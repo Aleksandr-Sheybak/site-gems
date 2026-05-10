@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Самоцветы — студия развития детей (Сысерть)</title>
+    <meta name="description" content="Студия каллиграфии, творчества и выразительного чтения в Сысерти. Занятия для детей от 6 лет.">
+
+    <!-- Яндекс.Карты -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ_ЯНДЕКС&lang=ru_RU"></script>
+    <!-- Виджет ВК -->
+    <script src="https://vk.com/js/api/openapi.js?169"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Flatpickr (календарь + время) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+
+    <style>
+        :root {
+            --purple: #7c3aed;
+            --purple-light: #a78bfa;
+            --darkblue: #1e293b;
+            --lightblue: #38bdf8;
+            --emerald: #10b981;
+            --orange: #f97316;
+            --raspberry: #f43f5e;
+            --font: 'Inter', 'Segoe UI', Arial, sans-serif;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow: 0 8px 25px rgba(0,0,0,0.06);
+            --shadow-lg: 0 16px 40px rgba(0,0,0,0.1);
+            --radius: 24px;
+            --transition: 0.25s ease-out;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            background: #ffffff;
+            color: #334155;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                radial-gradient(circle at 15% 30%, rgba(124, 58, 237, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+                linear-gradient(0deg, transparent 20px, rgba(30, 41, 59, 0.012) 21px),
+                linear-gradient(90deg, transparent 20px, rgba(30, 41, 59, 0.012) 21px);
+            background-size: 40px 40px, 60px 60px, 25px 25px, 25px 25px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--purple-light); border-radius: 10px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
+
+        /* Шапка */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 30px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px);
+            box-shadow: 0 1px 8px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; flex-wrap: wrap;
+        }
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--purple); transition: transform 0.3s; }
+        .logo-img:hover { transform: scale(1.05); }
+        .logo-text { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.4px; }
+        .logo-text .highlight { background: linear-gradient(135deg, #f97316, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-style: italic; }
+        .nav-links { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .nav-links a, .nav-links button { color: var(--darkblue); text-decoration: none; font-weight: 500; font-size: 15px; transition: var(--transition); background: none; border: none; cursor: pointer; padding: 8px 0; position: relative; display: flex; align-items: center; gap: 6px; }
+        .nav-links a::after, .nav-links button::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--purple); transition: width 0.25s; }
+        .nav-links a:hover::after, .nav-links button:hover::after { width: 100%; }
+        .nav-links a:hover, .nav-links button:hover { color: var(--purple); }
+        .header-phone { color: var(--purple); font-weight: 600; font-size: 16px; text-decoration: none; margin-left: 8px; }
+        .header-socials { display: flex; gap: 8px; margin-left: 12px; }
+        .header-socials a { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--lightblue); color: white; border-radius: 50%; font-size: 16px; transition: var(--transition); text-decoration: none; }
+        .header-socials a:hover { background: var(--darkblue); transform: translateY(-2px); }
+        .burger { display: none; }
+        @media (min-width: 769px) { .burger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 10px; } }
+        .burger span { display: block; width: 24px; height: 2px; background-color: var(--darkblue); border-radius: 2px; }
+        .side-menu { position: fixed; top: 0; right: -320px; width: 280px; height: 100%; background: white; box-shadow: -8px 0 25px rgba(0,0,0,0.1); transition: right 0.3s; z-index: 200; padding: 80px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
+        .side-menu.open { right: 0; }
+        .side-menu a, .side-menu button { display: block; padding: 12px 16px; color: var(--darkblue); text-decoration: none; font-size: 15px; border-radius: 12px; background: none; border: none; text-align: left; cursor: pointer; transition: background 0.2s; }
+        .side-menu a:hover, .side-menu button:hover { background: #f1f5f9; }
+        .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 26px; cursor: pointer; color: var(--darkblue); }
+        @media (max-width: 768px) { .header { justify-content: center; } .nav-links, .header-phone, .header-socials, .burger { display: none; } }
+        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); box-shadow: 0 -2px 10px rgba(0,0,0,0.04); z-index: 100; padding: 10px 20px; justify-content: space-around; align-items: center; }
+        @media (max-width: 768px) { .mobile-nav { display: flex; } }
+        .mobile-nav a, .mobile-nav button { display: flex; flex-direction: column; align-items: center; color: var(--darkblue); text-decoration: none; font-size: 11px; font-weight: 500; gap: 4px; background: none; border: none; cursor: pointer; }
+        .mobile-nav i { font-size: 18px; }
+
+        section { margin: 80px 0; }
+        .section-title { font-size: 32px; font-weight: 700; color: var(--darkblue); margin-bottom: 30px; position: relative; display: inline-block; }
+        .section-title::after { content: ""; position: absolute; bottom: -10px; left: 0; width: 60%; height: 3px; background: linear-gradient(to right, var(--purple), var(--lightblue)); border-radius: 4px; }
+
+        /* Карточки курсов */
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .course-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s, box-shadow 0.3s; border: 1px solid #f1f5f9; }
+        .course-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+        .course-img { height: 210px; background-size: cover; background-position: center; position: relative; display: flex; align-items: flex-end; color: white; padding: 20px; font-size: 22px; font-weight: 600; text-shadow: 0 2px 6px rgba(0,0,0,0.5); overflow: hidden; }
+        .course-img::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 60%); transition: opacity 0.3s; }
+        .course-card:hover .course-img::before { opacity: 0.7; }
+        .course-body { padding: 22px; }
+        .course-body h3 { font-size: 20px; margin-bottom: 10px; color: var(--darkblue); display: flex; align-items: center; gap: 8px; }
+        .price-tag { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: white; padding: 8px 18px; border-radius: 30px; font-weight: 600; display: inline-block; margin-bottom: 15px; font-size: 15px; }
+        .btn-expand { background: none; border: 2px solid var(--lightblue); color: var(--lightblue); padding: 8px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; }
+        .btn-expand:hover { background: var(--lightblue); color: white; }
+        .expanded-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .expanded-content.open { max-height: 2000px; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px; }
+
+        /* Новости – последние 3 */
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .news-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid #f1f5f9; }
+        .news-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .news-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 16px; margin-bottom: 12px; }
+        .news-date { color: var(--purple); font-size: 13px; margin-bottom: 6px; font-weight: 500; }
+        .news-title { font-size: 20px; font-weight: 600; color: var(--darkblue); margin-bottom: 8px; }
+        .news-text { color: #475569; font-size: 15px; line-height: 1.6; max-height: 4.8em; overflow: hidden; transition: max-height 0.3s; }
+        .news-text.open { max-height: 1000px; }
+        .read-more-btn { background: none; border: none; color: var(--purple); font-weight: 500; cursor: pointer; margin-top: 8px; display: inline-block; }
+
+        /* Админка */
+        .admin-panel { display: none; background: white; border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow-lg); margin-top: 20px; }
+        .admin-panel.active { display: block; }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th, .admin-table td { padding: 14px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        .admin-table th { color: var(--purple); font-weight: 600; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 300; display: flex; justify-content: center; align-items: center; }
+        .modal-content { background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8; }
+        .modal-close:hover { color: var(--darkblue); }
+
+        footer { text-align: center; padding: 35px; color: #94a3b8; border-top: 1px solid #e2e8f0; margin-top: 80px; }
+        footer a { color: var(--purple); text-decoration: none; }
+        .scroll-top-btn { position: fixed; bottom: 90px; right: 30px; width: 44px; height: 44px; background: var(--purple); color: white; border: none; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 6px 18px rgba(124,58,237,0.3); transition: var(--transition); display: none; z-index: 50; }
+        .scroll-top-btn.visible { display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img class="logo-img" src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип">
+            <div class="logo-text">Само<span class="highlight">цветы</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="#about">О студии</a>
+            <a href="#workshops">Мастер-классы</a>
+            <a href="#gift">Сертификаты</a>
+            <a href="#news">Новости</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contacts">Контакты</a>
+            <button id="newsMenuBtn">Отзывы</button>
+            <a href="tel:89667167436" class="header-phone">89667167436</a>
+            <div class="header-socials">
+                <a href="https://web.max.ru/-73411458885837" target="_blank" title="MAX"><i class="fas fa-comment"></i></a>
+                <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i></a>
+            </div>
+            <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+
+    <div class="side-menu" id="sideMenu">
+        <button class="close-btn" id="closeMenu">&times;</button>
+        <a href="#about">О студии</a>
+        <a href="#workshops">Мастер-классы</a>
+        <a href="#gift">Сертификаты</a>
+        <a href="#news">Новости</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contacts">Контакты</a>
+        <button id="adminLoginBtn">Вход администратора</button>
+    </div>
+
+    <div class="mobile-nav">
+        <a href="tel:89667167436"><i class="fas fa-phone"></i> Звонок</a>
+        <a href="#workshops"><i class="fas fa-paint-brush"></i> Курсы</a>
+        <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
+        <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i> ВКонтакте</a>
+    </div>
+
+    <div class="container">
+        <section id="about">
+            <h2 class="section-title">О студии</h2>
+            <p style="font-size:1.1rem; color:#475569;">"Искусство обладает чудесной способностью: оно может быть как пропастью, разделяющей умы и сердца, так и мостом, соединяющим их..."</p>
+            <p>Меня зовут <strong>Светлана</strong> — филолог и педагог с 3-летним стажем. В основе — авторские методики обучения письму и чтению.</p>
+        </section>
+
+        <section id="workshops">
+            <h2 class="section-title">Мастер-классы</h2>
+            <div class="courses-grid">
+                <div class="course-card">
+                    <div class="course-img" style="background-image: url('https://kanzoboz.ru/data/images/article/3/487403_d1ab2_th.jpg');"><span>Основы каллиграфии</span></div>
+                    <div class="course-body"><h3>Каллиграфия</h3><p>Исправление почерка для детей 6–9 лет.</p><div class="price-tag">500 руб.</div><button class="btn-expand" onclick="toggleExpand(this)"><i class="fas fa-chevron-down"></i> Подробнее</button><div class="expanded-content"><p>Занятия по выходным. Адрес: библиотеки Сысерти.</p></div></div>
+                </div>
+                <div class="course-card">
+                    <div class="course-img" style="background: linear-gradient(135deg, #f093fb, #f5576c);"><span>Ораторское мастерство</span></div>
+                    <div class="course-body"><h3>Ораторское искусство</h3><p>Постановка голоса, снятие зажимов.</p><div class="price-tag">Скоро</div><button class="btn-expand" onclick="toggleExpand(this)"><i class="fas fa-chevron-down"></i> Подробнее</button><div class="expanded-content"><p>Курс готовится. Следите за новостями!</p></div></div>
+                </div>
+                <div class="course-card">
+                    <div class="course-img" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb);"><span>Клуб выходного дня</span></div>
+                    <div class="course-body"><h3>Клуб выходного дня</h3><p>Творческие субботы для детей.</p><div class="price-tag">от 350 руб.</div><button class="btn-expand" onclick="toggleExpand(this)"><i class="fas fa-chevron-down"></i> Подробнее</button><div class="expanded-content"><p>Субботы 11:00–13:00, ул. Коммуны, 36.</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gift">
+            <h2 class="section-title">Подарочные сертификаты</h2>
+            <div style="display:flex; flex-wrap:wrap; gap:30px; background:white; border-radius:var(--radius); padding:30px; box-shadow:var(--shadow);">
+                <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" style="width:220px; border-radius:16px;">
+                <div>
+                    <h3 style="margin-bottom:10px;">Сертификат на одно занятие</h3>
+                    <p>Посещение любого курса на выбор. Отличный подарок!</p>
+                    <div style="font-size:1.5rem; font-weight:700; color:var(--purple); margin:10px 0;">700 руб.</div>
+                    <p><i class="fas fa-check" style="color:var(--emerald);"></i> Электронный или бумажный вид.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="news">
+            <h2 class="section-title">Новости</h2>
+            <div class="news-grid" id="newsContainer">Загрузка...</div>
+        </section>
+
+        <section id="faq">
+            <h2 class="section-title">Частые вопросы</h2>
+            <div style="max-width:700px;">
+                <div class="faq-item" style="background:white; border-radius:14px; padding:18px; margin-bottom:10px; box-shadow:var(--shadow-sm);">
+                    <button onclick="this.nextElementSibling.classList.toggle('open')" style="display:flex; justify-content:space-between; width:100%; background:none; border:none; font-weight:600; cursor:pointer;">С какого возраста? <i class="fas fa-chevron-down"></i></button>
+                    <div class="expanded-content" style="max-height:0; overflow:hidden;"><p style="padding-top:10px;">С 6 лет. Группы по возрасту.</p></div>
+                </div>
+                <div class="faq-item" style="background:white; border-radius:14px; padding:18px; margin-bottom:10px; box-shadow:var(--shadow-sm);">
+                    <button onclick="this.nextElementSibling.classList.toggle('open')" style="display:flex; justify-content:space-between; width:100%; background:none; border:none; font-weight:600; cursor:pointer;">Длительность? <i class="fas fa-chevron-down"></i></button>
+                    <div class="expanded-content" style="max-height:0; overflow:hidden;"><p style="padding-top:10px;">60 минут (Клуб выходного дня — 2 часа).</p></div>
+                </div>
+                <div class="faq-item" style="background:white; border-radius:14px; padding:18px; margin-bottom:10px; box-shadow:var(--shadow-sm);">
+                    <button onclick="this.nextElementSibling.classList.toggle('open')" style="display:flex; justify-content:space-between; width:100%; background:none; border:none; font-weight:600; cursor:pointer;">Запись? <i class="fas fa-chevron-down"></i></button>
+                    <div class="expanded-content" style="max-height:0; overflow:hidden;"><p style="padding-top:10px;">По телефону 89667167436 или в ВК.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="teacher">
+            <h2 class="section-title">Педагог</h2>
+            <div style="display:flex; align-items:center; gap:25px; flex-wrap:wrap; background:white; border-radius:var(--radius); padding:30px; box-shadow:var(--shadow);">
+                <img src="https://sun9-38.userapi.com/s/v1/ig2/nuPCIcGJ6D3yYfZL47ig_7XNs95a0jYPp8jDE31_CN9oPOTI_-5NyHLJnVtedCrB7h2ZSxp7YISluKOaW7E7KOWb.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&u=P1z34IBA8ylP8TkeihIRe2r43afh2iiqAjelFhv7Yus&cs=1920x0" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid var(--emerald);">
+                <div>
+                    <h3>Шейбак Светлана Сергеевна</h3>
+                    <p>Филолог, педагог, стаж 3 года.</p>
+                    <a href="tel:89667167436" class="btn-expand" style="margin-top:10px;"><i class="fas fa-phone-alt"></i> Позвонить</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacts">
+            <h2 class="section-title">Контакты</h2>
+            <p>Телефон: <a href="tel:89667167436">89667167436</a></p>
+            <p>Техподдержка: <a href="tel:89090226229">89090226229</a> (Студия программирования)</p>
+            <div id="map" style="height:300px; border-radius:20px; margin-top:15px;"></div>
+        </section>
+
+        <div class="admin-panel" id="adminPanel">
+            <h2 style="margin-bottom:20px;">Управление новостями</h2>
+            <button class="btn-expand" onclick="openNewsForm()">+ Новая новость</button>
+            <table class="admin-table" style="margin-top:20px;">
+                <thead><tr><th>Заголовок</th><th>Статус</th><th></th></tr></thead>
+                <tbody id="adminNewsTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Модалка входа -->
+    <div class="modal" id="loginModal" style="display:none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('loginModal').style.display='none'">&times;</button>
+            <h3>Вход</h3>
+            <input type="text" id="loginUser" placeholder="Логин" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;">
+            <input type="password" id="loginPass" placeholder="Пароль" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;">
+            <button class="btn-expand" onclick="doAdminLogin()" style="width:100%">Войти</button>
+            <p id="loginError" style="color:red;text-align:center;margin-top:10px;"></p>
+        </div>
+    </div>
+
+    <!-- Модалка редактора новости -->
+    <div class="modal" id="newsEditorModal" style="display:none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNewsEditor()">&times;</button>
+            <h3 id="editorTitle">Новая новость</h3>
+            <input id="newsTitle" placeholder="Заголовок" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;">
+            <textarea id="newsContent" rows="4" placeholder="Текст" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;"></textarea>
+            <input type="file" id="newsImages" multiple accept="image/*" style="margin:10px 0;">
+            <div class="emoji-picker" id="emojiPicker"></div>
+            <input type="text" id="newsPublishDate" placeholder="Дата и время (Екб)" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;">
+            <button class="btn-expand" onclick="saveNews()">Сохранить</button>
+            <button class="btn-expand" onclick="closeNewsEditor()" style="background:#cbd5e1;margin-left:10px;">Отмена</button>
+            <div id="editorError" style="color:red;margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Самоцветы, Сысерть | Техподдержка: 89090226229</p>
+    </footer>
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyhEpqT77tM3Em5EBuvdnlUR-kFVWYbrYiguVZQvTckbCW-BslerPAn_xzcT2lXLb7xtw/exec';
+        const ADMIN_USER = 'Root';
+        const ADMIN_PASS = 'anna1981';
+
+        // Карта
+        ymaps.ready(() => {
+            const map = new ymaps.Map('map', { center: [56.505210, 60.815588], zoom: 16 });
+            map.geoObjects.add(new ymaps.Placemark([56.505210, 60.815588], { hintContent: 'Самоцветы', balloonContent: 'ул. Коммуны, 36' }));
+        });
+
+        // Новости (последние 3)
+        async function loadNews() {
+            const container = document.getElementById('newsContainer');
+            try {
+                const res = await fetch(API_URL + '?action=news');
+                const data = await res.json();
+                if (!data.news || !data.news.length) {
+                    container.innerHTML = '<p>Пока новостей нет.</p>';
+                    return;
+                }
+                const latest = data.news.slice(0, 3);
+                container.innerHTML = latest.map(n => `
+                    <div class="news-card">
+                        ${n.images && n.images.length ? `<img src="${n.images[0]}" onerror="this.style.display='none'" style="height:160px; object-fit:cover; width:100%; border-radius:12px;">` : ''}
+                        <div class="news-date">${new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' })}</div>
+                        <div class="news-title">${n.title}</div>
+                        <div class="news-text" id="text-${n.id}">${n.content}</div>
+                        <button class="read-more-btn" onclick="toggleNewsText('${n.id}')">Читать дальше</button>
+                    </div>
+                `).join('');
+            } catch (e) {
+                container.innerHTML = '<p style="color:red;">Ошибка загрузки</p>';
+            }
+        }
+        loadNews();
+        setInterval(loadNews, 300000);
+
+        function toggleNewsText(id) {
+            const textEl = document.getElementById('text-' + id);
+            textEl.classList.toggle('open');
+        }
+
+        // Админка
+        let isAdmin = sessionStorage.getItem('sa_admin') === 'true';
+        document.getElementById('burgerBtn').onclick = () => document.getElementById('sideMenu').classList.add('open');
+        document.getElementById('closeMenu').onclick = () => document.getElementById('sideMenu').classList.remove('open');
+        document.getElementById('adminLoginBtn').onclick = () => document.getElementById('loginModal').style.display = 'flex';
+        document.getElementById('loginModal').addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
+
+        function doAdminLogin() {
+            const u = document.getElementById('loginUser').value.trim();
+            const p = document.getElementById('loginPass').value.trim();
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                sessionStorage.setItem('sa_admin', 'true');
+                isAdmin = true;
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('adminPanel').classList.add('active');
+                loadAdminNews();
+            } else {
+                document.getElementById('loginError').textContent = 'Неверные данные';
+            }
+        }
+
+        async function loadAdminNews() {
+            const tbody = document.getElementById('adminNewsTable');
+            try {
+                const res = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
+                const data = await res.json();
+                if (!data.news) return;
+                tbody.innerHTML = data.news.map(n => `
+                    <tr>
+                        <td>${n.title}</td>
+                        <td>${n.status || 'опубликовано'}</td>
+                        <td>
+                            <button class="btn-expand" onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn-expand" onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch(e) {
+                console.error('Ошибка загрузки админ-новостей', e);
+            }
+        }
+
+        let currentEditId = null;
+        function openNewsForm() {
+            currentEditId = null;
+            document.getElementById('editorTitle').textContent = 'Новая новость';
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsContent').value = '';
+            document.getElementById('newsImages').value = '';
+            document.getElementById('newsPublishDate').value = '';
+            initEmojiPicker();
+            flatpickr("#newsPublishDate", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                locale: "ru",
+                defaultDate: new Date()
+            });
+            document.getElementById('newsEditorModal').style.display = 'flex';
+        }
+
+        function editNews(id) {
+            fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`)
+                .then(r => r.json())
+                .then(data => {
+                    const item = data.news.find(n => n.id === id);
+                    if (!item) return;
+                    currentEditId = id;
+                    document.getElementById('editorTitle').textContent = 'Редактирование новости';
+                    document.getElementById('newsTitle').value = item.title;
+                    document.getElementById('newsContent').value = item.content;
+                    document.getElementById('newsPublishDate').value = item.publishDate;
+                    initEmojiPicker();
+                    flatpickr("#newsPublishDate", {
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        time_24hr: true,
+                        locale: "ru",
+                        defaultDate: item.publishDate
+                    });
+                    document.getElementById('newsEditorModal').style.display = 'flex';
+                });
+        }
+
+        function closeNewsEditor() {
+            document.getElementById('newsEditorModal').style.display = 'none';
+        }
+
+        function initEmojiPicker() {
+            const picker = document.getElementById('emojiPicker');
+            const emojis = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥'];
+            picker.innerHTML = emojis.map(e => `<button class="emoji-btn" style="font-size:20px; cursor:pointer; background:none; border:1px solid #ddd; border-radius:8px; padding:4px 8px; margin:4px;" onclick="document.getElementById('newsContent').value+='${e}'">${e}</button>`).join('');
+        }
+
+        async function saveNews() {
+            const title = document.getElementById('newsTitle').value.trim();
+            const content = document.getElementById('newsContent').value.trim();
+            const publishDate = document.getElementById('newsPublishDate').value.trim() || new Date().toISOString();
+            const files = document.getElementById('newsImages').files;
+
+            if (!title || !content) {
+                document.getElementById('editorError').textContent = 'Заполните заголовок и текст';
+                return;
+            }
+
+            let imageUrls = [];
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append('file', file);
+                try {
+                    const uploadResp = await fetch(`${API_URL}?action=upload&user=${ADMIN_USER}&pass=${ADMIN_PASS}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const uploadData = await uploadResp.json();
+                    if (uploadData.url) imageUrls.push(uploadData.url);
+                } catch(e) {
+                    console.error('Ошибка загрузки файла', e);
+                }
+            }
+
+            const payload = {
+                action: currentEditId ? 'newsUpdate' : 'newsAdd',
+                user: ADMIN_USER,
+                pass: ADMIN_PASS,
+                title,
+                content,
+                images: imageUrls.join('|'),
+                publishDate
+            };
+            if (currentEditId) payload.id = currentEditId;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    closeNewsEditor();
+                    loadAdminNews();
+                    loadNews();
+                } else {
+                    document.getElementById('editorError').textContent = 'Ошибка сохранения';
+                }
+            } catch(e) {
+                document.getElementById('editorError').textContent = 'Ошибка соединения';
+            }
+        }
+
+        async function deleteNews(id) {
+            if (!confirm('Удалить новость безвозвратно?')) return;
+            await fetch(`${API_URL}?action=newsDelete&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
+            loadAdminNews();
+            loadNews();
+        }
+
+        // Проверка сессии при загрузке
+        if (isAdmin) {
+            document.getElementById('adminPanel').classList.add('active');
+            loadAdminNews();
+        }
+
+        // Разворачивание блоков
+        function toggleExpand(btn) {
+            const content = btn.nextElementSibling;
+            content.classList.toggle('open');
+            const icon = btn.querySelector('i');
+            if (icon) {
+                icon.className = content.classList.contains('open') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+            }
+        }
+
+        // Кнопка "Наверх"
+        window.addEventListener('scroll', () => {
+            document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 400);
+        });
+    </script>
+</body>
+</html>
