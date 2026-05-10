@@ -516,15 +516,48 @@
             </div>
         </section>
 
-        <!-- Новости (JSONP на новом API) -->
-        <section id="news">
-            <div class="section-header">
-                <h2 class="section-title">Новости</h2>
-                <div class="section-underline"></div>
-            </div>
-            <div class="news-grid" id="newsContainer">Загрузка...</div>
-        </section>
+        <!-- Секция новостей -->
+<section id="news">
+    <div class="section-header">
+        <h2 class="section-title">Новости</h2>
+        <div class="section-underline"></div>
+    </div>
+    <div class="news-grid" id="newsContainer">Загрузка...</div>
+</section>
 
+<script>
+    // Функция загрузки новостей (JSONP)
+    function loadNews() {
+        const container = document.getElementById('newsContainer');
+        container.innerHTML = 'Загрузка...';
+        const callback = 'jsonp_news_' + Date.now();
+        window[callback] = function(data) {
+            delete window[callback];
+            if (!data.news || !data.news.length) {
+                container.innerHTML = '<p style="text-align:center;">Новостей пока нет.</p>';
+                return;
+            }
+            const latest = data.news.slice(0, 3);
+            container.innerHTML = latest.map(n => {
+                const dateStr = n.publishDate ? new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' }) : '';
+                return `<div class="news-card">
+                    ${n.images && n.images.length ? `<img src="${n.images[0]}" onerror="this.style.display='none'">` : ''}
+                    ${dateStr ? `<div class="news-date">${dateStr}</div>` : ''}
+                    <div class="news-title">${n.title}</div>
+                    <div class="news-text" id="text-${n.id}">${n.content}</div>
+                    <button class="read-more-btn" onclick="this.previousElementSibling.classList.toggle('open')">Читать дальше</button>
+                </div>`;
+            }).join('');
+        };
+        const script = document.createElement('script');
+        script.src = API_URL + '?action=news&callback=' + callback;
+        document.body.appendChild(script);
+    }
+
+    // Загружаем новости при открытии и обновляем каждые 5 минут
+    loadNews();
+    setInterval(loadNews, 300000);
+</script>
         <!-- FAQ – аккордеон с анимацией -->
         <section id="faq">
             <div class="section-header">
