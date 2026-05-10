@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Администратор — Самоцветы</title>
-    <!-- Font Awesome -->
+    <title>Администрирование — Самоцветы</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
@@ -17,23 +15,19 @@
             --darkblue: #1e293b;
             --lightblue: #38bdf8;
             --emerald: #10b981;
-            --font: 'Inter', system-ui, -apple-system, sans-serif;
+            --font: 'Inter', system-ui, Arial, sans-serif;
             --bg: #f8fafc;
-            --text: #334155;
             --card-bg: #ffffff;
-            --card-border: #f1f5f9;
+            --text: #334155;
+            --border: #e2e8f0;
             --shadow: 0 8px 30px rgba(0,0,0,0.06);
-            --shadow-hover: 0 20px 50px rgba(0,0,0,0.1);
             --radius: 24px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         body.dark {
             --bg: #0f172a;
-            --text: #cbd5e1;
             --card-bg: #1e293b;
-            --card-border: #334155;
-            --shadow: 0 8px 30px rgba(0,0,0,0.3);
-            --shadow-hover: 0 20px 50px rgba(0,0,0,0.5);
+            --text: #cbd5e1;
+            --border: #334155;
             background: #0f172a;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -41,247 +35,183 @@
             font-family: var(--font);
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             padding: 20px;
             transition: background 0.3s, color 0.3s;
-            background-image: radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.04) 1px, transparent 1px),
-                              radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
-            background-size: 40px 40px, 60px 60px;
         }
-
         .container {
-            width: 100%;
-            max-width: 900px;
-        }
-
-        /* Карточка */
-        .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 40px;
             box-shadow: var(--shadow);
-            border: 1px solid var(--card-border);
-            transition: var(--transition);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid var(--border);
             backdrop-filter: blur(10px);
-            background-image: linear-gradient(135deg, rgba(124, 58, 237, 0.03) 0%, rgba(56, 189, 248, 0.03) 100%);
+            animation: fadeIn 0.5s ease;
         }
-        .card h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 25px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 {
+            margin-bottom: 24px;
             color: var(--darkblue);
+            font-size: 1.8rem;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
-        .card h2 i { color: var(--purple); }
-
-        /* Кнопки */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            border: none;
-            transition: var(--transition);
-            text-decoration: none;
-            color: white;
-            background: linear-gradient(135deg, var(--purple), var(--purple-light));
-            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4); }
-        .btn-secondary {
-            background: var(--lightblue);
-            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
-        }
-        .btn-danger {
-            background: linear-gradient(135deg, #f43f5e, #e11d48);
-            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
-        }
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 13px;
-            border-radius: 20px;
-        }
-
-        /* Поля ввода */
-        input, textarea, select {
+        input {
             width: 100%;
-            padding: 14px 18px;
+            padding: 14px;
             margin: 10px 0;
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border);
             border-radius: 14px;
-            font-family: var(--font);
-            font-size: 15px;
             background: var(--bg);
             color: var(--text);
-            transition: var(--transition);
-            outline: none;
+            font-size: 16px;
+            transition: 0.2s;
         }
-        input:focus, textarea:focus {
+        input:focus {
             border-color: var(--purple);
+            outline: none;
             box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
         }
-
-        /* Таблица */
-        .table-wrap { overflow-x: auto; }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+        button:hover { background: var(--purple-light); }
+        .error {
+            color: #f43f5e;
+            margin-top: 12px;
+            text-align: center;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text);
+            cursor: pointer;
+        }
+        .logout-btn {
+            background: #94a3b8;
+            margin-top: 20px;
+        }
+        .admin-panel {
+            max-width: 900px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
         th, td {
-            padding: 14px 12px;
+            padding: 14px;
             text-align: left;
-            border-bottom: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--border);
         }
-        th {
-            color: var(--purple);
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        td { font-size: 15px; }
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        .status-published { background: rgba(16, 185, 129, 0.1); color: var(--emerald); }
-        .status-scheduled { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-
-        /* Модальное окно */
+        th { color: var(--purple); font-weight: 600; }
         .modal {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(4px);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 100;
         }
         .modal-content {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 35px;
+            padding: 30px;
             width: 90%;
             max-width: 600px;
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: var(--shadow-hover);
+            border: 1px solid var(--border);
         }
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 16px;
+            right: 16px;
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
-            color: var(--text);
-            transition: 0.2s;
+            color: #94a3b8;
         }
-        .modal-close:hover { color: var(--purple); transform: rotate(90deg); }
-
-        /* Эмодзи */
+        .modal-close:hover { color: var(--darkblue); }
         .emoji-picker {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin: 15px 0;
+            gap: 6px;
+            margin: 10px 0;
         }
         .emoji-btn {
-            font-size: 22px;
-            background: rgba(124, 58, 237, 0.05);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 6px 10px;
+            font-size: 20px;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px 8px;
             cursor: pointer;
-            transition: 0.2s;
-        }
-        .emoji-btn:hover { background: rgba(124, 58, 237, 0.1); transform: scale(1.2); }
-
-        /* Тёмная тема */
-        body.dark .card { background-image: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(56, 189, 248, 0.05) 100%); }
-        body.dark input, body.dark textarea { background: #0f172a; }
-
-        /* Адаптив */
-        @media (max-width: 600px) {
-            .card { padding: 25px; }
         }
     </style>
 </head>
 <body>
-    <!-- Экран входа -->
-    <div class="container" id="loginScreen">
-        <div class="card" style="max-width: 450px; margin: 0 auto; text-align: center;">
-            <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип" style="width: 80px; border-radius: 50%; margin-bottom: 20px; border: 3px solid var(--purple);">
-            <h2><i class="fas fa-lock"></i> Вход</h2>
-            <input type="text" id="loginUser" placeholder="Логин" autocomplete="off">
-            <input type="password" id="loginPass" placeholder="Пароль">
-            <button class="btn" onclick="login()" style="width:100%;">Войти</button>
-            <p id="loginError" style="color: #f43f5e; margin-top: 12px;"></p>
-            <button class="btn btn-secondary" style="margin-top: 15px; background: transparent; border: 1px solid var(--card-border); color: var(--text);" onclick="window.open('index.html','_self')">← На сайт</button>
-        </div>
+    <button class="theme-toggle" id="themeToggle" title="Переключить тему"><i class="fas fa-moon"></i></button>
+
+    <div class="container" id="loginBox">
+        <h2><i class="fas fa-lock"></i> Вход</h2>
+        <input type="text" id="loginUser" placeholder="Логин">
+        <input type="password" id="loginPass" placeholder="Пароль">
+        <button onclick="login()">Войти</button>
+        <div class="error" id="loginError"></div>
     </div>
 
-    <!-- Панель управления (скрыта) -->
-    <div class="container" id="adminScreen" style="display: none;">
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2><i class="fas fa-crown"></i> Управление новостями</h2>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-sm" onclick="openNewsForm()"><i class="fas fa-plus"></i> Новая новость</button>
-                    <button class="btn btn-sm btn-secondary" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Выйти</button>
-                </div>
-            </div>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Заголовок</th>
-                            <th>Дата</th>
-                            <th>Статус</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody id="newsTable"></tbody>
-                </table>
-            </div>
-            <p id="adminMessage" style="margin-top: 15px;"></p>
+    <div class="container admin-panel" id="adminBox" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2><i class="fas fa-newspaper"></i> Управление новостями</h2>
+            <button onclick="logout()" class="logout-btn" style="width:auto; padding:8px 16px;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
         </div>
+        <button onclick="openNewsForm()" style="width:auto; margin-bottom:20px;"><i class="fas fa-plus"></i> Новая новость</button>
+        <table>
+            <thead><tr><th>Заголовок</th><th>Статус</th><th></th></tr></thead>
+            <tbody id="adminNewsTable"></tbody>
+        </table>
     </div>
 
-    <!-- Модалка редактора -->
-    <div id="editorModal" class="modal" style="display: none;">
+    <div class="modal" id="editorModal" style="display:none;">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeEditor()">&times;</button>
-            <h2 id="editorTitle">Новая новость</h2>
-            <input type="text" id="newsTitle" placeholder="Заголовок новости">
-            <textarea id="newsContent" rows="5" placeholder="Текст новости (можно с эмодзи)"></textarea>
-            <label>Загрузить изображения (до трёх):</label>
+            <button class="modal-close" onclick="closeNewsEditor()">&times;</button>
+            <h3 id="editorTitle">Новая новость</h3>
+            <input type="text" id="newsTitle" placeholder="Заголовок">
+            <textarea id="newsContent" rows="4" placeholder="Текст новости" style="width:100%; margin:10px 0; padding:12px; border:1px solid var(--border); border-radius:14px; background:var(--bg); color:var(--text);"></textarea>
             <input type="file" id="newsImages" multiple accept="image/*">
             <div class="emoji-picker" id="emojiPicker"></div>
-            <label>Дата публикации (оставьте пустым для текущей):</label>
-            <input type="text" id="newsPublishDate" placeholder="Выберите дату и время">
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="btn" onclick="saveNews()">Сохранить</button>
-                <button class="btn btn-secondary" onclick="closeEditor()">Отмена</button>
-            </div>
-            <p id="editorError" style="color: #f43f5e; margin-top: 10px;"></p>
+            <input type="text" id="newsPublishDate" placeholder="Дата и время (Екб)">
+            <button onclick="saveNews()">Сохранить</button>
+            <button onclick="closeNewsEditor()" style="background:#cbd5e1; color:#334155; margin-top:5px;">Отмена</button>
+            <div class="error" id="editorError"></div>
         </div>
     </div>
 
@@ -289,30 +219,40 @@
         const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
         const ADMIN_USER = 'Root';
         const ADMIN_PASS = 'anna1981';
-        let currentEditId = null;
 
-        // Инициализация темы
-        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+        // Тёмная тема
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            if (document.body.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
 
-        // Проверка сессии
+        // Авторизация
         if (sessionStorage.getItem('admin_logged') === 'true') {
             showAdmin();
         }
 
-        // *** ВХОД ***
         function login() {
             const u = document.getElementById('loginUser').value.trim();
             const p = document.getElementById('loginPass').value.trim();
             if (!u || !p) return;
-
-            jsonp(API_URL + '?action=login&user=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p), function(data) {
-                if (data.success) {
-                    sessionStorage.setItem('admin_logged', 'true');
-                    showAdmin();
-                } else {
-                    document.getElementById('loginError').textContent = 'Неверный логин или пароль';
-                }
-            });
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                sessionStorage.setItem('admin_logged', 'true');
+                showAdmin();
+            } else {
+                document.getElementById('loginError').textContent = 'Неверный логин или пароль';
+            }
         }
 
         function logout() {
@@ -321,52 +261,37 @@
         }
 
         function showAdmin() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminScreen').style.display = 'block';
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('adminBox').style.display = 'block';
             loadAdminNews();
         }
 
-        // *** JSONP ***
-        function jsonp(url, callback) {
-            const cb = 'jsonp_' + Math.random().toString(36).substr(2, 9);
-            window[cb] = function(data) {
-                delete window[cb];
-                document.body.removeChild(script);
-                callback(data);
-            };
-            const script = document.createElement('script');
-            script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
-            document.body.appendChild(script);
-        }
-
-        // *** ЗАГРУЗКА СПИСКА НОВОСТЕЙ ***
-        function loadAdminNews() {
-            const tbody = document.getElementById('newsTable');
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Загрузка...</td></tr>';
-            jsonp(API_URL + '?action=newsAdmin&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS, function(data) {
-                if (!data.news || data.news.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Новостей пока нет</td></tr>';
+        async function loadAdminNews() {
+            const tbody = document.getElementById('adminNewsTable');
+            tbody.innerHTML = '<tr><td colspan="3">Загрузка...</td></tr>';
+            try {
+                const resp = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
+                const data = await resp.json();
+                if (!data.news) {
+                    tbody.innerHTML = '<tr><td colspan="3">Ошибка загрузки</td></tr>';
                     return;
                 }
-                tbody.innerHTML = data.news.map(n => {
-                    const dateStr = n.publishDate ? new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' }) : '—';
-                    const statusClass = n.status === 'published' ? 'status-published' : 'status-scheduled';
-                    return `
-                        <tr>
-                            <td><strong>${n.title}</strong></td>
-                            <td>${dateStr}</td>
-                            <td><span class="status-badge ${statusClass}">${n.status === 'published' ? 'Опубликовано' : 'Запланировано'}</span></td>
-                            <td>
-                                <button class="btn btn-sm" onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            });
+                tbody.innerHTML = data.news.map(n => `
+                    <tr>
+                        <td>${n.title}</td>
+                        <td>${n.status || 'опубликовано'}</td>
+                        <td>
+                            <button onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="3">Ошибка соединения</td></tr>';
+            }
         }
 
-        // *** ОТКРЫТИЕ ФОРМЫ ***
+        let currentEditId = null;
         function openNewsForm() {
             currentEditId = null;
             document.getElementById('editorTitle').textContent = 'Новая новость';
@@ -374,54 +299,38 @@
             document.getElementById('newsContent').value = '';
             document.getElementById('newsImages').value = '';
             document.getElementById('newsPublishDate').value = '';
-            document.getElementById('editorError').textContent = '';
             initEmojiPicker();
-            flatpickr("#newsPublishDate", {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i",
-                time_24hr: true,
-                locale: "ru",
-                defaultDate: new Date()
-            });
+            flatpickr("#newsPublishDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: new Date() });
             document.getElementById('editorModal').style.display = 'flex';
         }
 
         function editNews(id) {
-            // Загружаем все новости, чтобы найти нужную
-            jsonp(API_URL + '?action=newsAdmin&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS, function(data) {
-                const item = data.news.find(n => n.id === id);
-                if (!item) return;
-                currentEditId = id;
-                document.getElementById('editorTitle').textContent = 'Редактирование новости';
-                document.getElementById('newsTitle').value = item.title;
-                document.getElementById('newsContent').value = item.content;
-                document.getElementById('newsPublishDate').value = item.publishDate || '';
-                document.getElementById('newsImages').value = '';
-                document.getElementById('editorError').textContent = '';
-                initEmojiPicker();
-                flatpickr("#newsPublishDate", {
-                    enableTime: true,
-                    dateFormat: "Y-m-d H:i",
-                    time_24hr: true,
-                    locale: "ru",
-                    defaultDate: item.publishDate || new Date()
+            fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`)
+                .then(r => r.json())
+                .then(data => {
+                    const item = data.news.find(n => n.id === id);
+                    if (!item) return;
+                    currentEditId = id;
+                    document.getElementById('editorTitle').textContent = 'Редактирование';
+                    document.getElementById('newsTitle').value = item.title;
+                    document.getElementById('newsContent').value = item.content;
+                    document.getElementById('newsPublishDate').value = item.publishDate;
+                    initEmojiPicker();
+                    flatpickr("#newsPublishDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: item.publishDate });
+                    document.getElementById('editorModal').style.display = 'flex';
                 });
-                document.getElementById('editorModal').style.display = 'flex';
-            });
         }
 
-        function closeEditor() {
+        function closeNewsEditor() {
             document.getElementById('editorModal').style.display = 'none';
         }
 
-        // *** ЭМОДЗИ ***
         function initEmojiPicker() {
             const picker = document.getElementById('emojiPicker');
             const emojis = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥'];
             picker.innerHTML = emojis.map(e => `<button class="emoji-btn" onclick="document.getElementById('newsContent').value+='${e}'">${e}</button>`).join('');
         }
 
-        // *** СОХРАНЕНИЕ НОВОСТИ ***
         async function saveNews() {
             const title = document.getElementById('newsTitle').value.trim();
             const content = document.getElementById('newsContent').value.trim();
@@ -433,76 +342,42 @@
                 return;
             }
 
-            // Загрузка изображений по очереди
             let imageUrls = [];
-            if (files.length) {
-                for (let file of files) {
-                    try {
-                        const url = await uploadFile(file);
-                        if (url) imageUrls.push(url);
-                    } catch (err) {
-                        document.getElementById('editorError').textContent = 'Ошибка загрузки файла: ' + err;
-                        return;
-                    }
-                }
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append('file', file);
+                try {
+                    const resp = await fetch(`${API_URL}?action=upload&user=${ADMIN_USER}&pass=${ADMIN_PASS}`, { method: 'POST', body: formData });
+                    const data = await resp.json();
+                    if (data.url) imageUrls.push(data.url);
+                } catch(e) {}
             }
 
-            // Сохраняем новость
             const params = new URLSearchParams({
                 action: currentEditId ? 'newsUpdate' : 'newsAdd',
                 user: ADMIN_USER,
                 pass: ADMIN_PASS,
-                title: title,
-                content: content,
+                title,
+                content,
                 images: imageUrls.join('|'),
-                publishDate: publishDate
+                publishDate
             });
             if (currentEditId) params.append('id', currentEditId);
 
-            jsonp(API_URL + '?' + params.toString(), function(data) {
-                if (data.success) {
-                    closeEditor();
-                    loadAdminNews();
-                } else {
-                    document.getElementById('editorError').textContent = 'Ошибка сохранения: ' + (data.message || '');
-                }
-            });
+            const resp = await fetch(API_URL + '?' + params.toString());
+            const result = await resp.json();
+            if (result.success) {
+                closeNewsEditor();
+                loadAdminNews();
+            } else {
+                document.getElementById('editorError').textContent = 'Ошибка сохранения';
+            }
         }
 
-        function uploadFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const binary = e.target.result;
-                    // Используем XMLHttpRequest для отправки бинарных данных (JSONP не поддерживает POST с файлами напрямую)
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', API_URL + '?action=upload&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS);
-                    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            const resp = JSON.parse(xhr.responseText);
-                            if (resp.url) resolve(resp.url);
-                            else reject(resp.error || 'Неизвестная ошибка');
-                        } else {
-                            reject('HTTP ' + xhr.status);
-                        }
-                    };
-                    xhr.onerror = function() {
-                        reject('Сетевая ошибка');
-                    };
-                    xhr.send(blob);
-                };
-                reader.readAsArrayBuffer(file);
-            });
-        }
-
-        // *** УДАЛЕНИЕ ***
-        function deleteNews(id) {
-            if (!confirm('Удалить новость безвозвратно?')) return;
-            jsonp(API_URL + '?action=newsDelete&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS + '&id=' + id, function(data) {
-                if (data.success) loadAdminNews();
-                else alert('Ошибка удаления');
-            });
+        async function deleteNews(id) {
+            if (!confirm('Удалить новость?')) return;
+            await fetch(`${API_URL}?action=newsDelete&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
+            loadAdminNews();
         }
     </script>
 </body>
