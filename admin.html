@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администрирование — Самоцветы</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+    <style>
+        :root {
+            --purple: #7c3aed;
+            --purple-light: #a78bfa;
+            --darkblue: #1e293b;
+            --lightblue: #38bdf8;
+            --emerald: #10b981;
+            --font: 'Inter', 'Segoe UI', Arial, sans-serif;
+            --shadow: 0 8px 25px rgba(0,0,0,0.06);
+            --radius: 20px;
+            --transition: 0.25s ease-out;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font);
+            background: #f8fafc;
+            color: #334155;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-container, .admin-container {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .admin-container { max-width: 900px; display: none; }
+        .admin-container.active { display: block; }
+        .login-container.hidden { display: none; }
+        h2 { margin-bottom: 20px; color: var(--darkblue); }
+        input, textarea, button { width: 100%; margin: 10px 0; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-family: inherit; }
+        button { background: var(--purple); color: white; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
+        button:hover { background: var(--purple-light); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { color: var(--purple); }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8; }
+        .modal-close:hover { color: var(--darkblue); }
+        .emoji-picker { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+        .emoji-btn { font-size: 20px; background: none; border: 1px solid #ddd; border-radius: 8px; padding: 4px 8px; cursor: pointer; }
+        .error { color: red; margin-top: 10px; }
+        .logout-btn { background: #94a3b8; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <!-- Экран входа -->
+    <div class="login-container" id="loginBox">
+        <h2><i class="fas fa-lock"></i> Вход администратора</h2>
+        <input type="text" id="loginUser" placeholder="Логин">
+        <input type="password" id="loginPass" placeholder="Пароль">
+        <button onclick="login()">Войти</button>
+        <p class="error" id="loginError"></p>
+    </div>
+
+    <!-- Панель управления (скрыта до входа) -->
+    <div class="admin-container" id="adminBox">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2><i class="fas fa-newspaper"></i> Управление новостями</h2>
+            <button style="width:auto; padding:8px 16px;" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        </div>
+        <button onclick="openNewsForm()"><i class="fas fa-plus"></i> Новая новость</button>
+        <table>
+            <thead><tr><th>Заголовок</th><th>Статус</th><th></th></tr></thead>
+            <tbody id="adminNewsTable"></tbody>
+        </table>
+    </div>
+
+    <!-- Модальное окно редактора -->
+    <div class="modal" id="editorModal" style="display:none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNewsEditor()">&times;</button>
+            <h3 id="editorTitle">Новая новость</h3>
+            <input type="text" id="newsTitle" placeholder="Заголовок">
+            <textarea id="newsContent" rows="4" placeholder="Текст новости"></textarea>
+            <label>Изображения (до 3-х):</label>
+            <input type="file" id="newsImages" multiple accept="image/*">
+            <div class="emoji-picker" id="emojiPicker"></div>
+            <label>Опубликовать сейчас / запланировать:</label>
+            <input type="text" id="newsPublishDate" placeholder="Дата и время (Екб)">
+            <button onclick="saveNews()">Сохранить</button>
+            <button onclick="closeNewsEditor()" style="background:#cbd5e1; margin-top:5px;">Отмена</button>
+            <p class="error" id="editorError"></p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyhEpqT77tM3Em5EBuvdnlUR-kFVWYbrYiguVZQvTckbCW-BslerPAn_xzcT2lXLb7xtw/exec';
+        const ADMIN_USER = 'Root';
+        const ADMIN_PASS = 'anna1981';
+        let isLoggedIn = sessionStorage.getItem('admin_logged') === 'true';
+
+        // Проверка сессии
+        if (isLoggedIn) {
+            document.getElementById('loginBox').classList.add('hidden');
+            document.getElementById('adminBox').classList.add('active');
+            loadAdminNews();
+        }
+
+        function login() {
+            const u = document.getElementById('loginUser').value.trim();
+            const p = document.getElementById('loginPass').value.trim();
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                sessionStorage.setItem('admin_logged', 'true');
+                document.getElementById('loginBox').classList.add('hidden');
+                document.getElementById('adminBox').classList.add('active');
+                loadAdminNews();
+            } else {
+                document.getElementById('loginError').textContent = 'Неверный логин или пароль';
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('admin_logged');
+            location.reload();
+        }
+
+        async function loadAdminNews() {
+            const tbody = document.getElementById('adminNewsTable');
+            try {
+                const res = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
+                const data = await res.json();
+                if (!data.news) return;
+                tbody.innerHTML = data.news.map(n => `
+                    <tr>
+                        <td>${n.title}</td>
+                        <td>${n.status || 'опубликовано'}</td>
+                        <td>
+                            <button style="width:auto; padding:6px 10px; margin-right:5px;" onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
+                            <button style="width:auto; padding:6px 10px; background:#f43f5e;" onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        let currentEditId = null;
+        function openNewsForm() {
+            currentEditId = null;
+            document.getElementById('editorTitle').textContent = 'Новая новость';
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsContent').value = '';
+            document.getElementById('newsImages').value = '';
+            document.getElementById('newsPublishDate').value = '';
+            initEmojiPicker();
+            flatpickr("#newsPublishDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: new Date() });
+            document.getElementById('editorModal').style.display = 'flex';
+        }
+
+        function editNews(id) {
+            fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`)
+                .then(r => r.json())
+                .then(data => {
+                    const item = data.news.find(n => n.id === id);
+                    if (!item) return;
+                    currentEditId = id;
+                    document.getElementById('editorTitle').textContent = 'Редактировать новость';
+                    document.getElementById('newsTitle').value = item.title;
+                    document.getElementById('newsContent').value = item.content;
+                    document.getElementById('newsPublishDate').value = item.publishDate;
+                    initEmojiPicker();
+                    flatpickr("#newsPublishDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: item.publishDate });
+                    document.getElementById('editorModal').style.display = 'flex';
+                });
+        }
+
+        function closeNewsEditor() {
+            document.getElementById('editorModal').style.display = 'none';
+        }
+
+        function initEmojiPicker() {
+            const picker = document.getElementById('emojiPicker');
+            const emojis = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥'];
+            picker.innerHTML = emojis.map(e => `<button class="emoji-btn" onclick="document.getElementById('newsContent').value+='${e}'">${e}</button>`).join('');
+        }
+
+        async function saveNews() {
+            const title = document.getElementById('newsTitle').value.trim();
+            const content = document.getElementById('newsContent').value.trim();
+            const publishDate = document.getElementById('newsPublishDate').value.trim() || new Date().toISOString();
+            const files = document.getElementById('newsImages').files;
+
+            if (!title || !content) {
+                document.getElementById('editorError').textContent = 'Заполните заголовок и текст';
+                return;
+            }
+
+            let imageUrls = [];
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append('file', file);
+                try {
+                    const uploadResp = await fetch(`${API_URL}?action=upload&user=${ADMIN_USER}&pass=${ADMIN_PASS}`, { method: 'POST', body: formData });
+                    const uploadData = await uploadResp.json();
+                    if (uploadData.url) imageUrls.push(uploadData.url);
+                } catch(e) { console.error(e); }
+            }
+
+            const payload = {
+                action: currentEditId ? 'newsUpdate' : 'newsAdd',
+                user: ADMIN_USER,
+                pass: ADMIN_PASS,
+                title,
+                content,
+                images: imageUrls.join('|'),
+                publishDate
+            };
+            if (currentEditId) payload.id = currentEditId;
+
+            try {
+                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const result = await response.json();
+                if (result.success) {
+                    closeNewsEditor();
+                    loadAdminNews();
+                } else {
+                    document.getElementById('editorError').textContent = 'Ошибка сохранения';
+                }
+            } catch(e) {
+                document.getElementById('editorError').textContent = 'Ошибка соединения';
+            }
+        }
+
+        async function deleteNews(id) {
+            if (!confirm('Удалить новость?')) return;
+            await fetch(`${API_URL}?action=newsDelete&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
+            loadAdminNews();
+        }
+    </script>
+</body>
+</html>
