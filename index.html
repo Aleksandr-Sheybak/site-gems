@@ -8,14 +8,8 @@
 
     <!-- Яндекс.Карты -->
     <script src="https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ_ЯНДЕКС&lang=ru_RU"></script>
-    <!-- Виджет ВК -->
-    <script src="https://vk.com/js/api/openapi.js?169"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Flatpickr (календарь + время) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
 
     <style>
         :root {
@@ -25,7 +19,6 @@
             --lightblue: #38bdf8;
             --emerald: #10b981;
             --orange: #f97316;
-            --raspberry: #f43f5e;
             --font: 'Inter', 'Segoe UI', Arial, sans-serif;
             --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
             --shadow: 0 8px 25px rgba(0,0,0,0.06);
@@ -72,26 +65,18 @@
         .logo-text { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.4px; }
         .logo-text .highlight { background: linear-gradient(135deg, #f97316, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-style: italic; }
         .nav-links { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-        .nav-links a, .nav-links button { color: var(--darkblue); text-decoration: none; font-weight: 500; font-size: 15px; transition: var(--transition); background: none; border: none; cursor: pointer; padding: 8px 0; position: relative; display: flex; align-items: center; gap: 6px; }
-        .nav-links a::after, .nav-links button::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--purple); transition: width 0.25s; }
-        .nav-links a:hover::after, .nav-links button:hover::after { width: 100%; }
-        .nav-links a:hover, .nav-links button:hover { color: var(--purple); }
+        .nav-links a { color: var(--darkblue); text-decoration: none; font-weight: 500; font-size: 15px; transition: var(--transition); padding: 8px 0; position: relative; display: flex; align-items: center; gap: 6px; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--purple); transition: width 0.25s; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--purple); }
         .header-phone { color: var(--purple); font-weight: 600; font-size: 16px; text-decoration: none; margin-left: 8px; }
         .header-socials { display: flex; gap: 8px; margin-left: 12px; }
         .header-socials a { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--lightblue); color: white; border-radius: 50%; font-size: 16px; transition: var(--transition); text-decoration: none; }
         .header-socials a:hover { background: var(--darkblue); transform: translateY(-2px); }
-        .burger { display: none; }
-        @media (min-width: 769px) { .burger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 10px; } }
-        .burger span { display: block; width: 24px; height: 2px; background-color: var(--darkblue); border-radius: 2px; }
-        .side-menu { position: fixed; top: 0; right: -320px; width: 280px; height: 100%; background: white; box-shadow: -8px 0 25px rgba(0,0,0,0.1); transition: right 0.3s; z-index: 200; padding: 80px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
-        .side-menu.open { right: 0; }
-        .side-menu a, .side-menu button { display: block; padding: 12px 16px; color: var(--darkblue); text-decoration: none; font-size: 15px; border-radius: 12px; background: none; border: none; text-align: left; cursor: pointer; transition: background 0.2s; }
-        .side-menu a:hover, .side-menu button:hover { background: #f1f5f9; }
-        .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 26px; cursor: pointer; color: var(--darkblue); }
-        @media (max-width: 768px) { .header { justify-content: center; } .nav-links, .header-phone, .header-socials, .burger { display: none; } }
+        @media (max-width: 768px) { .header { justify-content: center; } .nav-links, .header-phone, .header-socials { display: none; } }
         .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); box-shadow: 0 -2px 10px rgba(0,0,0,0.04); z-index: 100; padding: 10px 20px; justify-content: space-around; align-items: center; }
         @media (max-width: 768px) { .mobile-nav { display: flex; } }
-        .mobile-nav a, .mobile-nav button { display: flex; flex-direction: column; align-items: center; color: var(--darkblue); text-decoration: none; font-size: 11px; font-weight: 500; gap: 4px; background: none; border: none; cursor: pointer; }
+        .mobile-nav a { display: flex; flex-direction: column; align-items: center; color: var(--darkblue); text-decoration: none; font-size: 11px; font-weight: 500; gap: 4px; }
         .mobile-nav i { font-size: 18px; }
 
         section { margin: 80px 0; }
@@ -124,21 +109,22 @@
         .news-text.open { max-height: 1000px; }
         .read-more-btn { background: none; border: none; color: var(--purple); font-weight: 500; cursor: pointer; margin-top: 8px; display: inline-block; }
 
-        /* Админка */
-        .admin-panel { display: none; background: white; border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow-lg); margin-top: 20px; }
-        .admin-panel.active { display: block; }
-        .admin-table { width: 100%; border-collapse: collapse; }
-        .admin-table th, .admin-table td { padding: 14px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-        .admin-table th { color: var(--purple); font-weight: 600; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 300; display: flex; justify-content: center; align-items: center; }
-        .modal-content { background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 560px; max-height: 85vh; overflow-y: auto; position: relative; }
-        .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8; }
-        .modal-close:hover { color: var(--darkblue); }
+        /* Подарочный сертификат */
+        .gift-card { display: flex; flex-wrap: wrap; align-items: center; gap: 30px; background: white; border-radius: var(--radius); padding: 35px; box-shadow: var(--shadow); }
+        .gift-img { width: 250px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+        /* FAQ */
+        .faq-item { background: white; border-radius: 14px; padding: 18px; margin-bottom: 10px; box-shadow: var(--shadow-sm); }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; width: 100%; background: none; border: none; font-weight: 600; font-size: 16px; cursor: pointer; color: var(--darkblue); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s; }
+        .faq-answer.open { max-height: 300px; padding-top: 10px; }
+
+        /* Педагог */
+        .teacher-card { display: flex; align-items: center; gap: 25px; flex-wrap: wrap; background: white; border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow); }
+        .teacher-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--emerald); }
 
         footer { text-align: center; padding: 35px; color: #94a3b8; border-top: 1px solid #e2e8f0; margin-top: 80px; }
         footer a { color: var(--purple); text-decoration: none; }
-        .scroll-top-btn { position: fixed; bottom: 90px; right: 30px; width: 44px; height: 44px; background: var(--purple); color: white; border: none; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 6px 18px rgba(124,58,237,0.3); transition: var(--transition); display: none; z-index: 50; }
-        .scroll-top-btn.visible { display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -154,26 +140,13 @@
             <a href="#news">Новости</a>
             <a href="#faq">FAQ</a>
             <a href="#contacts">Контакты</a>
-            <button id="newsMenuBtn">Отзывы</button>
             <a href="tel:89667167436" class="header-phone">89667167436</a>
             <div class="header-socials">
                 <a href="https://web.max.ru/-73411458885837" target="_blank" title="MAX"><i class="fas fa-comment"></i></a>
                 <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i></a>
             </div>
-            <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
         </div>
     </header>
-
-    <div class="side-menu" id="sideMenu">
-        <button class="close-btn" id="closeMenu">&times;</button>
-        <a href="#about">О студии</a>
-        <a href="#workshops">Мастер-классы</a>
-        <a href="#gift">Сертификаты</a>
-        <a href="#news">Новости</a>
-        <a href="#faq">FAQ</a>
-        <a href="#contacts">Контакты</a>
-        <button id="adminLoginBtn">Вход администратора</button>
-    </div>
 
     <div class="mobile-nav">
         <a href="tel:89667167436"><i class="fas fa-phone"></i> Звонок</a>
@@ -209,8 +182,8 @@
 
         <section id="gift">
             <h2 class="section-title">Подарочные сертификаты</h2>
-            <div style="display:flex; flex-wrap:wrap; gap:30px; background:white; border-radius:var(--radius); padding:30px; box-shadow:var(--shadow);">
-                <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" style="width:220px; border-radius:16px;">
+            <div class="gift-card">
+                <img class="gift-img" src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат">
                 <div>
                     <h3 style="margin-bottom:10px;">Сертификат на одно занятие</h3>
                     <p>Посещение любого курса на выбор. Отличный подарок!</p>
@@ -227,26 +200,26 @@
 
         <section id="faq">
             <h2 class="section-title">Частые вопросы</h2>
-            <div style="max-width:700px;">
-                <div class="faq-item" style="background:white; border-radius:14px; padding:18px; margin-bottom:10px; box-shadow:var(--shadow-sm);">
-                    <button onclick="this.nextElementSibling.classList.toggle('open')" style="display:flex; justify-content:space-between; width:100%; background:none; border:none; font-weight:600; cursor:pointer;">С какого возраста? <i class="fas fa-chevron-down"></i></button>
-                    <div class="expanded-content" style="max-height:0; overflow:hidden;"><p style="padding-top:10px;">С 6 лет. Группы по возрасту.</p></div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.nextElementSibling.classList.toggle('open')">С какого возраста? <i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer"><p>С 6 лет. Группы по возрасту.</p></div>
                 </div>
-                <div class="faq-item" style="background:white; border-radius:14px; padding:18px; margin-bottom:10px; box-shadow:var(--shadow-sm);">
-                    <button onclick="this.nextElementSibling.classList.toggle('open')" style="display:flex; justify-content:space-between; width:100%; background:none; border:none; font-weight:600; cursor:pointer;">Длительность? <i class="fas fa-chevron-down"></i></button>
-                    <div class="expanded-content" style="max-height:0; overflow:hidden;"><p style="padding-top:10px;">60 минут (Клуб выходного дня — 2 часа).</p></div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.nextElementSibling.classList.toggle('open')">Длительность? <i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer"><p>60 минут (Клуб выходного дня — 2 часа).</p></div>
                 </div>
-                <div class="faq-item" style="background:white; border-radius:14px; padding:18px; margin-bottom:10px; box-shadow:var(--shadow-sm);">
-                    <button onclick="this.nextElementSibling.classList.toggle('open')" style="display:flex; justify-content:space-between; width:100%; background:none; border:none; font-weight:600; cursor:pointer;">Запись? <i class="fas fa-chevron-down"></i></button>
-                    <div class="expanded-content" style="max-height:0; overflow:hidden;"><p style="padding-top:10px;">По телефону 89667167436 или в ВК.</p></div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.nextElementSibling.classList.toggle('open')">Запись? <i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer"><p>По телефону 89667167436 или в ВК.</p></div>
                 </div>
             </div>
         </section>
 
         <section id="teacher">
             <h2 class="section-title">Педагог</h2>
-            <div style="display:flex; align-items:center; gap:25px; flex-wrap:wrap; background:white; border-radius:var(--radius); padding:30px; box-shadow:var(--shadow);">
-                <img src="https://sun9-38.userapi.com/s/v1/ig2/nuPCIcGJ6D3yYfZL47ig_7XNs95a0jYPp8jDE31_CN9oPOTI_-5NyHLJnVtedCrB7h2ZSxp7YISluKOaW7E7KOWb.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&u=P1z34IBA8ylP8TkeihIRe2r43afh2iiqAjelFhv7Yus&cs=1920x0" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid var(--emerald);">
+            <div class="teacher-card">
+                <img class="teacher-avatar" src="https://sun9-38.userapi.com/s/v1/ig2/nuPCIcGJ6D3yYfZL47ig_7XNs95a0jYPp8jDE31_CN9oPOTI_-5NyHLJnVtedCrB7h2ZSxp7YISluKOaW7E7KOWb.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&u=P1z34IBA8ylP8TkeihIRe2r43afh2iiqAjelFhv7Yus&cs=1920x0" alt="Педагог">
                 <div>
                     <h3>Шейбак Светлана Сергеевна</h3>
                     <p>Филолог, педагог, стаж 3 года.</p>
@@ -261,54 +234,14 @@
             <p>Техподдержка: <a href="tel:89090226229">89090226229</a> (Студия программирования)</p>
             <div id="map" style="height:300px; border-radius:20px; margin-top:15px;"></div>
         </section>
-
-        <div class="admin-panel" id="adminPanel">
-            <h2 style="margin-bottom:20px;">Управление новостями</h2>
-            <button class="btn-expand" onclick="openNewsForm()">+ Новая новость</button>
-            <table class="admin-table" style="margin-top:20px;">
-                <thead><tr><th>Заголовок</th><th>Статус</th><th></th></tr></thead>
-                <tbody id="adminNewsTable"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Модалка входа -->
-    <div class="modal" id="loginModal" style="display:none;">
-        <div class="modal-content">
-            <button class="modal-close" onclick="document.getElementById('loginModal').style.display='none'">&times;</button>
-            <h3>Вход</h3>
-            <input type="text" id="loginUser" placeholder="Логин" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;">
-            <input type="password" id="loginPass" placeholder="Пароль" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;">
-            <button class="btn-expand" onclick="doAdminLogin()" style="width:100%">Войти</button>
-            <p id="loginError" style="color:red;text-align:center;margin-top:10px;"></p>
-        </div>
-    </div>
-
-    <!-- Модалка редактора новости -->
-    <div class="modal" id="newsEditorModal" style="display:none;">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeNewsEditor()">&times;</button>
-            <h3 id="editorTitle">Новая новость</h3>
-            <input id="newsTitle" placeholder="Заголовок" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;">
-            <textarea id="newsContent" rows="4" placeholder="Текст" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;"></textarea>
-            <input type="file" id="newsImages" multiple accept="image/*" style="margin:10px 0;">
-            <div class="emoji-picker" id="emojiPicker"></div>
-            <input type="text" id="newsPublishDate" placeholder="Дата и время (Екб)" style="width:100%;margin:10px 0;padding:10px;border:1px solid #e2e8f0;border-radius:8px;">
-            <button class="btn-expand" onclick="saveNews()">Сохранить</button>
-            <button class="btn-expand" onclick="closeNewsEditor()" style="background:#cbd5e1;margin-left:10px;">Отмена</button>
-            <div id="editorError" style="color:red;margin-top:10px;"></div>
-        </div>
     </div>
 
     <footer>
         <p>© 2025 Самоцветы, Сысерть | Техподдержка: 89090226229</p>
     </footer>
-    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbyhEpqT77tM3Em5EBuvdnlUR-kFVWYbrYiguVZQvTckbCW-BslerPAn_xzcT2lXLb7xtw/exec';
-        const ADMIN_USER = 'Root';
-        const ADMIN_PASS = 'anna1981';
 
         // Карта
         ymaps.ready(() => {
@@ -344,187 +277,15 @@
         setInterval(loadNews, 300000);
 
         function toggleNewsText(id) {
-            const textEl = document.getElementById('text-' + id);
-            textEl.classList.toggle('open');
+            document.getElementById('text-' + id).classList.toggle('open');
         }
 
-        // Админка
-        let isAdmin = sessionStorage.getItem('sa_admin') === 'true';
-        document.getElementById('burgerBtn').onclick = () => document.getElementById('sideMenu').classList.add('open');
-        document.getElementById('closeMenu').onclick = () => document.getElementById('sideMenu').classList.remove('open');
-        document.getElementById('adminLoginBtn').onclick = () => document.getElementById('loginModal').style.display = 'flex';
-        document.getElementById('loginModal').addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
-
-        function doAdminLogin() {
-            const u = document.getElementById('loginUser').value.trim();
-            const p = document.getElementById('loginPass').value.trim();
-            if (u === ADMIN_USER && p === ADMIN_PASS) {
-                sessionStorage.setItem('sa_admin', 'true');
-                isAdmin = true;
-                document.getElementById('loginModal').style.display = 'none';
-                document.getElementById('adminPanel').classList.add('active');
-                loadAdminNews();
-            } else {
-                document.getElementById('loginError').textContent = 'Неверные данные';
-            }
-        }
-
-        async function loadAdminNews() {
-            const tbody = document.getElementById('adminNewsTable');
-            try {
-                const res = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
-                const data = await res.json();
-                if (!data.news) return;
-                tbody.innerHTML = data.news.map(n => `
-                    <tr>
-                        <td>${n.title}</td>
-                        <td>${n.status || 'опубликовано'}</td>
-                        <td>
-                            <button class="btn-expand" onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn-expand" onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-            } catch(e) {
-                console.error('Ошибка загрузки админ-новостей', e);
-            }
-        }
-
-        let currentEditId = null;
-        function openNewsForm() {
-            currentEditId = null;
-            document.getElementById('editorTitle').textContent = 'Новая новость';
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsContent').value = '';
-            document.getElementById('newsImages').value = '';
-            document.getElementById('newsPublishDate').value = '';
-            initEmojiPicker();
-            flatpickr("#newsPublishDate", {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i",
-                time_24hr: true,
-                locale: "ru",
-                defaultDate: new Date()
-            });
-            document.getElementById('newsEditorModal').style.display = 'flex';
-        }
-
-        function editNews(id) {
-            fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`)
-                .then(r => r.json())
-                .then(data => {
-                    const item = data.news.find(n => n.id === id);
-                    if (!item) return;
-                    currentEditId = id;
-                    document.getElementById('editorTitle').textContent = 'Редактирование новости';
-                    document.getElementById('newsTitle').value = item.title;
-                    document.getElementById('newsContent').value = item.content;
-                    document.getElementById('newsPublishDate').value = item.publishDate;
-                    initEmojiPicker();
-                    flatpickr("#newsPublishDate", {
-                        enableTime: true,
-                        dateFormat: "Y-m-d H:i",
-                        time_24hr: true,
-                        locale: "ru",
-                        defaultDate: item.publishDate
-                    });
-                    document.getElementById('newsEditorModal').style.display = 'flex';
-                });
-        }
-
-        function closeNewsEditor() {
-            document.getElementById('newsEditorModal').style.display = 'none';
-        }
-
-        function initEmojiPicker() {
-            const picker = document.getElementById('emojiPicker');
-            const emojis = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥'];
-            picker.innerHTML = emojis.map(e => `<button class="emoji-btn" style="font-size:20px; cursor:pointer; background:none; border:1px solid #ddd; border-radius:8px; padding:4px 8px; margin:4px;" onclick="document.getElementById('newsContent').value+='${e}'">${e}</button>`).join('');
-        }
-
-        async function saveNews() {
-            const title = document.getElementById('newsTitle').value.trim();
-            const content = document.getElementById('newsContent').value.trim();
-            const publishDate = document.getElementById('newsPublishDate').value.trim() || new Date().toISOString();
-            const files = document.getElementById('newsImages').files;
-
-            if (!title || !content) {
-                document.getElementById('editorError').textContent = 'Заполните заголовок и текст';
-                return;
-            }
-
-            let imageUrls = [];
-            for (const file of files) {
-                const formData = new FormData();
-                formData.append('file', file);
-                try {
-                    const uploadResp = await fetch(`${API_URL}?action=upload&user=${ADMIN_USER}&pass=${ADMIN_PASS}`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const uploadData = await uploadResp.json();
-                    if (uploadData.url) imageUrls.push(uploadData.url);
-                } catch(e) {
-                    console.error('Ошибка загрузки файла', e);
-                }
-            }
-
-            const payload = {
-                action: currentEditId ? 'newsUpdate' : 'newsAdd',
-                user: ADMIN_USER,
-                pass: ADMIN_PASS,
-                title,
-                content,
-                images: imageUrls.join('|'),
-                publishDate
-            };
-            if (currentEditId) payload.id = currentEditId;
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    closeNewsEditor();
-                    loadAdminNews();
-                    loadNews();
-                } else {
-                    document.getElementById('editorError').textContent = 'Ошибка сохранения';
-                }
-            } catch(e) {
-                document.getElementById('editorError').textContent = 'Ошибка соединения';
-            }
-        }
-
-        async function deleteNews(id) {
-            if (!confirm('Удалить новость безвозвратно?')) return;
-            await fetch(`${API_URL}?action=newsDelete&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
-            loadAdminNews();
-            loadNews();
-        }
-
-        // Проверка сессии при загрузке
-        if (isAdmin) {
-            document.getElementById('adminPanel').classList.add('active');
-            loadAdminNews();
-        }
-
-        // Разворачивание блоков
         function toggleExpand(btn) {
             const content = btn.nextElementSibling;
             content.classList.toggle('open');
             const icon = btn.querySelector('i');
-            if (icon) {
-                icon.className = content.classList.contains('open') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
-            }
+            if (icon) icon.className = content.classList.contains('open') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
         }
-
-        // Кнопка "Наверх"
-        window.addEventListener('scroll', () => {
-            document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 400);
-        });
     </script>
 </body>
 </html>
