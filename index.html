@@ -418,13 +418,48 @@
         </section>
 
         <!-- Новости -->
-        <section id="news" class="fade-in">
-            <div class="section-header">
-                <h2 class="section-title">Новости</h2>
-                <div class="section-underline"></div>
-            </div>
-            <div class="news-grid" id="newsContainer">Загрузка...</div>
-        </section>
+        <!-- Секция новостей -->
+<section id="news">
+    <h2 style="text-align:center; font-size: 2.5rem; margin-bottom: 30px;">Новости</h2>
+    <div class="news-grid" id="newsContainer">Загрузка...</div>
+</section>
+
+<script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyhEpqT77tM3Em5EBuvdnlUR-kFVWYbrYiguVZQvTckbCW-BslerPAn_xzcT2lXLb7xtw/exec';
+
+    function loadNews() {
+        var container = document.getElementById('newsContainer');
+        container.innerHTML = 'Загрузка...';
+        var callbackName = 'jsonp_news_' + Math.random().toString(36).substr(2, 9);
+        window[callbackName] = function(data) {
+            delete window[callbackName];
+            if (!data.news || !data.news.length) {
+                container.innerHTML = '<p style="text-align:center; color:#94a3b8;">Новостей пока нет.</p>';
+                return;
+            }
+            var latest = data.news.slice(0, 3);
+            container.innerHTML = latest.map(function(n) {
+                var dateStr = n.publishDate ? new Date(n.publishDate).toLocaleString('ru-RU', {
+                    timeZone: 'Asia/Yekaterinburg',
+                    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                }) : '';
+                return '<div class="news-card">' +
+                    (n.images && n.images.length ? '<img src="' + n.images[0] + '" onerror="this.style.display=\'none\'" style="height:200px; object-fit:cover; width:100%; border-radius:20px;">' : '') +
+                    (dateStr ? '<div class="news-date">' + dateStr + '</div>' : '') +
+                    '<div class="news-title">' + n.title + '</div>' +
+                    '<div class="news-text" id="text-' + n.id + '">' + n.content + '</div>' +
+                    '<button class="read-more-btn" onclick="document.getElementById(\'text-' + n.id + '\').classList.toggle(\'open\'); this.textContent = document.getElementById(\'text-' + n.id + '\').classList.contains(\'open\') ? \'Свернуть\' : \'Читать дальше\';">Читать дальше</button>' +
+                '</div>';
+            }).join('');
+        };
+        var script = document.createElement('script');
+        script.src = API_URL + '?action=news&callback=' + callbackName;
+        document.body.appendChild(script);
+    }
+
+    loadNews();
+    setInterval(loadNews, 300000);
+</script>
 
         <!-- FAQ -->
         <section id="faq" class="fade-in">
