@@ -48,17 +48,21 @@
             transition: background 0.3s, color 0.3s;
             overflow-x: hidden;
         }
+        /* Фон с анимированным градиентом для эффекта "водянистости" */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.03) 1px, transparent 1px),
-                              radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
-                              linear-gradient(0deg, transparent 24px, rgba(0,0,0,0.01) 25px),
-                              linear-gradient(90deg, transparent 24px, rgba(0,0,0,0.01) 25px);
-            background-size: 40px 40px, 60px 60px, 25px 25px, 25px 25px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(56, 189, 248, 0.08) 50%, rgba(16, 185, 129, 0.05) 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
             pointer-events: none;
             z-index: 0;
+        }
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
 
@@ -102,29 +106,132 @@
         .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .section-underline { width: 70px; height: 4px; background: linear-gradient(to right, #7c3aed, #38bdf8); margin: 20px auto; border-radius: 4px; }
 
-        /* О студии – улучшенный блок */
-        .about-section {
+        /* О студии – водянистый, наполненный блок */
+        .about-hero {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 30px;
-            margin-top: 50px;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
         }
         .about-logo-large {
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid var(--purple-light);
-            box-shadow: 0 0 40px rgba(124, 58, 237, 0.3);
+            border: 6px solid rgba(124, 58, 237, 0.3);
+            box-shadow: 0 0 60px rgba(124, 58, 237, 0.4);
+            animation: float 4s ease-in-out infinite;
         }
-        .about-text {
-            max-width: 600px;
-            text-align: center;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        .about-hero-text {
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        body.dark .about-hero-text {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .about-hero-text h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--darkblue);
+        }
+        .about-hero-text p {
             font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
         }
-        .about-text p { margin-bottom: 20px; }
-        .about-text i { color: var(--purple); margin-right: 8px; width: 20px; }
+        .about-hero-text .highlight {
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        /* Сетка "водянистых" карточек с ценностями */
+        .about-values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .value-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        body.dark .value-card {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .value-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.2);
+            border-color: var(--purple-light);
+        }
+        .value-icon {
+            font-size: 40px;
+            color: var(--purple);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .value-card:hover .value-icon { transform: scale(1.2); }
+        .value-card h4 { font-size: 1.4rem; margin-bottom: 10px; color: var(--darkblue); }
+        .value-card p { color: var(--text); font-size: 0.95rem; }
+
+        /* Таймлайн (вдохновлено конкурентом) */
+        .timeline {
+            position: relative;
+            max-width: 700px;
+            margin: 40px auto 0;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--purple), var(--lightblue));
+            border-radius: 3px;
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            margin-bottom: 30px;
+            padding-left: 50px;
+            position: relative;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 20px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            background: var(--purple);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+        }
+        .timeline-content h4 { font-size: 1.2rem; color: var(--darkblue); margin-bottom: 5px; }
+        .timeline-content p { color: var(--text); }
 
         /* Преимущества – центрированные */
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; justify-items: center; text-align: center; }
@@ -220,6 +327,9 @@
         @media (max-width: 768px) {
             .section-title { font-size: 2.2rem; }
             .about-logo-large { width: 140px; height: 140px; }
+            .timeline::before { left: 15px; }
+            .timeline-item { padding-left: 40px; }
+            .timeline-dot { left: 15px; }
         }
     </style>
 </head>
@@ -254,19 +364,76 @@
     </div>
 
     <div class="container">
-        <!-- О студии: с большим логотипом -->
+        <!-- О студии: водянистый, наполненный блок -->
         <section id="about">
             <div class="section-header">
                 <h2 class="section-title">О студии</h2>
                 <div class="section-underline"></div>
             </div>
-            <div class="about-section">
+
+            <!-- Hero: логотип + описание -->
+            <div class="about-hero">
                 <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип Самоцветы" class="about-logo-large">
-                <div class="about-text">
-                    <p style="font-size: 1.3rem; font-weight: 300;">Студия «Самоцветы» открывает мир творчества, грамотной речи и красивого письма для детей Сысерти.</p>
-                    <p><i class="fas fa-user-graduate"></i> <strong>Педагог:</strong> Шейбак Светлана Сергеевна — дипломированный филолог с опытом работы более 1 года.</p>
-                    <p><i class="fas fa-map-marker-alt"></i> <strong>Где проходят занятия:</strong> две городские библиотеки в самом центре Сысерти.</p>
-                    <p><i class="fas fa-graduation-cap"></i> <strong>Авторские методики:</strong> учим писать, говорить и читать с удовольствием, без стресса.</p>
+                <div class="about-hero-text">
+                    <h3>Студия «Самоцветы»</h3>
+                    <p><span class="highlight">Миссия:</span> помочь каждому ребёнку раскрыть творческий потенциал, обрести уверенность в себе и полюбить процесс обучения через игру, творчество и выразительное чтение.</p>
+                    <p>Мы работаем с <span class="highlight">2024 года</span> и уже помогли десяткам детей улучшить почерк, начать говорить красиво и читать осмысленно.</p>
+                </div>
+            </div>
+
+            <!-- Ценности (в стиле "водянистых" плиток) -->
+            <div class="about-values-grid">
+                <div class="value-card">
+                    <i class="fas fa-heart value-icon"></i>
+                    <h4>Забота и внимание</h4>
+                    <p>Каждый ребёнок для нас — личность. Мы создаём безопасную среду, где можно ошибаться, пробовать и расти.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-seedling value-icon"></i>
+                    <h4>Развитие и рост</h4>
+                    <p>Мы постоянно учимся сами и помогаем детям двигаться вперёд, осваивая новые навыки в комфортном темпе.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-handshake value-icon"></i>
+                    <h4>Поддержка и сотрудничество</h4>
+                    <p>Родители, педагог и ребёнок — одна команда. Мы открыты к диалогу и совместно строим образовательный маршрут.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-star value-icon"></i>
+                    <h4>Качество и результат</h4>
+                    <p>Авторские методики, малые группы и индивидуальный подход обеспечивают видимый прогресс уже после первых занятий.</p>
+                </div>
+            </div>
+
+            <!-- Таймлайн (как у конкурента) -->
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>2024 год — открытие студии</h4>
+                        <p>Первые мастер-классы в Сысертской городской библиотеке. Начало пути.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>2024 год — запуск курса каллиграфии</h4>
+                        <p>Авторская программа по коррекции почерка для детей 6–9 лет.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>2025 год — расширение направлений</h4>
+                        <p>Открытие Клуба выходного дня, подготовка курса ораторского мастерства.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>2025 год — планы на будущее</h4>
+                        <p>Запуск онлайн-занятий, новые творческие направления и регулярные бесплатные мастер-классы.</p>
+                    </div>
                 </div>
             </div>
         </section>
