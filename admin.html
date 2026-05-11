@@ -230,7 +230,6 @@
             <h3 id="editorTitle">Новая новость</h3>
             <input type="text" id="newsTitle" placeholder="Заголовок">
             <textarea id="newsContent" rows="4" placeholder="Текст новости"></textarea>
-            <!-- НОВОЕ: поле ссылки на изображение -->
             <label style="display:block; margin-top:15px;">📷 Ссылка на изображение (URL):</label>
             <input type="text" id="newsImageUrl" placeholder="https://example.com/image.jpg" oninput="previewImage()">
             <img id="imagePreview" class="image-preview" alt="Предпросмотр" />
@@ -305,9 +304,9 @@
                     <tr>
                         <td>${n.title}</td>
                         <td>${n.status || 'опубликовано'}</td>
-                        <td>
-                            <button onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
-                            <button onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
+                        <td style="display:flex; gap:8px;">
+                            <button onclick="editNews('${n.id}')" style="width:auto; padding:6px 10px;"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteNews('${n.id}')" style="width:auto; padding:6px 10px; background:#f43f5e;"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
                 `).join('');
@@ -380,16 +379,13 @@
                 return;
             }
 
-            // Изображение берётся из поля ссылки (если не пустое)
-            const images = imageUrl ? imageUrl : '';
-
             const params = new URLSearchParams({
                 action: currentEditId ? 'newsUpdate' : 'newsAdd',
                 user: ADMIN_USER,
                 pass: ADMIN_PASS,
                 title,
                 content,
-                images,
+                images: imageUrl || '',
                 publishDate
             });
             if (currentEditId) params.append('id', currentEditId);
