@@ -97,7 +97,7 @@
         .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-block; }
         .section-underline { width: 70px; height: 4px; background: linear-gradient(to right, #7c3aed, #38bdf8); border-radius: 4px; margin-bottom: 20px; }
 
-        /* О студии – увеличенный логотип и много текста */
+        /* О студии – увеличенный логотип и таймлайн */
         .about-hero {
             display: flex; align-items: center; justify-content: flex-start;
             gap: 50px; flex-wrap: wrap; margin-bottom: 40px;
@@ -107,6 +107,45 @@
         .about-info h3 { font-size: 2.2rem; margin-bottom: 15px; color: var(--darkblue); }
         .about-info p { margin-bottom: 18px; display: flex; align-items: flex-start; gap: 12px; font-size: 1.05rem; }
         .about-info i { color: var(--purple); font-size: 1.2rem; width: 24px; text-align: center; margin-top: 4px; }
+
+        /* Таймлайн */
+        .timeline {
+            position: relative;
+            max-width: 600px;
+            margin: 40px 0 0;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 18px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--purple), var(--lightblue));
+            border-radius: 3px;
+        }
+        .timeline-item {
+            margin-bottom: 30px;
+            padding-left: 50px;
+            position: relative;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 11px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: var(--purple);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+        }
+        .timeline-content h4 { font-size: 1.3rem; color: var(--darkblue); margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .timeline-content p { color: var(--text); }
+        .timeline-content i { color: var(--purple); }
+
+        .error-report { margin-top: 30px; font-size: 0.95rem; }
+        .error-report a { color: var(--raspberry); font-weight: 600; }
 
         /* Места */
         .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; }
@@ -119,7 +158,7 @@
         .venue-body li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         .venue-body li i { color: var(--purple); width: 20px; text-align: center; }
 
-        /* Карточки курсов – ровные кнопки */
+        /* Карточки курсов */
         .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; align-items: stretch; }
         .course-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); display: flex; flex-direction: column; }
         .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
@@ -167,7 +206,7 @@
         .qr-section { display: flex; gap: 30px; justify-content: flex-start; align-items: center; margin-top: 20px; }
         .qr-code { width: 100px; border-radius: 16px; }
 
-        /* Педагог / программист */
+        /* Команда */
         .team-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
         .team-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
         .team-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--emerald); }
@@ -179,10 +218,6 @@
         body.dark .header, body.dark .course-card, body.dark .news-card, body.dark .venue-card, body.dark .gift-container, body.dark .team-card, body.dark .faq-item { background: #1e293b; border-color: #334155; }
         body.dark .btn-expand { background: #4c1d95; }
         footer { text-align: center; padding: 30px; border-top: 1px solid var(--card-border); margin-top: 60px; color: var(--text); }
-
-        .error-report { margin-top: 20px; font-size: 0.95rem; }
-        .error-report a { color: var(--raspberry); }
-        .phone-btn { background: var(--purple); color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; display: inline-block; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -217,7 +252,7 @@
     </div>
 
     <div class="container">
-        <!-- О студии – увеличенный логотип и в 2 раза больше текста -->
+        <!-- О студии с таймлайном -->
         <section id="about" style="margin-top: 30px;">
             <div class="about-hero">
                 <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип" class="about-logo-large">
@@ -226,10 +261,34 @@
                     <p><i class="fas fa-map-pin"></i> <strong>Находимся:</strong> г. Сысерть, ул. Коммуны, 36. Вход со двора пятиэтажного панельного дома, недалеко от остановки. Уютное пространство, где дети чувствуют себя как дома.</p>
                     <p><i class="fas fa-star"></i> <strong>Наша миссия:</strong> Раскрыть творческий потенциал каждого ребёнка, научить говорить красиво, писать уверенно и мыслить свободно. Мы верим, что грамотная речь и аккуратный почерк — фундамент успеха в будущем.</p>
                     <p><i class="fas fa-heart"></i> <strong>Почему мы уникальны:</strong> Авторские методики, малые группы, индивидуальный подход. Мы не просто учим — мы вдохновляем, поддерживаем и создаём среду, в которой ребёнок растёт с радостью. Каждое занятие — это маленькое приключение с играми, творческими заданиями и живым общением.</p>
-                    <p><i class="fas fa-calendar-alt"></i> <strong>Путь развития:</strong> Апрель — бесплатные мастер-классы по каллиграфии. Май — открытие платных групп. Июнь — запуск Клуба выходного дня и курса ораторского мастерства. Мы постоянно расширяемся и прислушиваемся к пожеланиям родителей.</p>
-                    <p><i class="fas fa-smile"></i> <strong>Для кого:</strong> Дети от 5 до 14 лет, которые хотят научиться красиво писать, уверенно выступать и находить новых друзей. Родители, которые ценят качественное дополнительное образование в районе.</p>
                 </div>
             </div>
+
+            <!-- Таймлайн -->
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4><i class="fas fa-calendar-alt"></i> Апрель 2025</h4>
+                        <p>Бесплатные мастер‑классы по каллиграфии. Знакомство с пером, первые шаги к красивому почерку.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4><i class="fas fa-calendar-check"></i> Май 2025</h4>
+                        <p>Открытие платных групп. Индивидуальные и групповые занятия по авторским программам.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4><i class="fas fa-calendar-plus"></i> Июнь 2025</h4>
+                        <p>Запуск Клуба выходного дня и курса ораторского мастерства. Творческие субботы и мастерская слова для детей и подростков.</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="error-report">
                 <i class="fas fa-bug"></i> Нашли ошибку или есть предложение? Напишите или позвоните: <a href="tel:89090226229">89090226229</a>
             </div>
