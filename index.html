@@ -526,7 +526,9 @@
 </section>
 
 <script>
-    // Функция загрузки новостей (JSONP)
+    // Ваш актуальный API URL (должен совпадать с URL развёрнутого Apps Script)
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
+
     function loadNews() {
         const container = document.getElementById('newsContainer');
         container.innerHTML = 'Загрузка...';
@@ -554,7 +556,7 @@
         document.body.appendChild(script);
     }
 
-    // Загружаем новости при открытии и обновляем каждые 5 минут
+    // Первая загрузка и автообновление каждые 5 минут
     loadNews();
     setInterval(loadNews, 300000);
 </script>
