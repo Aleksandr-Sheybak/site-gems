@@ -48,21 +48,17 @@
             transition: background 0.3s, color 0.3s;
             overflow-x: hidden;
         }
-        /* Фон с анимированным градиентом для эффекта "водянистости" */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(56, 189, 248, 0.08) 50%, rgba(16, 185, 129, 0.05) 100%);
-            background-size: 400% 400%;
-            animation: gradientFlow 15s ease infinite;
+            background-image: radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.03) 1px, transparent 1px),
+                              radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+                              linear-gradient(0deg, transparent 24px, rgba(0,0,0,0.01) 25px),
+                              linear-gradient(90deg, transparent 24px, rgba(0,0,0,0.01) 25px);
+            background-size: 40px 40px, 60px 60px, 25px 25px, 25px 25px;
             pointer-events: none;
             z-index: 0;
-        }
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
 
@@ -106,158 +102,47 @@
         .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .section-underline { width: 70px; height: 4px; background: linear-gradient(to right, #7c3aed, #38bdf8); margin: 20px auto; border-radius: 4px; }
 
-        /* О студии – водянистый, наполненный блок */
-        .about-hero {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 60px;
-            flex-wrap: wrap;
-            margin-bottom: 60px;
-        }
-        .about-logo-large {
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 6px solid rgba(124, 58, 237, 0.3);
-            box-shadow: 0 0 60px rgba(124, 58, 237, 0.4);
-            animation: float 4s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-        }
-        .about-hero-text {
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-        body.dark .about-hero-text {
-            background: rgba(30, 41, 59, 0.6);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .about-hero-text h3 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--darkblue);
-        }
-        .about-hero-text p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 15px;
-        }
-        .about-hero-text .highlight {
-            color: var(--purple);
-            font-weight: 600;
-        }
+        /* О студии */
+        .about-hero { display: flex; align-items: center; justify-content: center; gap: 60px; flex-wrap: wrap; margin-bottom: 40px; }
+        .about-logo-large { width: 220px; height: 220px; border-radius: 50%; object-fit: cover; border: 6px solid rgba(124, 58, 237, 0.3); box-shadow: 0 0 60px rgba(124, 58, 237, 0.4); animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
 
-        /* Сетка "водянистых" карточек с ценностями */
-        .about-values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
+        /* Места проведения */
+        .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; }
+        .venue-card {
+            background: var(--card-bg); border-radius: var(--radius); overflow: hidden;
+            box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border);
         }
-        .value-card {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-        body.dark .value-card {
-            background: rgba(30, 41, 59, 0.5);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .value-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.2);
-            border-color: var(--purple-light);
-        }
-        .value-icon {
-            font-size: 40px;
-            color: var(--purple);
-            margin-bottom: 20px;
-            transition: transform 0.3s;
-        }
-        .value-card:hover .value-icon { transform: scale(1.2); }
-        .value-card h4 { font-size: 1.4rem; margin-bottom: 10px; color: var(--darkblue); }
-        .value-card p { color: var(--text); font-size: 0.95rem; }
+        .venue-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .venue-img { height: 200px; background-size: cover; background-position: center; }
+        .venue-body { padding: 25px; }
+        .venue-body h3 { font-size: 1.5rem; margin-bottom: 12px; color: var(--darkblue); display: flex; align-items: center; gap: 8px; }
+        .venue-body ul { list-style: none; padding: 0; }
+        .venue-body li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .venue-body li i { color: var(--purple); width: 20px; text-align: center; }
 
-        /* Таймлайн (вдохновлено конкурентом) */
-        .timeline {
-            position: relative;
-            max-width: 700px;
-            margin: 40px auto 0;
-            padding: 20px 0;
-        }
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(to bottom, var(--purple), var(--lightblue));
-            border-radius: 3px;
-            transform: translateX(-50%);
-        }
-        .timeline-item {
-            margin-bottom: 30px;
-            padding-left: 50px;
-            position: relative;
-        }
-        .timeline-dot {
-            position: absolute;
-            left: 20px;
-            top: 5px;
-            width: 16px;
-            height: 16px;
-            background: var(--purple);
-            border-radius: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
-        }
-        .timeline-content h4 { font-size: 1.2rem; color: var(--darkblue); margin-bottom: 5px; }
-        .timeline-content p { color: var(--text); }
-
-        /* Преимущества – центрированные */
+        /* Преимущества */
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; justify-items: center; text-align: center; }
         .feature-item { background: var(--card-bg); border-radius: var(--radius); padding: 35px 25px; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); width: 100%; }
         .feature-item:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
         .feature-icon { font-size: 44px; color: var(--purple); margin-bottom: 20px; transition: 0.3s; }
         .feature-item:hover .feature-icon { transform: scale(1.2); }
-        .feature-item h3 { margin-bottom: 10px; color: var(--darkblue); }
+        .feature-item h3 { margin-bottom: 10px; }
 
-        /* Карточки курсов – кнопки на одном уровне */
+        /* Карточки курсов */
         .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; align-items: stretch; }
         .course-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); display: flex; flex-direction: column; }
         .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
         .course-img { height: 200px; background-size: cover; background-position: center; display: flex; align-items: flex-end; color: white; padding: 20px; font-size: 1.8rem; font-weight: 700; text-shadow: 0 4px 12px rgba(0,0,0,0.6); }
         .course-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
-        .course-body h3 { font-size: 1.6rem; margin-bottom: 10px; }
         .price-tag { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: white; padding: 8px 20px; border-radius: 40px; font-weight: 600; display: inline-block; margin-bottom: 15px; }
-        .btn-expand { background: var(--lightblue); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; transition: 0.3s; margin-top: auto; align-self: flex-start; }
-        .btn-expand:hover { background: var(--darkblue); }
+        .btn-expand { background: var(--lightblue); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; margin-top: auto; align-self: flex-start; }
         .expanded-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
         .expanded-content.open { max-height: 500px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--card-border); }
 
-        /* Новости – JSONP */
+        /* Новости */
         .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .news-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); }
-        .news-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .news-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
         .news-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; }
         .news-date { color: var(--purple); font-size: 0.9rem; margin-bottom: 8px; }
         .news-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
@@ -265,46 +150,21 @@
         .news-text.open { max-height: 600px; }
         .read-more-btn { background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600; }
 
-        /* FAQ – стильный аккордеон */
-        .faq-item {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--card-border);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-        .faq-question {
-            display: flex; justify-content: space-between; align-items: center;
-            width: 100%; padding: 25px 30px; background: none; border: none;
-            font-weight: 600; font-size: 1.2rem; color: var(--text);
-            cursor: pointer; transition: background 0.2s;
-        }
+        /* FAQ */
+        .faq-item { background: var(--card-bg); border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--card-border); overflow: hidden; }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 25px 30px; background: none; border: none; font-weight: 600; font-size: 1.2rem; color: var(--text); cursor: pointer; transition: background 0.2s; }
         .faq-question:hover { background: rgba(124, 58, 237, 0.03); }
         .faq-question i { font-size: 1.2rem; transition: transform 0.3s; color: var(--purple); }
-        .faq-answer {
-            max-height: 0; overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.4s ease;
-            background: rgba(0,0,0,0.01);
-        }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; background: rgba(0,0,0,0.01); }
         .faq-answer.open { max-height: 300px; }
         .faq-answer-content { padding: 0 30px 25px; color: var(--text); line-height: 1.6; }
 
         /* Подарочные сертификаты */
-        .gift-container {
-            display: flex; flex-wrap: wrap; gap: 40px; align-items: center;
-            background: var(--card-bg); border-radius: var(--radius);
-            padding: 50px; box-shadow: var(--shadow); border: 1px solid var(--card-border);
-        }
+        .gift-container { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; background: var(--card-bg); border-radius: var(--radius); padding: 50px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
         .gift-img { width: 250px; border-radius: 20px; box-shadow: var(--shadow); }
 
         /* Контакты */
-        .contact-card {
-            display: flex; flex-wrap: wrap; gap: 30px;
-            background: var(--card-bg); border-radius: var(--radius);
-            padding: 40px; box-shadow: var(--shadow); border: 1px solid var(--card-border);
-        }
+        .contact-card { display: flex; flex-wrap: wrap; gap: 30px; background: var(--card-bg); border-radius: var(--radius); padding: 40px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
 
         /* Тёмная тема */
         body.dark .feature-icon { color: var(--purple-light); }
@@ -317,20 +177,11 @@
         body.dark .faq-answer { background: rgba(255,255,255,0.02); }
         body.dark .expanded-content { border-color: #334155; }
 
-        /* Футер */
         footer { text-align: center; padding: 30px; border-top: 1px solid var(--card-border); margin-top: 60px; color: #94a3b8; }
 
         /* Кнопка наверх */
         .scroll-top-btn { position: fixed; bottom: 90px; right: 30px; width: 45px; height: 45px; background: var(--purple); color: white; border: none; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: var(--shadow); display: none; z-index: 50; }
         .scroll-top-btn.visible { display: flex; align-items: center; justify-content: center; }
-
-        @media (max-width: 768px) {
-            .section-title { font-size: 2.2rem; }
-            .about-logo-large { width: 140px; height: 140px; }
-            .timeline::before { left: 15px; }
-            .timeline-item { padding-left: 40px; }
-            .timeline-dot { left: 15px; }
-        }
     </style>
 </head>
 <body>
@@ -341,6 +192,7 @@
         </div>
         <div class="nav-links">
             <a href="#about"><i class="fas fa-gem"></i> О студии</a>
+            <a href="#venues"><i class="fas fa-map-pin"></i> Где проходят</a>
             <a href="#workshops"><i class="fas fa-paint-brush"></i> Мастер-классы</a>
             <a href="#gift"><i class="fas fa-gift"></i> Сертификаты</a>
             <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
@@ -351,6 +203,7 @@
                 <a href="https://web.max.ru/-73411458885837" target="_blank" title="MAX"><i class="fas fa-comment"></i></a>
                 <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i></a>
             </div>
+            <a href="admin.html" class="header-phone" style="margin-left:10px; background:rgba(124,58,237,0.1);"><i class="fas fa-lock"></i> Панель управления</a>
             <button class="theme-toggle" id="themeToggle" title="Переключить тему"><i class="fas fa-moon"></i></button>
         </div>
     </header>
@@ -364,75 +217,54 @@
     </div>
 
     <div class="container">
-        <!-- О студии: водянистый, наполненный блок -->
+        <!-- О студии -->
         <section id="about">
             <div class="section-header">
                 <h2 class="section-title">О студии</h2>
                 <div class="section-underline"></div>
             </div>
-
-            <!-- Hero: логотип + описание -->
             <div class="about-hero">
                 <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип Самоцветы" class="about-logo-large">
-                <div class="about-hero-text">
-                    <h3>Студия «Самоцветы»</h3>
-                    <p><span class="highlight">Миссия:</span> помочь каждому ребёнку раскрыть творческий потенциал, обрести уверенность в себе и полюбить процесс обучения через игру, творчество и выразительное чтение.</p>
-                    <p>Мы работаем с <span class="highlight">2024 года</span> и уже помогли десяткам детей улучшить почерк, начать говорить красиво и читать осмысленно.</p>
+                <div style="max-width: 500px; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 30px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.08);">
+                    <h3 style="font-size: 2rem; margin-bottom: 15px; color: var(--darkblue);">Студия «Самоцветы»</h3>
+                    <p>Мы открываем мир творчества, грамотной речи и красивого письма для детей Сысерти. Наш педагог — дипломированный филолог с опытом работы более 1 года.</p>
+                    <p style="margin-top: 10px;"><i class="fas fa-graduation-cap" style="color: var(--purple); margin-right: 8px;"></i> Авторские методики обучения письму и чтению.</p>
                 </div>
             </div>
+        </section>
 
-            <!-- Ценности (в стиле "водянистых" плиток) -->
-            <div class="about-values-grid">
-                <div class="value-card">
-                    <i class="fas fa-heart value-icon"></i>
-                    <h4>Забота и внимание</h4>
-                    <p>Каждый ребёнок для нас — личность. Мы создаём безопасную среду, где можно ошибаться, пробовать и расти.</p>
-                </div>
-                <div class="value-card">
-                    <i class="fas fa-seedling value-icon"></i>
-                    <h4>Развитие и рост</h4>
-                    <p>Мы постоянно учимся сами и помогаем детям двигаться вперёд, осваивая новые навыки в комфортном темпе.</p>
-                </div>
-                <div class="value-card">
-                    <i class="fas fa-handshake value-icon"></i>
-                    <h4>Поддержка и сотрудничество</h4>
-                    <p>Родители, педагог и ребёнок — одна команда. Мы открыты к диалогу и совместно строим образовательный маршрут.</p>
-                </div>
-                <div class="value-card">
-                    <i class="fas fa-star value-icon"></i>
-                    <h4>Качество и результат</h4>
-                    <p>Авторские методики, малые группы и индивидуальный подход обеспечивают видимый прогресс уже после первых занятий.</p>
-                </div>
+        <!-- Где проходят занятия -->
+        <section id="venues">
+            <div class="section-header">
+                <h2 class="section-title">Где проходят занятия</h2>
+                <p style="max-width: 700px; margin: 0 auto;">Две уютные библиотеки в самом центре Сысерти, оборудованные всем необходимым для комфортного обучения.</p>
+                <div class="section-underline"></div>
             </div>
-
-            <!-- Таймлайн (как у конкурента) -->
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h4>2024 год — открытие студии</h4>
-                        <p>Первые мастер-классы в Сысертской городской библиотеке. Начало пути.</p>
+            <div class="venues-grid">
+                <div class="venue-card">
+                    <div class="venue-img" style="background-image: url('https://cdn.culture.ru/images/58826fd3-1837-577b-ab24-c23332c549f9');"></div>
+                    <div class="venue-body">
+                        <h3><i class="fas fa-building" style="color: var(--purple);"></i> Районная библиотека</h3>
+                        <p style="color: var(--text); margin-bottom: 15px;"><strong>Адрес:</strong> ул. Коммуны, 36</p>
+                        <ul>
+                            <li><i class="fas fa-chair"></i> Удобные новые столы и стулья</li>
+                            <li><i class="fas fa-projector"></i> Проектор для показа видео</li>
+                            <li><i class="fas fa-users"></i> Вместимость до 15 человек</li>
+                            <li><i class="fas fa-wifi"></i> Уютная атмосфера и хорошее освещение</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h4>2024 год — запуск курса каллиграфии</h4>
-                        <p>Авторская программа по коррекции почерка для детей 6–9 лет.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h4>2025 год — расширение направлений</h4>
-                        <p>Открытие Клуба выходного дня, подготовка курса ораторского мастерства.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h4>2025 год — планы на будущее</h4>
-                        <p>Запуск онлайн-занятий, новые творческие направления и регулярные бесплатные мастер-классы.</p>
+                <div class="venue-card">
+                    <div class="venue-img" style="background-image: url('https://avatars.mds.yandex.net/get-altay/15285331/2a0000019680f5e6044e52f8b1341cb2b1dd/L_height');"></div>
+                    <div class="venue-body">
+                        <h3><i class="fas fa-child" style="color: var(--purple);"></i> Детская библиотека им. Бажова</h3>
+                        <p style="color: var(--text); margin-bottom: 15px;"><strong>Адрес:</strong> ул. Красноармейская, 44</p>
+                        <ul>
+                            <li><i class="fas fa-pencil-alt"></i> Специальные рабочие места для творчества</li>
+                            <li><i class="fas fa-book"></i> Большой выбор детской литературы</li>
+                            <li><i class="fas fa-smile"></i> Игровая зона для маленьких посетителей</li>
+                            <li><i class="fas fa-music"></i> Возможность проводить музыкальные занятия</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -516,51 +348,16 @@
             </div>
         </section>
 
-        <!-- Секция новостей -->
-<section id="news">
-    <div class="section-header">
-        <h2 class="section-title">Новости</h2>
-        <div class="section-underline"></div>
-    </div>
-    <div class="news-grid" id="newsContainer">Загрузка...</div>
-</section>
+        <!-- Новости (JSONP) -->
+        <section id="news">
+            <div class="section-header">
+                <h2 class="section-title">Новости</h2>
+                <div class="section-underline"></div>
+            </div>
+            <div class="news-grid" id="newsContainer">Загрузка...</div>
+        </section>
 
-<script>
-    // Ваш актуальный API URL (должен совпадать с URL развёрнутого Apps Script)
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
-
-    function loadNews() {
-        const container = document.getElementById('newsContainer');
-        container.innerHTML = 'Загрузка...';
-        const callback = 'jsonp_news_' + Date.now();
-        window[callback] = function(data) {
-            delete window[callback];
-            if (!data.news || !data.news.length) {
-                container.innerHTML = '<p style="text-align:center;">Новостей пока нет.</p>';
-                return;
-            }
-            const latest = data.news.slice(0, 3);
-            container.innerHTML = latest.map(n => {
-                const dateStr = n.publishDate ? new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' }) : '';
-                return `<div class="news-card">
-                    ${n.images && n.images.length ? `<img src="${n.images[0]}" onerror="this.style.display='none'">` : ''}
-                    ${dateStr ? `<div class="news-date">${dateStr}</div>` : ''}
-                    <div class="news-title">${n.title}</div>
-                    <div class="news-text" id="text-${n.id}">${n.content}</div>
-                    <button class="read-more-btn" onclick="this.previousElementSibling.classList.toggle('open')">Читать дальше</button>
-                </div>`;
-            }).join('');
-        };
-        const script = document.createElement('script');
-        script.src = API_URL + '?action=news&callback=' + callback;
-        document.body.appendChild(script);
-    }
-
-    // Первая загрузка и автообновление каждые 5 минут
-    loadNews();
-    setInterval(loadNews, 300000);
-</script>
-        <!-- FAQ – аккордеон с анимацией -->
+        <!-- FAQ -->
         <section id="faq">
             <div class="section-header">
                 <h2 class="section-title">Часто задаваемые вопросы</h2>
@@ -632,7 +429,6 @@
     <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
 
     <script>
-        // Используем указанный новый API
         const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
 
         // Карта
@@ -665,13 +461,12 @@
             if (content) content.classList.toggle('open');
         }
 
-        // FAQ аккордеон с анимацией иконки
+        // FAQ аккордеон
         function toggleFAQ(btn) {
             const answer = btn.nextElementSibling;
             const icon = btn.querySelector('i');
             if (answer) {
                 answer.classList.toggle('open');
-                // Поворот иконки
                 if (answer.classList.contains('open')) {
                     icon.style.transform = 'rotate(180deg)';
                 } else {
@@ -684,7 +479,7 @@
         function loadNews() {
             const container = document.getElementById('newsContainer');
             container.innerHTML = 'Загрузка...';
-            const callbackName = 'jsonp_news_' + Math.random().toString(36).substr(2, 9);
+            const callbackName = 'jsonp_news_' + Date.now();
             window[callbackName] = function(data) {
                 delete window[callbackName];
                 if (!data.news || !data.news.length) {
