@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Самоцветы — студия развития детей (Сысерть)</title>
+    <title>Самоцветы — студия развития детей (Сысерть, 66)</title>
     <meta name="description" content="Студия каллиграфии, творчества и выразительного чтения в Сысерти. Занятия для детей от 6 лет.">
 
     <!-- Яндекс.Карты -->
     <script src="https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ_ЯНДЕКС&lang=ru_RU"></script>
-    <!-- Font Awesome -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
@@ -48,18 +48,19 @@
             transition: background 0.3s, color 0.3s;
             overflow-x: hidden;
         }
+        /* Фон с анимированной сеткой и точками */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.03) 1px, transparent 1px),
-                              radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
-                              linear-gradient(0deg, transparent 24px, rgba(0,0,0,0.01) 25px),
-                              linear-gradient(90deg, transparent 24px, rgba(0,0,0,0.01) 25px);
+            background-image: radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+                              radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+                              linear-gradient(0deg, transparent 24px, rgba(0,0,0,0.02) 25px),
+                              linear-gradient(90deg, transparent 24px, rgba(0,0,0,0.02) 25px);
             background-size: 40px 40px, 60px 60px, 25px 25px, 25px 25px;
             pointer-events: none;
             z-index: 0;
-            animation: bg-drift 20s linear infinite;
+            animation: bg-drift 30s linear infinite;
         }
         @keyframes bg-drift {
             0% { background-position: 0 0, 0 0, 0 0, 0 0; }
@@ -74,31 +75,33 @@
         }
         .floating-dots span {
             position: absolute;
-            width: 6px; height: 6px;
-            background: var(--purple);
+            width: 8px; height: 8px;
+            background: var(--purple-light);
             border-radius: 50%;
-            opacity: 0.2;
-            animation: float 8s infinite alternate ease-in-out;
+            opacity: 0.15;
+            animation: float 10s infinite alternate ease-in-out;
         }
-        .floating-dots span:nth-child(1) { top: 20%; left: 10%; animation-duration: 7s; }
-        .floating-dots span:nth-child(2) { top: 60%; left: 80%; animation-duration: 9s; background: var(--lightblue); }
-        .floating-dots span:nth-child(3) { top: 80%; left: 30%; animation-duration: 10s; background: var(--emerald); }
+        .floating-dots span:nth-child(1) { top: 15%; left: 8%; animation-duration: 8s; }
+        .floating-dots span:nth-child(2) { top: 70%; left: 85%; animation-duration: 12s; background: var(--lightblue); }
+        .floating-dots span:nth-child(3) { top: 85%; left: 25%; animation-duration: 14s; background: var(--emerald); }
         @keyframes float {
-            0% { transform: translateY(0px) scale(1); }
-            100% { transform: translateY(-40px) scale(1.5); opacity: 0.4; }
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, -40px) scale(1.8); opacity: 0.3; }
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
 
         /* Шапка */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 30px; background: var(--card-bg); backdrop-filter: blur(10px);
+            padding: 14px 30px; background: var(--card-bg); backdrop-filter: blur(12px);
             box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; flex-wrap: wrap;
             border-bottom: 1px solid var(--card-border); transition: 0.3s;
         }
-        .logo-container { display: flex; align-items: center; gap: 15px; }
-        .logo-img { width: 56px; height: 56px; border-radius: 18px; object-fit: cover; border: 2px solid var(--purple); }
-        .logo-text { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 52px; height: 52px; border-radius: 16px; object-fit: cover; border: 2px solid var(--purple); }
+        .logo-text { font-size: 1.7rem; font-weight: 800; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .city-tag { font-size: 0.9rem; color: var(--text-secondary); margin-left: 8px; background: rgba(124,58,237,0.08); padding: 4px 10px; border-radius: 20px; }
+        body.dark .city-tag { color: #cbd5e1; background: rgba(124,58,237,0.2); }
         .nav-links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
         .nav-links a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 15px; transition: 0.2s; padding: 6px 10px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
         .nav-links a:hover { background: rgba(124, 58, 237, 0.1); color: var(--purple); }
@@ -107,8 +110,12 @@
         .header-phone { color: var(--purple); font-weight: 600; background: rgba(124,58,237,0.1); padding: 8px 16px; border-radius: 30px; text-decoration: none; }
         .header-socials a { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--lightblue); color: white; border-radius: 50%; margin-left: 8px; transition: 0.2s; text-decoration: none; }
         .header-socials a:hover { background: var(--darkblue); transform: translateY(-2px); }
-        @media (max-width: 768px) { .nav-links, .header-phone, .header-socials, .theme-toggle { display: none; } }
 
+        @media (max-width: 768px) {
+            .nav-links, .header-phone, .header-socials, .theme-toggle { display: none; }
+        }
+
+        /* Мобильное нижнее меню */
         .mobile-nav {
             display: none; position: fixed; bottom: 0; left: 0; width: 100%;
             background: var(--card-bg); backdrop-filter: blur(10px);
@@ -134,22 +141,22 @@
         }
         .section-underline { width: 70px; height: 4px; background: linear-gradient(to right, #7c3aed, #38bdf8); border-radius: 4px; margin-bottom: 20px; }
 
-        /* О студии с таймлайном */
+        /* О студии */
         .about-hero {
             display: flex; align-items: center; justify-content: flex-start;
             gap: 50px; flex-wrap: wrap; margin-bottom: 40px;
         }
-        .about-logo-large { width: 300px; height: 300px; border-radius: 40px; object-fit: cover; border: 6px solid rgba(124, 58, 237, 0.3); box-shadow: 0 0 60px rgba(124, 58, 237, 0.5); }
+        .about-logo-large { width: 280px; height: 280px; border-radius: 32px; object-fit: cover; border: 6px solid rgba(124, 58, 237, 0.3); box-shadow: 0 0 60px rgba(124, 58, 237, 0.5); }
         .about-info { flex: 1; min-width: 300px; }
         .about-info h3 { font-size: 2.2rem; margin-bottom: 15px; color: var(--darkblue); }
         body.dark .about-info h3 { color: #f1f5f9; }
         .about-info p { margin-bottom: 18px; display: flex; align-items: flex-start; gap: 12px; font-size: 1.05rem; }
         .about-info i { color: var(--purple); font-size: 1.2rem; width: 24px; text-align: center; margin-top: 4px; }
 
-        /* План работы (ништяк) */
+        /* План работы */
         .plan-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 25px;
             margin: 40px 0;
         }
@@ -188,7 +195,7 @@
         .venue-body li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         .venue-body li i { color: var(--purple); width: 20px; text-align: center; }
 
-        /* Карточки курсов – кнопки на одном уровне */
+        /* Карточки курсов */
         .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; align-items: stretch; }
         .course-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); display: flex; flex-direction: column; }
         .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
@@ -228,7 +235,7 @@
         .faq-answer.open { max-height: 300px; }
         .faq-answer-content { padding: 0 30px 25px; color: var(--text); line-height: 1.6; }
 
-        /* Сертификаты – по центру */
+        /* Сертификаты */
         .gift-wrapper { display: flex; justify-content: center; }
         .gift-container {
             display: flex; flex-wrap: wrap; gap: 40px; align-items: center;
@@ -243,17 +250,17 @@
         .qr-section { display: flex; gap: 30px; justify-content: flex-start; align-items: center; margin-top: 20px; }
         .qr-code { width: 100px; border-radius: 16px; }
 
-        /* Команда (3 человека) */
-        .team-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
-        .team-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
-        .team-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--emerald); }
-
-        /* Отзывы (вода) */
+        /* Отзывы */
         .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .testimonial-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); position: relative; }
         .testimonial-card::before { content: "“"; font-size: 4rem; color: var(--purple-light); position: absolute; top: -10px; left: 15px; opacity: 0.3; }
         .testimonial-text { font-style: italic; margin-bottom: 10px; }
         .testimonial-author { font-weight: 600; color: var(--purple); }
+
+        /* Команда */
+        .team-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+        .team-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
+        .team-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--emerald); }
 
         /* Тёмная тема */
         body.dark .course-body h3, body.dark .plan-card h4, body.dark .venue-body h3, body.dark .testimonial-text { color: #f1f5f9; }
@@ -266,10 +273,18 @@
         .error-report a { color: var(--raspberry); font-weight: 600; }
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
+            50% { transform: scale(1.08); opacity: 0.8; }
             100% { transform: scale(1); opacity: 1; }
         }
         .pulse-icon { animation: pulse 2s infinite; color: var(--purple); }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .about-hero { flex-direction: column; align-items: center; text-align: center; }
+            .about-logo-large { width: 200px; height: 200px; }
+            .section-title { font-size: 2rem; }
+            .gift-container { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -279,6 +294,7 @@
         <div class="logo-container">
             <img class="logo-img" src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип">
             <div class="logo-text">Самоцветы</div>
+            <span class="city-tag"><i class="fas fa-map-marker-alt"></i> г. Сысерть (66)</span>
         </div>
         <div class="nav-links">
             <a href="#about"><i class="fas fa-gem"></i> О студии</a>
@@ -311,10 +327,10 @@
             <div class="about-hero">
                 <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип" class="about-logo-large">
                 <div class="about-info">
-                    <h3>Студия «Самоцветы»</h3>
+                    <h3><i class="fas fa-star" style="color: var(--purple); margin-right: 10px;"></i>Студия «Самоцветы»</h3>
                     <p><i class="fas fa-map-pin"></i> <strong>Находимся:</strong> г. Сысерть, ул. Коммуны, 36. Вход со двора пятиэтажного панельного дома, недалеко от остановки. Уютное пространство, где дети чувствуют себя как дома.</p>
-                    <p><i class="fas fa-star"></i> <strong>Наша миссия:</strong> Раскрыть творческий потенциал каждого ребёнка, научить говорить красиво, писать уверенно и мыслить свободно. Мы верим, что грамотная речь и аккуратный почерк — фундамент успеха в будущем.</p>
-                    <p><i class="fas fa-heart pulse-icon"></i> <strong>Почему мы уникальны:</strong> Авторские методики, малые группы, индивидуальный подход. Мы не просто учим — мы вдохновляем, поддерживаем и создаём среду, в которой ребёнок растёт с радостью. Каждое занятие — это маленькое приключение с играми, творческими заданиями и живым общением.</p>
+                    <p><i class="fas fa-bullseye pulse-icon"></i> <strong>Наша миссия:</strong> Раскрыть творческий потенциал каждого ребёнка, научить говорить красиво, писать уверенно и мыслить свободно. Мы верим, что грамотная речь и аккуратный почерк — фундамент успеха в будущем.</p>
+                    <p><i class="fas fa-heart"></i> <strong>Почему мы уникальны:</strong> Авторские методики, малые группы, индивидуальный подход. Мы не просто учим — мы вдохновляем, поддерживаем и создаём среду, в которой ребёнок растёт с радостью.</p>
                 </div>
             </div>
 
@@ -327,10 +343,10 @@
             <div class="error-report"><i class="fas fa-bug"></i> Нашли ошибку или есть предложение? Напишите или позвоните: <a href="tel:89090226229">89090226229</a></div>
         </section>
 
-        <!-- Место (одна библиотека, две карточки) -->
+        <!-- Место -->
         <section id="venue">
-            <div class="section-header"><h2 class="section-title">Где проходят занятия</h2><div class="section-underline"></div></div>
-            <p style="margin-bottom:30px;">Все занятия проходят по адресу: <strong>г. Сысерть, ул. Коммуны, 36</strong>.</p>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-map-signs"></i> Где проходят занятия</h2><div class="section-underline"></div></div>
+            <p style="margin-bottom:30px;"><i class="fas fa-map-marker-alt" style="color:var(--purple); margin-right:8px;"></i>Все занятия проходят по адресу: <strong>г. Сысерть, ул. Коммуны, 36</strong>.</p>
             <div class="venue-grid">
                 <div class="venue-card">
                     <div class="venue-img" style="background-image: url('https://cdn.culture.ru/images/58826fd3-1837-577b-ab24-c23332c549f9');"></div>
@@ -362,7 +378,7 @@
 
         <!-- Мастер-классы -->
         <section id="workshops">
-            <div class="section-header"><h2 class="section-title">Мастер-классы</h2><div class="section-underline"></div></div>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-paint-brush"></i> Мастер-классы</h2><div class="section-underline"></div></div>
             <div class="courses-grid">
                 <div class="course-card">
                     <div class="course-img" style="background-image: url('https://kanzoboz.ru/data/images/article/3/487403_d1ab2_th.jpg');"><span>Каллиграфия</span></div>
@@ -371,7 +387,7 @@
                         <p>Для детей 6–9 лет. Исправление почерка, постановка руки, работа с чернилами и пером.</p>
                         <div class="price-tag">500 руб. / занятие</div>
                         <button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button>
-                        <div class="expanded-content"><p>Расписание: суббота 15:00 (ул. Коммуны, 36), воскресенье 15:00 (ул. Красноармейская, 44).</p></div>
+                        <div class="expanded-content"><p>Расписание: суббота 15:00, воскресенье 15:00.</p></div>
                     </div>
                 </div>
                 <div class="course-card">
@@ -391,7 +407,7 @@
                         <p>Рисование, лепка, скрапбукинг, развивающие игры. Для детей от 5 лет.</p>
                         <div class="price-tag">от 350 руб. (с июня)</div>
                         <button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button>
-                        <div class="expanded-content"><p>Суббота 11:00–13:00 в библиотеке на ул. Коммуны, 36. Предварительная запись обязательна.</p></div>
+                        <div class="expanded-content"><p>Суббота 11:00–13:00 в библиотеке на ул. Коммуны, 36.</p></div>
                     </div>
                 </div>
             </div>
@@ -399,7 +415,7 @@
 
         <!-- Сертификаты -->
         <section id="gift">
-            <div class="section-header"><h2 class="section-title">Подарочные сертификаты</h2><div class="section-underline"></div></div>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-gift"></i> Подарочные сертификаты</h2><div class="section-underline"></div></div>
             <div class="gift-wrapper">
                 <div class="gift-container">
                     <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" class="gift-img">
@@ -420,34 +436,34 @@
 
         <!-- Новости -->
         <section id="news">
-            <div class="section-header"><h2 class="section-title">Новости</h2><div class="section-underline"></div></div>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-newspaper"></i> Новости</h2><div class="section-underline"></div></div>
             <div class="news-grid" id="newsContainer">Загрузка...</div>
         </section>
 
-        <!-- Отзывы (вода) -->
+        <!-- Отзывы -->
         <section>
-            <div class="section-header"><h2 class="section-title">Что говорят родители</h2><div class="section-underline"></div></div>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-comment-dots"></i> Что говорят родители</h2><div class="section-underline"></div></div>
             <div class="testimonials-grid">
-                <div class="testimonial-card"><p class="testimonial-text">“Дочка стала писать аккуратнее уже через месяц! Занятия проходят в игровой форме, бежит с удовольствием.”</p><div class="testimonial-author">— Анна, мама Миланы</div></div>
-                <div class="testimonial-card"><p class="testimonial-text">“Очень нравится подход педагога: сначала разбирают буквы на крупных листах, потом плавно переходят к обычным прописям.”</p><div class="testimonial-author">— Иван, папа Матвея</div></div>
-                <div class="testimonial-card"><p class="testimonial-text">“Сын с нетерпением ждёт субботних мастер‑классов. Здесь не только учёба, но и общение, и новые друзья.”</p><div class="testimonial-author">— Марина, мама Артёма</div></div>
+                <div class="testimonial-card"><p class="testimonial-text">“Дочка стала писать аккуратнее уже через месяц! Занятия проходят в игровой форме, бежит с удовольствием.”</p><div class="testimonial-author"><i class="fas fa-user-circle"></i> Анна, мама Миланы</div></div>
+                <div class="testimonial-card"><p class="testimonial-text">“Очень нравится подход педагога: сначала разбирают буквы на крупных листах, потом плавно переходят к обычным прописям.”</p><div class="testimonial-author"><i class="fas fa-user-circle"></i> Иван, папа Матвея</div></div>
+                <div class="testimonial-card"><p class="testimonial-text">“Сын с нетерпением ждёт субботних мастер‑классов. Здесь не только учёба, но и общение, и новые друзья.”</p><div class="testimonial-author"><i class="fas fa-user-circle"></i> Марина, мама Артёма</div></div>
             </div>
         </section>
 
         <!-- FAQ -->
         <section id="faq">
-            <div class="section-header"><h2 class="section-title">Частые вопросы</h2><div class="section-underline"></div></div>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-question-circle"></i> Частые вопросы</h2><div class="section-underline"></div></div>
             <div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)">С какого возраста принимаете детей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Основные программы с 6 лет. Клуб выходного дня доступен с 5 лет.</div></div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)">Сколько длится одно занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Каллиграфия — 60 минут. Клуб выходного дня — 2 часа с перерывом.</div></div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)">Нужно ли присутствие родителей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">На мастер-классах родители могут наблюдать и получать комментарии педагога. На регулярных занятиях присутствие не обязательно.</div></div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)">Как записаться на пробное занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Позвоните по телефону <a href="tel:89667167436">89667167436</a> или напишите в сообщения группы ВКонтакте.</div></div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)"><i class="fas fa-child" style="margin-right:10px;"></i> С какого возраста принимаете детей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Основные программы с 6 лет. Клуб выходного дня доступен с 5 лет.</div></div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)"><i class="fas fa-clock" style="margin-right:10px;"></i> Сколько длится одно занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Каллиграфия — 60 минут. Клуб выходного дня — 2 часа с перерывом.</div></div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)"><i class="fas fa-user-friends" style="margin-right:10px;"></i> Нужно ли присутствие родителей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">На мастер-классах родители могут наблюдать и получать комментарии педагога. На регулярных занятиях присутствие не обязательно.</div></div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)"><i class="fas fa-pencil-alt" style="margin-right:10px;"></i> Как записаться на пробное занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Позвоните по телефону <a href="tel:89667167436">89667167436</a> или напишите в сообщения группы ВКонтакте.</div></div></div>
             </div>
         </section>
 
         <!-- Контакты -->
         <section id="contacts">
-            <div class="section-header"><h2 class="section-title">Контакты</h2><div class="section-underline"></div></div>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-address-book"></i> Контакты</h2><div class="section-underline"></div></div>
             <div style="display: flex; flex-wrap: wrap; gap: 30px;">
                 <div style="flex: 1;">
                     <p><i class="fas fa-phone"></i> <strong>Запись на занятия:</strong> <a href="tel:89667167436">89667167436</a></p>
@@ -455,11 +471,11 @@
                     <div class="qr-section">
                         <div>
                             <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotROfZ0VWf-MCfWNgpYPA5EqheFIFzMaeTRu44FG2MMX4" alt="MAX QR" class="qr-code">
-                            <p style="font-size:0.8rem; text-align:center;">MAX</p>
+                            <p style="font-size:0.8rem; text-align:center;"><i class="fab fa-max"></i> MAX</p>
                         </div>
                         <div>
                             <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Noto-apB3ohaP21INdXypLpJKheFIFzMaeTRu44FG2MMX4" alt="VK QR" class="qr-code">
-                            <p style="font-size:0.8rem; text-align:center;">ВКонтакте</p>
+                            <p style="font-size:0.8rem; text-align:center;"><i class="fab fa-vk"></i> ВКонтакте</p>
                         </div>
                     </div>
                 </div>
@@ -469,19 +485,19 @@
 
         <!-- Команда -->
         <section>
-            <div class="section-header"><h2 class="section-title">Наша команда</h2><div class="section-underline"></div></div>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-users"></i> Наша команда</h2><div class="section-underline"></div></div>
             <div class="team-grid">
                 <div class="team-card">
                     <img src="https://sun9-38.userapi.com/s/v1/ig2/nuPCIcGJ6D3yYfZL47ig_7XNs95a0jYPp8jDE31_CN9oPOTI_-5NyHLJnVtedCrB7h2ZSxp7YISluKOaW7E7KOWb.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&u=P1z34IBA8ylP8TkeihIRe2r43afh2iiqAjelFhv7Yus&cs=1920x0" alt="Педагог" class="team-avatar">
-                    <h4>Шейбак Светлана Сергеевна</h4><p>Педагог, филолог</p>
+                    <h4><i class="fas fa-chalkboard-teacher"></i> Шейбак Светлана Сергеевна</h4><p>Педагог, филолог</p>
                 </div>
                 <div class="team-card">
                     <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotF17Yinlc6F5MU7WOOd39VKheFIFzMaeTRu44FG2MMX4" alt="Программист" class="team-avatar" style="border-color: var(--lightblue);">
-                    <h4>Александр Шейбак</h4><p>Веб-специалист, Java / Python</p>
+                    <h4><i class="fas fa-code"></i> Александр Шейбак</h4><p>Веб-специалист, Java / Python</p>
                 </div>
                 <div class="team-card">
                     <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotrcMnzy0vA-xdqV6dHBg4NaheFIFzMaeTRu44FG2MMX4" alt="Психолог" class="team-avatar" style="border-color: var(--orange);">
-                    <h4>Павел Абдуллов</h4><p>Бизнес-психолог</p>
+                    <h4><i class="fas fa-brain"></i> Павел Абдуллов</h4><p>Бизнес-психолог</p>
                 </div>
             </div>
         </section>
