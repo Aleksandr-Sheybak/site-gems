@@ -29,7 +29,6 @@
             --shadow-hover: 0 20px 50px rgba(0,0,0,0.1);
             --radius: 24px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --max-width: 1200px;
         }
         body.dark {
             --bg: #0f172a;
@@ -61,7 +60,7 @@
             pointer-events: none;
             z-index: 0;
         }
-        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
 
         /* Шапка */
         .header {
@@ -93,7 +92,7 @@
         .mobile-nav a { display: flex; flex-direction: column; align-items: center; color: var(--text); text-decoration: none; font-size: 11px; font-weight: 500; gap: 4px; }
         .mobile-nav i { font-size: 20px; color: var(--purple); }
 
-        section { margin: 90px 0; }
+        section { margin: 80px 0; }
         .section-header { text-align: left; margin-bottom: 40px; }
         .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-block; }
         .section-underline { width: 70px; height: 4px; background: linear-gradient(to right, #7c3aed, #38bdf8); border-radius: 4px; margin-bottom: 20px; }
@@ -109,7 +108,18 @@
         .about-info p { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .about-info i { color: var(--purple); width: 20px; text-align: center; }
 
-        /* Карточки в один ряд и ровные */
+        /* Места */
+        .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; }
+        .venue-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); }
+        .venue-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .venue-img { height: 200px; background-size: cover; background-position: center; }
+        .venue-body { padding: 25px; }
+        .venue-body h3 { font-size: 1.5rem; margin-bottom: 12px; color: var(--darkblue); display: flex; align-items: center; gap: 8px; }
+        .venue-body ul { list-style: none; padding: 0; }
+        .venue-body li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .venue-body li i { color: var(--purple); width: 20px; text-align: center; }
+
+        /* Карточки курсов – ровные кнопки */
         .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; align-items: stretch; }
         .course-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); display: flex; flex-direction: column; }
         .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
@@ -130,21 +140,31 @@
         .news-text.open { max-height: 600px; }
         .read-more-btn { background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600; }
 
-        .qr-section { display: flex; gap: 30px; align-items: center; margin: 30px 0; }
-        .qr-code { width: 120px; border-radius: 18px; }
-        .contact-badge { background: var(--lightblue); color: white; padding: 8px 20px; border-radius: 30px; text-decoration: none; margin-right: 10px; }
+        /* Сертификаты */
+        .gift-container { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; background: var(--card-bg); border-radius: var(--radius); padding: 40px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
+        .gift-img { width: 200px; border-radius: 20px; box-shadow: var(--shadow); }
+        .contact-badge { display: inline-block; background: var(--lightblue); color: white; padding: 8px 20px; border-radius: 30px; text-decoration: none; margin-right: 10px; }
+
+        /* QR */
+        .qr-section { display: flex; gap: 30px; justify-content: flex-start; align-items: center; margin-top: 20px; }
+        .qr-code { width: 100px; border-radius: 16px; }
+
+        /* Педагог / программист */
+        .team-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+        .team-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
+        .team-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--emerald); }
 
         /* Тёмная тема */
         body.dark .feature-icon { color: var(--purple-light); }
         body.dark .course-body h3, body.dark .news-title { color: #f1f5f9; }
         body.dark .section-title { background: linear-gradient(135deg, #a78bfa, #38bdf8); -webkit-background-clip: text; background-clip: text; }
-        body.dark .header, body.dark .course-card, body.dark .news-card { background: #1e293b; border-color: #334155; }
+        body.dark .header, body.dark .course-card, body.dark .news-card, body.dark .venue-card, body.dark .gift-container, body.dark .team-card { background: #1e293b; border-color: #334155; }
         body.dark .btn-expand { background: #4c1d95; }
         footer { text-align: center; padding: 30px; border-top: 1px solid var(--card-border); margin-top: 60px; color: var(--text); }
 
-        .phone-btn { background: var(--purple); color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; display: inline-block; margin-top: 10px; }
-        .error-report { margin-top: 20px; font-size: 0.9rem; }
+        .error-report { margin-top: 20px; font-size: 0.95rem; }
         .error-report a { color: var(--raspberry); }
+        .phone-btn { background: var(--purple); color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; display: inline-block; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -155,11 +175,16 @@
         </div>
         <div class="nav-links">
             <a href="#about"><i class="fas fa-gem"></i> О студии</a>
+            <a href="#venues"><i class="fas fa-map-pin"></i> Где проходят</a>
             <a href="#workshops"><i class="fas fa-paint-brush"></i> Мастер-классы</a>
             <a href="#gift"><i class="fas fa-gift"></i> Сертификаты</a>
             <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
             <a href="#contacts"><i class="fas fa-phone-alt"></i> Контакты</a>
             <a href="tel:89667167436" class="header-phone"><i class="fas fa-phone"></i> 89667167436</a>
+            <div class="header-socials">
+                <a href="https://web.max.ru/-73411458885837" target="_blank" title="MAX"><i class="fas fa-comment"></i></a>
+                <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i></a>
+            </div>
             <a href="admin.html" class="header-phone" style="margin-left:10px; background:rgba(124,58,237,0.1);"><i class="fas fa-lock"></i> Панель</a>
             <button class="theme-toggle" id="themeToggle" title="Переключить тему"><i class="fas fa-moon"></i></button>
         </div>
@@ -173,106 +198,255 @@
     </div>
 
     <div class="container">
+        <!-- О студии -->
         <section id="about" style="margin-top: 30px;">
             <div class="about-hero">
                 <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип" class="about-logo-large">
                 <div class="about-info">
                     <h3>Студия «Самоцветы»</h3>
-                    <p><i class="fas fa-map-pin"></i> <strong>Находимся:</strong> г. Сысерть, ул. Коммуны, 36. Вход со двора пятиэтажного дома, недалеко от остановки.</p>
-                    <p><i class="fas fa-star"></i> <strong>Цель:</strong> Раскрыть таланты детей через творчество, чтение и грамотную речь. Мы создаём уютную среду, где ребёнок чувствует себя уверенно и с радостью учится новому.</p>
-                    <p><i class="fas fa-calendar-alt"></i> <strong>Путь:</strong> Апрель — бесплатные курсы каллиграфии. Май — открытие платных групп. Июнь — запуск клуба выходного дня и ораторского искусства.</p>
+                    <p><i class="fas fa-map-pin"></i> <strong>Находимся:</strong> г. Сысерть, ул. Коммуны, 36. Вход со двора пятиэтажного панельного дома, недалеко от остановки.</p>
+                    <p><i class="fas fa-star"></i> <strong>Наша миссия:</strong> Раскрыть творческий потенциал каждого ребёнка, научить его говорить красиво, писать уверенно и мыслить свободно. Мы создаём уютную атмосферу, где дети чувствуют себя успешными.</p>
+                    <p><i class="fas fa-calendar-alt"></i> <strong>Путь развития:</strong> Апрель — бесплатные мастер-классы по каллиграфии. Май — открытие платных групп. Июнь — запуск Клуба выходного дня и курса ораторского мастерства.</p>
                 </div>
             </div>
             <div class="error-report">
-                <i class="fas fa-bug"></i> Нашли ошибку? Сообщите: <a href="tel:89090226229">89090226229</a>
+                <i class="fas fa-bug"></i> Нашли ошибку или есть предложение? Напишите или позвоните: <a href="tel:89090226229">89090226229</a>
             </div>
         </section>
 
+        <!-- Места проведения -->
+        <section id="venues">
+            <div class="section-header">
+                <h2 class="section-title">Где проходят занятия</h2>
+                <div class="section-underline"></div>
+            </div>
+            <div class="venues-grid">
+                <div class="venue-card">
+                    <div class="venue-img" style="background-image: url('https://cdn.culture.ru/images/58826fd3-1837-577b-ab24-c23332c549f9');"></div>
+                    <div class="venue-body">
+                        <h3><i class="fas fa-building"></i> Районная библиотека</h3>
+                        <p><strong>ул. Коммуны, 36</strong></p>
+                        <ul>
+                            <li><i class="fas fa-chair"></i> Удобные новые столы и стулья</li>
+                            <li><i class="fas fa-projector"></i> Проектор для видеоуроков</li>
+                            <li><i class="fas fa-users"></i> Вместимость до 15 человек</li>
+                            <li><i class="fas fa-lightbulb"></i> Хорошее освещение, уютная обстановка</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="venue-card">
+                    <div class="venue-img" style="background-image: url('https://avatars.mds.yandex.net/get-altay/15285331/2a0000019680f5e6044e52f8b1341cb2b1dd/L_height');"></div>
+                    <div class="venue-body">
+                        <h3><i class="fas fa-child"></i> Детская библиотека им. Бажова</h3>
+                        <p><strong>ул. Красноармейская, 44</strong></p>
+                        <ul>
+                            <li><i class="fas fa-pencil-alt"></i> Специальные рабочие места для творчества</li>
+                            <li><i class="fas fa-book"></i> Богатый выбор детской литературы</li>
+                            <li><i class="fas fa-smile"></i> Игровая зона для маленьких</li>
+                            <li><i class="fas fa-music"></i> Возможность музыкальных занятий</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Мастер-классы -->
         <section id="workshops">
-            <div class="section-header"><h2 class="section-title">Мастер-классы</h2><div class="section-underline"></div></div>
+            <div class="section-header">
+                <h2 class="section-title">Мастер-классы</h2>
+                <div class="section-underline"></div>
+            </div>
             <div class="courses-grid">
                 <div class="course-card">
                     <div class="course-img" style="background-image: url('https://kanzoboz.ru/data/images/article/3/487403_d1ab2_th.jpg');"><span>Каллиграфия</span></div>
-                    <div class="course-body"><h3>🖋 Основы каллиграфии</h3><p>Для детей 6–9 лет. Исправление почерка, работа с пером.</p><div class="price-tag">500 руб. / занятие</div><button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button><div class="expanded-content"><p>Суббота 15:00 (Коммуны, 36), Воскресенье 15:00 (Красноармейская, 44).</p></div></div>
+                    <div class="course-body">
+                        <h3><i class="fas fa-pen-fancy"></i> Основы каллиграфии</h3>
+                        <p>Для детей 6–9 лет. Исправление почерка, постановка руки, работа с чернилами и пером.</p>
+                        <div class="price-tag">500 руб. / занятие</div>
+                        <button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button>
+                        <div class="expanded-content">
+                            <p>Расписание: суббота 15:00 (ул. Коммуны, 36), воскресенье 15:00 (ул. Красноармейская, 44).</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="course-card">
                     <div class="course-img" style="background-image: url('https://treningminsk.by/wp-content/uploads/2020/10/oratorskoe-iskusstvo-minsk.jpg');"><span>Ораторское искусство</span></div>
-                    <div class="course-body"><h3>🎤 Мастерская слова</h3><p>Постановка голоса, дикция. Для детей и подростков.</p><div class="price-tag">Скоро (июнь)</div><button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button><div class="expanded-content"><p>Программа готовится к запуску в июне.</p></div></div>
+                    <div class="course-body">
+                        <h3><i class="fas fa-microphone-alt"></i> Мастерская слова</h3>
+                        <p>Постановка голоса, работа с дикцией, снятие страха выступлений. Для детей и подростков.</p>
+                        <div class="price-tag">Старт в июне</div>
+                        <button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button>
+                        <div class="expanded-content">
+                            <p>Программа будет запущена в июне. Следите за новостями в ВК!</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="course-card">
                     <div class="course-img" style="background-image: url('https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not4GMkR1X1Dm2GMT6pYkobVaheFIFzMaeTRu44FG2MMX4');"><span>Клуб выходного дня</span></div>
-                    <div class="course-body"><h3>🎨 Творческие субботы</h3><p>Рисование, лепка, игры. От 5 лет.</p><div class="price-tag">от 350 руб. (июнь)</div><button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button><div class="expanded-content"><p>Суббота 11:00–13:00, библиотека Коммуны, 36.</p></div></div>
+                    <div class="course-body">
+                        <h3><i class="fas fa-palette"></i> Творческие субботы</h3>
+                        <p>Рисование, лепка, скрапбукинг, развивающие игры. Для детей от 5 лет.</p>
+                        <div class="price-tag">от 350 руб. (с июня)</div>
+                        <button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button>
+                        <div class="expanded-content">
+                            <p>Суббота 11:00–13:00 в библиотеке на ул. Коммуны, 36. Предварительная запись обязательна.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Сертификаты -->
         <section id="gift">
-            <div class="section-header"><h2 class="section-title">Подарочные сертификаты</h2><div class="section-underline"></div></div>
-            <div style="display:flex; flex-wrap:wrap; gap:30px; background:var(--card-bg); border-radius:var(--radius); padding:40px; box-shadow:var(--shadow); align-items:center;">
-                <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" style="width:200px; border-radius:20px;">
+            <div class="section-header">
+                <h2 class="section-title">Подарочные сертификаты</h2>
+                <div class="section-underline"></div>
+            </div>
+            <div class="gift-container">
+                <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" class="gift-img">
                 <div>
-                    <h3 style="font-size:1.8rem;">Сертификат на одно занятие</h3>
-                    <div style="font-size:2.2rem; font-weight:800; color:var(--purple); margin:10px 0;">700 руб.</div>
-                    <p><i class="fas fa-check-circle" style="color:var(--emerald);"></i> Любой курс на выбор</p>
-                    <p>Заказ: <a href="tel:89667167436" class="contact-badge"><i class="fas fa-phone"></i> 89667167436</a> <a href="https://vk.com/samotsveti_sysert" target="_blank" class="contact-badge"><i class="fab fa-vk"></i> ВКонтакте</a></p>
+                    <h3 style="font-size: 2rem;">Сертификат на одно занятие</h3>
+                    <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Посещение любого курса на выбор</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Электронный или бумажный формат</p>
+                    <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Прекрасный подарок для ребёнка</p>
+                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--purple); margin: 15px 0;">700 руб.</div>
+                    <div>
+                        <a href="tel:89667167436" class="contact-badge"><i class="fas fa-phone"></i> Позвонить</a>
+                        <a href="https://vk.com/samotsveti_sysert" target="_blank" class="contact-badge"><i class="fab fa-vk"></i> ВКонтакте</a>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Новости -->
         <section id="news">
-            <div class="section-header"><h2 class="section-title">Новости</h2><div class="section-underline"></div></div>
+            <div class="section-header">
+                <h2 class="section-title">Новости</h2>
+                <div class="section-underline"></div>
+            </div>
             <div class="news-grid" id="newsContainer">Загрузка...</div>
         </section>
 
+        <!-- Контакты -->
         <section id="contacts">
-            <div class="section-header"><h2 class="section-title">Контакты</h2><div class="section-underline"></div></div>
-            <div style="display:flex; flex-wrap:wrap; gap:30px;">
-                <div style="flex:1;">
-                    <p><i class="fas fa-phone"></i> <strong>Запись:</strong> <a href="tel:89667167436">89667167436</a></p>
-                    <p><i class="fas fa-headset"></i> <strong>Техподдержка:</strong> <a href="tel:89090226229">89090226229</a></p>
+            <div class="section-header">
+                <h2 class="section-title">Контакты</h2>
+                <div class="section-underline"></div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+                <div style="flex: 1;">
+                    <p><i class="fas fa-phone"></i> <strong>Запись на занятия:</strong> <a href="tel:89667167436">89667167436</a></p>
+                    <p><i class="fas fa-headset"></i> <strong>Техподдержка (сайт):</strong> <a href="tel:89090226229">89090226229</a></p>
                     <div class="qr-section">
-                        <div><img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotROfZ0VWf-MCfWNgpYPA5EqheFIFzMaeTRu44FG2MMX4" alt="MAX QR" class="qr-code"><p style="font-size:0.8rem;">MAX</p></div>
-                        <div><img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Noto-apB3ohaP21INdXypLpJKheFIFzMaeTRu44FG2MMX4" alt="VK QR" class="qr-code"><p style="font-size:0.8rem;">ВКонтакте</p></div>
+                        <div>
+                            <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotROfZ0VWf-MCfWNgpYPA5EqheFIFzMaeTRu44FG2MMX4" alt="MAX QR" class="qr-code">
+                            <p style="font-size:0.8rem; text-align:center;">MAX</p>
+                        </div>
+                        <div>
+                            <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Noto-apB3ohaP21INdXypLpJKheFIFzMaeTRu44FG2MMX4" alt="VK QR" class="qr-code">
+                            <p style="font-size:0.8rem; text-align:center;">ВКонтакте</p>
+                        </div>
                     </div>
                 </div>
                 <div id="map" style="height:200px; border-radius:20px; flex:1; min-width:250px;"></div>
             </div>
         </section>
 
-        <section id="team" style="margin-top:40px;">
-            <div style="display:flex; flex-wrap:wrap; gap:30px; justify-content:center;">
-                <div style="background:var(--card-bg); border-radius:var(--radius); padding:25px; text-align:center; box-shadow:var(--shadow);">
-                    <img src="https://sun9-38.userapi.com/s/v1/ig2/nuPCIcGJ6D3yYfZL47ig_7XNs95a0jYPp8jDE31_CN9oPOTI_-5NyHLJnVtedCrB7h2ZSxp7YISluKOaW7E7KOWb.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&u=P1z34IBA8ylP8TkeihIRe2r43afh2iiqAjelFhv7Yus&cs=1920x0" alt="Педагог" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--emerald);">
-                    <h4>Шейбак Светлана</h4><p>Педагог, филолог</p>
+        <!-- Педагог и программист -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Наша команда</h2>
+                <div class="section-underline"></div>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="https://sun9-38.userapi.com/s/v1/ig2/nuPCIcGJ6D3yYfZL47ig_7XNs95a0jYPp8jDE31_CN9oPOTI_-5NyHLJnVtedCrB7h2ZSxp7YISluKOaW7E7KOWb.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&u=P1z34IBA8ylP8TkeihIRe2r43afh2iiqAjelFhv7Yus&cs=1920x0" alt="Педагог" class="team-avatar">
+                    <h4>Шейбак Светлана Сергеевна</h4>
+                    <p>Педагог, филолог</p>
                 </div>
-                <div style="background:var(--card-bg); border-radius:var(--radius); padding:25px; text-align:center; box-shadow:var(--shadow);">
-                    <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotF17Yinlc6F5MU7WOOd39VKheFIFzMaeTRu44FG2MMX4" alt="Программист" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--lightblue);">
-                    <h4>Александр Шейбак</h4><p>Веб-специалист, Java/Python</p>
+                <div class="team-card">
+                    <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotF17Yinlc6F5MU7WOOd39VKheFIFzMaeTRu44FG2MMX4" alt="Программист" class="team-avatar" style="border-color: var(--lightblue);">
+                    <h4>Александр Шейбак</h4>
+                    <p>Веб-специалист, Java / Python</p>
                 </div>
             </div>
         </section>
     </div>
 
     <footer>
-        <p>© 2025 Самоцветы, Сысерть | Самозанятый: Шейбак Светлана Сергеевна | ИНН: ______________</p>
+        <p>© 2025 Самоцветы, г. Сысерть</p>
+        <p style="font-size:0.9rem;">Самозанятый: Шейбак Светлана Сергеевна | ИНН: ______________</p>
     </footer>
+
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
-        ymaps.ready(() => { const m = new ymaps.Map('map', { center: [56.505210, 60.815588], zoom: 16 }); m.geoObjects.add(new ymaps.Placemark([56.505210, 60.815588], { hintContent: 'Самоцветы', balloonContent: 'ул. Коммуны, 36' })); });
-        const tt = document.getElementById('themeToggle'); const ti = tt.querySelector('i');
-        if(localStorage.getItem('theme')==='dark'){ document.body.classList.add('dark'); ti.classList.replace('fa-moon','fa-sun'); }
-        tt.addEventListener('click',()=>{ document.body.classList.toggle('dark'); if(document.body.classList.contains('dark')){ localStorage.setItem('theme','dark'); ti.classList.replace('fa-moon','fa-sun'); } else { localStorage.setItem('theme','light'); ti.classList.replace('fa-sun','fa-moon'); } });
-        function toggleExpand(b){ b.nextElementSibling?.classList.toggle('open'); }
-        function loadNews() {
-            const c = document.getElementById('newsContainer'); c.innerHTML = 'Загрузка...';
-            const cb = 'jp' + Date.now(); window[cb] = d => {
-                delete window[cb]; if(!d.news?.length){ c.innerHTML='<p>Новостей нет</p>'; return; }
-                c.innerHTML = d.news.slice(0,3).map(n => `<div class="news-card">${n.images?.[0]?`<img src="${n.images[0]}" onerror="this.style.display='none'">`:''}<div class="news-date">${n.publishDate?new Date(n.publishDate).toLocaleString('ru-RU',{timeZone:'Asia/Yekaterinburg'}):''}</div><h3>${n.title}</h3><p>${n.content}</p></div>`).join('');
-            };
-            const s = document.createElement('script'); s.src = API_URL + '?action=news&callback=' + cb; document.body.appendChild(s);
+
+        // Карта
+        ymaps.ready(() => {
+            const map = new ymaps.Map('map', { center: [56.505210, 60.815588], zoom: 16 });
+            map.geoObjects.add(new ymaps.Placemark([56.505210, 60.815588], { hintContent: 'Студия Самоцветы', balloonContent: 'ул. Коммуны, 36' }));
+        });
+
+        // Тёмная тема
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
         }
-        loadNews(); setInterval(loadNews, 300000);
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            if (document.body.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+
+        // Раскрытие блоков
+        function toggleExpand(btn) {
+            const content = btn.nextElementSibling;
+            if (content) content.classList.toggle('open');
+        }
+
+        // Новости (JSONP)
+        function loadNews() {
+            const container = document.getElementById('newsContainer');
+            container.innerHTML = 'Загрузка...';
+            const callbackName = 'jsonp_news_' + Date.now();
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                if (!data.news || !data.news.length) {
+                    container.innerHTML = '<p style="text-align:center;">Новостей пока нет.</p>';
+                    return;
+                }
+                const latest = data.news.slice(0, 3);
+                container.innerHTML = latest.map(n => {
+                    const dateStr = n.publishDate ? new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' }) : '';
+                    return `<div class="news-card">
+                        ${n.images && n.images.length ? `<img src="${n.images[0]}" onerror="this.style.display='none'">` : ''}
+                        ${dateStr ? `<div class="news-date">${dateStr}</div>` : ''}
+                        <div class="news-title">${n.title}</div>
+                        <div class="news-text" id="text-${n.id}">${n.content}</div>
+                        <button class="read-more-btn" onclick="this.previousElementSibling.classList.toggle('open')">Читать дальше</button>
+                    </div>`;
+                }).join('');
+            };
+            const script = document.createElement('script');
+            script.src = API_URL + '?action=news&callback=' + callbackName;
+            document.body.appendChild(script);
+        }
+        loadNews();
+        setInterval(loadNews, 300000);
+
+        // Кнопка "Наверх"
+        window.addEventListener('scroll', () => {
+            document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 400);
+        });
     </script>
 </body>
 </html>
