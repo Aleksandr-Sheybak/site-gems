@@ -1,61 +1,46 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
 let allNewsData = [];
 
-// ---------- ГЛОБАЛЬНЫЕ ФУНКЦИИ, ДОСТУПНЫЕ ИЗ РАЗДЕЛОВ ----------
-window.toggleExpand = function(btn) {
-    const content = btn.nextElementSibling;
-    if (content) content.classList.toggle('open');
-};
+// Глобальные функции для модальных окон
+window.openVenueModal = function() { document.getElementById('venueModal').classList.add('active'); };
+window.closeVenueModal = function() { document.getElementById('venueModal').classList.remove('active'); };
+window.openGiftModal = function() { document.getElementById('giftModal').classList.add('active'); };
+window.closeGiftModal = function() { document.getElementById('giftModal').classList.remove('active'); };
 
-window.openVenueModal = function() {
-    document.getElementById('venueModal').classList.add('active');
-};
-window.closeVenueModal = function() {
-    document.getElementById('venueModal').classList.remove('active');
-};
-window.openGiftModal = function() {
-    document.getElementById('giftModal').classList.add('active');
-};
-window.closeGiftModal = function() {
-    document.getElementById('giftModal').classList.remove('active');
-};
-
-// ---------- ОПРЕДЕЛЕНИЕ БАЗОВОГО ПУТИ ----------
+// Расчёт базового пути
 function getBasePath() {
     const path = window.location.pathname;
-    // Если сайт лежит в подпапке (например, /repo/), то path = /repo/index.html
     if (path.endsWith('/')) return path;
     if (path.endsWith('.html')) return path.substring(0, path.lastIndexOf('/') + 1);
     return '/';
 }
 
-// ---------- РОУТЕР ----------
+// Роутер: подгружает раздел в <main id="content">
 function loadSection(sectionId) {
     const main = document.getElementById('content');
+    if (!main) return;
     main.innerHTML = '<p style="text-align:center; padding:40px;">Загрузка...</p>';
-    
     const basePath = getBasePath();
     const url = `${basePath}sections/${sectionId}.html`;
-    
+
     fetch(url)
         .then(response => {
-            if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             return response.text();
         })
         .then(html => {
             main.innerHTML = html;
-            // Специальная инициализация для некоторых разделов
             if (sectionId === 'contacts') initMap();
             if (sectionId === 'news') loadInitialNews();
             if (sectionId === 'faq') setupFAQDelegation();
         })
         .catch(error => {
-            console.error('Ошибка загрузки раздела:', error);
-            main.innerHTML = `<p style="text-align:center; padding:40px; color:red;">Не удалось загрузить раздел «${sectionId}». Проверьте консоль (F12).</p>`;
+            main.innerHTML = `<p style="text-align:center; padding:40px; color:red;">Ошибка загрузки раздела «${sectionId}». Проверьте консоль.</p>`;
+            console.error(error);
         });
 }
 
-// Обработка кликов по навигационным ссылкам
+// Навигация по хешу и кликам
 document.addEventListener('click', e => {
     const link = e.target.closest('a[href^="#"]');
     if (!link) return;
@@ -63,29 +48,31 @@ document.addEventListener('click', e => {
     const sectionId = link.getAttribute('href').substring(1);
     if (sectionId) loadSection(sectionId);
 });
+window.addEventListener('hashchange', () => {
+    const sectionId = window.location.hash.substring(1);
+    if (sectionId) loadSection(sectionId);
+});
 
-// ---------- FAQ ----------
+// FAQ аккордеон
 function setupFAQDelegation() {
-    // Уже используется глобальный обработчик, просто добавляем классы для иконок
     document.querySelectorAll('.faq-question').forEach(btn => {
-        if (!btn.dataset.listener) {
-            btn.dataset.listener = 'true';
-            btn.addEventListener('click', function() {
-                const answer = this.nextElementSibling;
-                const icon = this.querySelector('i.fa-chevron-down, i.fa-chevron-up');
-                if (answer) {
-                    answer.classList.toggle('open');
-                    if (icon) {
-                        icon.classList.toggle('fa-chevron-down');
-                        icon.classList.toggle('fa-chevron-up');
-                    }
+        if (btn.dataset.listener) return;
+        btn.dataset.listener = 'true';
+        btn.addEventListener('click', function() {
+            const answer = this.nextElementSibling;
+            const icon = this.querySelector('i.fa-chevron-down, i.fa-chevron-up');
+            if (answer) {
+                answer.classList.toggle('open');
+                if (icon) {
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
                 }
-            });
-        }
+            }
+        });
     });
 }
 
-// ---------- ТЁМНАЯ ТЕМА ----------
+// Тёмная тема
 const themeToggle = document.getElementById('themeToggle');
 if (themeToggle) {
     const icon = themeToggle.querySelector('i');
@@ -105,7 +92,7 @@ if (themeToggle) {
     });
 }
 
-// ---------- НОВОСТИ (JSONP) ----------
+// JSONP для новостей
 function jsonp(url, callback) {
     const cbName = 'jsonp_' + Date.now() + '_' + Math.random().toString(36).substr(2);
     window[cbName] = function(data) {
@@ -172,9 +159,7 @@ window.openNewsDetail = function(newsId) {
     document.getElementById('newsDetailModal').classList.add('active');
 };
 
-window.closeNewsDetailModal = function() {
-    document.getElementById('newsDetailModal').classList.remove('active');
-};
+window.closeNewsDetailModal = function() { document.getElementById('newsDetailModal').classList.remove('active'); };
 
 // Закрытие модалок при клике на фон
 document.addEventListener('click', e => {
@@ -183,13 +168,13 @@ document.addEventListener('click', e => {
     }
 });
 
-// ---------- КНОПКА НАВЕРХ ----------
+// Кнопка "Наверх"
 window.addEventListener('scroll', () => {
     const btn = document.getElementById('scrollTopBtn');
     if (btn) btn.classList.toggle('visible', window.scrollY > 400);
 });
 
-// ---------- КАРТА ----------
+// Яндекс.Карта
 function initMap() {
     if (typeof ymaps === 'undefined') {
         const script = document.createElement('script');
@@ -205,7 +190,7 @@ function initMap() {
     }
 }
 
-// ---------- ПЕРВЫЙ ЗАПУСК ----------
+// Первый запуск
 (function() {
     const hash = window.location.hash.substring(1);
     if (hash) loadSection(hash);
