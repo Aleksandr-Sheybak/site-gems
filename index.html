@@ -10,11 +10,242 @@
     <script src="https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ_ЯНДЕКС&lang=ru_RU"></script>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Подключаем стили -->
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --purple: #7c3aed;
+            --purple-light: #a78bfa;
+            --darkblue: #1e293b;
+            --lightblue: #38bdf8;
+            --emerald: #10b981;
+            --orange: #f97316;
+            --gold: #f59e0b;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+            --bg: #ffffff;
+            --text: #334155;
+            --card-bg: #ffffff;
+            --card-border: #f1f5f9;
+            --shadow: 0 8px 30px rgba(0,0,0,0.06);
+            --shadow-hover: 0 20px 50px rgba(0,0,0,0.1);
+            --radius: 24px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body.dark {
+            --bg: #0f172a;
+            --text: #cbd5e1;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --shadow: 0 8px 30px rgba(0,0,0,0.3);
+            --shadow-hover: 0 20px 50px rgba(0,0,0,0.5);
+            background: #0f172a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+                              radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+                              linear-gradient(0deg, transparent 24px, rgba(0,0,0,0.02) 25px),
+                              linear-gradient(90deg, transparent 24px, rgba(0,0,0,0.02) 25px);
+            background-size: 40px 40px, 60px 60px, 25px 25px, 25px 25px;
+            pointer-events: none;
+            z-index: 0;
+            animation: bg-drift 30s linear infinite;
+        }
+        @keyframes bg-drift {
+            0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+            100% { background-position: 100px 100px, -100px -100px, 50px 50px, -50px -50px; }
+        }
+        .floating-dots { position: fixed; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .floating-dots span {
+            position: absolute; width: 8px; height: 8px;
+            background: var(--purple-light); border-radius: 50%; opacity: 0.15;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+        .floating-dots span:nth-child(1) { top: 15%; left: 8%; animation-duration: 8s; }
+        .floating-dots span:nth-child(2) { top: 70%; left: 85%; animation-duration: 12s; background: var(--lightblue); }
+        .floating-dots span:nth-child(3) { top: 85%; left: 25%; animation-duration: 14s; background: var(--emerald); }
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, -40px) scale(1.8); opacity: 0.3; }
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
+
+        /* Шапка */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 30px; background: var(--card-bg); backdrop-filter: blur(12px);
+            box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; flex-wrap: wrap;
+            border-bottom: 1px solid var(--card-border); transition: 0.3s;
+        }
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 52px; height: 52px; border-radius: 16px; object-fit: cover; border: 2px solid var(--purple); }
+        .logo-text { font-size: 1.7rem; font-weight: 800; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .city-tag { font-size: 0.9rem; color: var(--text-secondary); margin-left: 8px; background: rgba(124,58,237,0.08); padding: 4px 10px; border-radius: 20px; }
+        body.dark .city-tag { color: #cbd5e1; background: rgba(124,58,237,0.2); }
+        .nav-links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+        .nav-links a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 15px; transition: 0.2s; padding: 6px 10px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
+        .nav-links a:hover { background: rgba(124, 58, 237, 0.1); color: var(--purple); }
+        .theme-toggle { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); margin-left: 10px; transition: 0.2s; }
+        .theme-toggle:hover { color: var(--purple); }
+        .header-phone { color: var(--purple); font-weight: 600; background: rgba(124,58,237,0.1); padding: 8px 16px; border-radius: 30px; text-decoration: none; }
+        .header-socials a { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--lightblue); color: white; border-radius: 50%; margin-left: 8px; transition: 0.2s; text-decoration: none; }
+        .header-socials a:hover { background: var(--darkblue); transform: translateY(-2px); }
+        @media (max-width: 768px) { .nav-links, .header-phone, .header-socials, .theme-toggle { display: none; } }
+
+        /* Мобильное меню */
+        .mobile-nav {
+            display: none; position: fixed; bottom: 0; left: 0; width: 100%;
+            background: var(--card-bg); backdrop-filter: blur(10px);
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.06); z-index: 100;
+            padding: 12px 20px; justify-content: space-around; align-items: center;
+        }
+        @media (max-width: 768px) { .mobile-nav { display: flex; } }
+        .mobile-nav a { display: flex; flex-direction: column; align-items: center; color: var(--text); text-decoration: none; font-size: 11px; font-weight: 500; gap: 4px; }
+        .mobile-nav i { font-size: 20px; color: var(--purple); }
+
+        section { margin: 80px 0; }
+        .section-header { text-align: left; margin-bottom: 40px; }
+        .section-title {
+            font-size: 2.5rem; font-weight: 800; margin-bottom: 15px;
+            background: linear-gradient(135deg, #7c3aed, #38bdf8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; display: inline-block;
+        }
+        body.dark .section-title { background: linear-gradient(135deg, #a78bfa, #7dd3fc); -webkit-background-clip: text; background-clip: text; }
+        .section-underline { width: 70px; height: 4px; background: linear-gradient(to right, #7c3aed, #38bdf8); border-radius: 4px; margin-bottom: 20px; }
+
+        /* О студии */
+        .about-hero { display: flex; align-items: center; justify-content: flex-start; gap: 50px; flex-wrap: wrap; margin-bottom: 40px; }
+        .about-logo-large { width: 280px; height: 280px; border-radius: 32px; object-fit: cover; border: 6px solid rgba(124, 58, 237, 0.3); box-shadow: 0 0 60px rgba(124, 58, 237, 0.5); }
+        .about-info { flex: 1; min-width: 300px; }
+        .about-info h3 { font-size: 2.2rem; margin-bottom: 15px; color: var(--darkblue); }
+        body.dark .about-info h3 { color: #f1f5f9; }
+        .about-info p { margin-bottom: 18px; display: flex; align-items: flex-start; gap: 12px; font-size: 1.05rem; }
+        .about-info i { color: var(--purple); font-size: 1.2rem; width: 24px; text-align: center; margin-top: 4px; }
+
+        /* План работы */
+        .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin: 40px 0; }
+        .plan-card {
+            background: var(--card-bg); border-radius: var(--radius); padding: 30px;
+            box-shadow: var(--shadow); border: 1px solid var(--card-border);
+            transition: transform 0.3s, box-shadow 0.3s; text-align: center; position: relative; overflow: hidden;
+        }
+        .plan-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, var(--purple), var(--lightblue)); }
+        .plan-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .plan-card i { font-size: 2.5rem; color: var(--purple); margin-bottom: 15px; }
+        .plan-card h4 { font-size: 1.4rem; color: var(--darkblue); margin-bottom: 10px; }
+        body.dark .plan-card h4 { color: #f1f5f9; }
+        .plan-card p { color: var(--text); }
+
+        /* Место проведения */
+        .venue-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; }
+        .venue-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); cursor: pointer; }
+        .venue-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .venue-img { height: 200px; background-size: cover; background-position: center; }
+        .venue-body { padding: 25px; }
+        .venue-body h3 { font-size: 1.5rem; margin-bottom: 12px; color: var(--darkblue); display: flex; align-items: center; gap: 8px; }
+        body.dark .venue-body h3 { color: #f1f5f9; }
+        .venue-body ul { list-style: none; padding: 0; }
+        .venue-body li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .venue-body li i { color: var(--purple); width: 20px; text-align: center; }
+
+        /* Курсы */
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; align-items: stretch; }
+        .course-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); display: flex; flex-direction: column; }
+        .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .course-img { height: 200px; background-size: cover; background-position: center; display: flex; align-items: flex-end; color: white; padding: 20px; font-size: 1.8rem; font-weight: 700; text-shadow: 0 4px 12px rgba(0,0,0,0.6); }
+        .course-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+        .course-body .price-tag { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: white; padding: 8px 20px; border-radius: 40px; font-weight: 600; display: inline-block; margin-bottom: 15px; margin-top: auto; }
+        .btn-expand { background: var(--lightblue); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; align-self: flex-start; margin-top: 15px; }
+        .expanded-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+        .expanded-content.open { max-height: 500px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--card-border); }
+
+        /* Новости */
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .news-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
+        .news-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; }
+        .news-date { color: var(--purple); font-size: 0.9rem; margin-bottom: 8px; }
+        .news-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--darkblue); }
+        body.dark .news-title { color: #f1f5f9; }
+        .news-text { max-height: 4.5em; overflow: hidden; transition: max-height 0.4s; }
+        .news-text.open { max-height: 600px; }
+        .read-more-btn, .show-all-news-btn, .collapse-news-btn { background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600; }
+
+        /* FAQ */
+        .faq-item { background: var(--card-bg); border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--card-border); overflow: hidden; }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 25px 30px; background: none; border: none; font-weight: 600; font-size: 1.2rem; color: var(--text); cursor: pointer; transition: background 0.2s; }
+        .faq-question:hover { background: rgba(124, 58, 237, 0.03); }
+        .faq-question i { font-size: 1.2rem; transition: transform 0.3s; color: var(--purple); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(0,0,0,0.01); }
+        .faq-answer.open { max-height: 500px; }
+        .faq-answer-content { padding: 0 30px 25px; color: var(--text); line-height: 1.6; }
+
+        /* Сертификаты */
+        .gift-wrapper { display: flex; justify-content: center; }
+        .gift-container { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; background: var(--card-bg); border-radius: var(--radius); padding: 40px; box-shadow: var(--shadow); border: 1px solid var(--card-border); width: fit-content; cursor: pointer; }
+        .gift-img { width: 200px; border-radius: 20px; box-shadow: var(--shadow); }
+        .contact-badge { display: inline-block; background: var(--lightblue); color: white; padding: 8px 20px; border-radius: 30px; text-decoration: none; margin-right: 10px; }
+
+        /* QR */
+        .qr-section { display: flex; gap: 30px; justify-content: flex-start; align-items: center; margin-top: 20px; }
+        .qr-code { width: 100px; border-radius: 16px; }
+
+        /* Отзывы */
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .testimonial-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); position: relative; }
+        .testimonial-card::before { content: "“"; font-size: 4rem; color: var(--purple-light); position: absolute; top: -10px; left: 15px; opacity: 0.3; }
+        .testimonial-text { font-style: italic; margin-bottom: 10px; color: var(--text); }
+        .testimonial-author { font-weight: 600; color: var(--purple); }
+
+        /* Команда */
+        .team-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+        .team-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
+        .team-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--emerald); }
+
+        /* Модальные окна */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 200; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--card-bg); border-radius: var(--radius); padding: 30px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 25px 80px rgba(0,0,0,0.3); border: 1px solid var(--card-border); }
+        .modal-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); transition: 0.2s; }
+        .modal-close:hover { color: var(--purple); }
+        .gallery-slider { display: flex; overflow-x: auto; gap: 15px; margin-bottom: 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .gallery-slider img { max-height: 300px; object-fit: cover; border-radius: 16px; flex-shrink: 0; scroll-snap-align: start; }
+
+        /* Тёмная тема */
+        body.dark .course-body h3, body.dark .plan-card h4, body.dark .venue-body h3, body.dark .testimonial-text { color: #f1f5f9; }
+        body.dark .section-title { background: linear-gradient(135deg, #a78bfa, #7dd3fc); -webkit-background-clip: text; background-clip: text; }
+        body.dark .header, body.dark .course-card, body.dark .news-card, body.dark .venue-card, body.dark .gift-container, body.dark .team-card, body.dark .faq-item, body.dark .plan-card, body.dark .testimonial-card, body.dark .modal-content { background: #1e293b; border-color: #334155; }
+        body.dark .btn-expand { background: #4c1d95; }
+        footer { text-align: center; padding: 30px; border-top: 1px solid var(--card-border); margin-top: 60px; color: var(--text); }
+
+        .error-report { margin-top: 30px; font-size: 0.95rem; }
+        .error-report a { color: var(--raspberry); font-weight: 600; }
+        .pulse-icon { animation: pulse 2s infinite; color: var(--purple); }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.08); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+
+        .scroll-top-btn { position: fixed; bottom: 90px; right: 30px; width: 45px; height: 45px; background: var(--purple); color: white; border: none; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: var(--shadow); display: none; z-index: 50; }
+        .scroll-top-btn.visible { display: flex; align-items: center; justify-content: center; }
+
+        @media (max-width: 768px) {
+            .about-hero { flex-direction: column; align-items: center; text-align: center; }
+            .about-logo-large { width: 200px; height: 200px; }
+            .section-title { font-size: 2rem; }
+            .gift-container { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
     <div class="floating-dots"><span></span><span></span><span></span></div>
+
     <!-- Шапка -->
     <header class="header">
         <div class="logo-container">
@@ -39,6 +270,7 @@
             <button class="theme-toggle" id="themeToggle" title="Переключить тему"><i class="fas fa-moon"></i></button>
         </div>
     </header>
+
     <!-- Мобильное меню -->
     <div class="mobile-nav">
         <a href="tel:89667167436"><i class="fas fa-phone"></i> Звонок</a>
@@ -46,6 +278,7 @@
         <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
         <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i> ВКонтакте</a>
     </div>
+
     <!-- Основной контент -->
     <main class="container">
         <!-- О студии -->
@@ -66,6 +299,7 @@
             </div>
             <div class="error-report"><i class="fas fa-bug"></i> Нашли ошибку или есть предложение? Напишите или позвоните: <a href="tel:89090226229">89090226229</a></div>
         </section>
+
         <!-- Где проходят -->
         <section id="venue">
             <div class="section-header"><h2 class="section-title"><i class="fas fa-map-signs"></i> Где проходят занятия</h2><div class="section-underline"></div></div>
@@ -97,6 +331,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Мастер-классы -->
         <section id="workshops">
             <div class="section-header"><h2 class="section-title"><i class="fas fa-paint-brush"></i> Мастер-классы</h2><div class="section-underline"></div></div>
@@ -133,6 +368,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Сертификаты -->
         <section id="gift">
             <div class="section-header"><h2 class="section-title"><i class="fas fa-gift"></i> Подарочные сертификаты</h2><div class="section-underline"></div></div>
@@ -150,16 +386,23 @@
                 </div>
             </div>
         </section>
+
         <!-- Новости -->
         <section id="news">
             <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <div><h2 class="section-title"><i class="fas fa-newspaper"></i> Новости</h2><div class="section-underline"></div></div>
-                <button class="show-all-news-btn" onclick="renderAllNews()" style="font-size: 1rem; background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600;">
-                    <i class="fas fa-list"></i> Все новости
-                </button>
+                <div>
+                    <button class="show-all-news-btn" onclick="renderAllNews()" style="font-size: 1rem; background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600; margin-right: 15px;">
+                        <i class="fas fa-list"></i> Все новости
+                    </button>
+                    <button class="collapse-news-btn" onclick="collapseAllNews()" style="font-size: 1rem; background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-compress-alt"></i> Свернуть
+                    </button>
+                </div>
             </div>
             <div class="news-grid" id="newsContainer">Загрузка...</div>
         </section>
+
         <!-- FAQ -->
         <section id="faq">
             <div class="section-header"><h2 class="section-title"><i class="fas fa-question-circle"></i> Частые вопросы</h2><div class="section-underline"></div></div>
@@ -170,6 +413,7 @@
                 <div class="faq-item"><button class="faq-question"><i class="fas fa-pencil-alt" style="margin-right:10px;"></i> Как записаться на пробное занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Просто позвоните по телефону <a href="tel:89667167436">89667167436</a> или напишите в сообщения нашей группы ВКонтакте. Мы согласуем удобное время и ответим на все вопросы.</div></div></div>
             </div>
         </section>
+
         <!-- Контакты -->
         <section id="contacts">
             <div class="section-header"><h2 class="section-title"><i class="fas fa-address-book"></i> Контакты</h2><div class="section-underline"></div></div>
@@ -185,6 +429,7 @@
                 <div id="map" style="height:200px; border-radius:20px; flex:1; min-width:250px;"></div>
             </div>
         </section>
+
         <!-- Команда -->
         <section>
             <div class="section-header"><h2 class="section-title"><i class="fas fa-users"></i> Наша команда</h2><div class="section-underline"></div></div>
@@ -195,14 +440,17 @@
             </div>
         </section>
     </main>
+
     <!-- Футер -->
     <footer>
         <p>© 2025 Самоцветы, г. Сысерть</p>
         <p style="font-size:0.9rem;">Самозанятый: Шейбак Светлана Сергеевна | ИНН: ______________</p>
     </footer>
+
     <!-- Кнопка наверх -->
     <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
-    <!-- Модалки -->
+
+    <!-- Модальные окна -->
     <div class="modal" id="newsDetailModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeNewsDetailModal()">&times;</button>
@@ -243,7 +491,172 @@
             <a href="tel:89667167436" class="btn-expand" style="display: inline-block; margin-top: 10px;"><i class="fas fa-phone"></i> Заказать</a>
         </div>
     </div>
+
     <!-- Подключаем скрипты -->
-    <script src="js/main.js"></script>
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
+        let allNewsData = [];
+
+        // ========== ГЛОБАЛЬНЫЕ ФУНКЦИИ ==========
+        window.toggleExpand = function(btn) {
+            const content = btn.nextElementSibling;
+            if (content) content.classList.toggle('open');
+        };
+
+        window.openVenueModal = function() {
+            document.getElementById('venueModal').classList.add('active');
+        };
+        window.closeVenueModal = function() {
+            document.getElementById('venueModal').classList.remove('active');
+        };
+        window.openGiftModal = function() {
+            document.getElementById('giftModal').classList.add('active');
+        };
+        window.closeGiftModal = function() {
+            document.getElementById('giftModal').classList.remove('active');
+        };
+
+        // ========== ТЁМНАЯ ТЕМА ==========
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            const icon = themeToggle.querySelector('i');
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark');
+                if (document.body.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                }
+            });
+        }
+
+        // ========== FAQ АККОРДЕОН ==========
+        document.addEventListener('click', e => {
+            const btn = e.target.closest('.faq-question');
+            if (btn) {
+                const answer = btn.nextElementSibling;
+                const icon = btn.querySelector('i.fa-chevron-down, i.fa-chevron-up');
+                if (answer) {
+                    answer.classList.toggle('open');
+                    if (icon) {
+                        icon.classList.toggle('fa-chevron-down');
+                        icon.classList.toggle('fa-chevron-up');
+                    }
+                }
+            }
+            if (e.target.classList.contains('modal') && e.target.classList.contains('active')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // ========== НОВОСТИ (JSONP) ==========
+        function jsonp(url, callback) {
+            const cbName = 'jsonp_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+            window[cbName] = function(data) {
+                delete window[cbName];
+                const script = document.getElementById(cbName);
+                if (script) script.remove();
+                callback(data);
+            };
+            const script = document.createElement('script');
+            script.id = cbName;
+            script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
+            document.body.appendChild(script);
+        }
+
+        function loadInitialNews() {
+            const container = document.getElementById('newsContainer');
+            if (!container) return;
+            container.innerHTML = '<p style="text-align:center;">Загрузка...</p>';
+            jsonp(API_URL + '?action=news', data => {
+                if (!data.news || !data.news.length) {
+                    container.innerHTML = '<p style="text-align:center;">Новостей пока нет.</p>';
+                    return;
+                }
+                allNewsData = data.news;
+                renderNews(allNewsData.slice(0, 3));
+            });
+        }
+
+        function renderNews(newsArray) {
+            const container = document.getElementById('newsContainer');
+            if (!container) return;
+            if (!newsArray || newsArray.length === 0) {
+                container.innerHTML = '<p style="text-align:center;">Новостей нет.</p>';
+                return;
+            }
+            container.innerHTML = newsArray.map(n => {
+                const dateStr = n.publishDate ? new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' }) : '';
+                return `<div class="news-card">
+                    ${n.images && n.images.length ? `<img src="${n.images[0]}" onerror="this.style.display='none'" style="height:180px; object-fit:cover;">` : ''}
+                    ${dateStr ? `<div class="news-date">${dateStr}</div>` : ''}
+                    <div class="news-title">${n.title}</div>
+                    <button class="read-more-btn" onclick="openNewsDetail('${n.id}')">Читать далее</button>
+                </div>`;
+            }).join('');
+        }
+
+        window.renderAllNews = function() {
+            if (allNewsData.length > 0) renderNews(allNewsData);
+            else loadInitialNews();
+        };
+
+        window.collapseAllNews = function() {
+            renderNews(allNewsData.slice(0, 3));
+        };
+
+        window.openNewsDetail = function(newsId) {
+            const item = allNewsData.find(n => n.id === newsId);
+            if (!item) return alert('Новость не найдена');
+            document.getElementById('newsDetailTitle').textContent = item.title;
+            document.getElementById('newsDetailDate').textContent = item.publishDate ? new Date(item.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' }) : '';
+            const imgContainer = document.getElementById('newsDetailImages');
+            if (item.images && item.images.length) {
+                imgContainer.innerHTML = item.images.map(url => `<img src="${url}" onerror="this.style.display='none'">`).join('');
+            } else {
+                imgContainer.innerHTML = '<p>Нет изображений</p>';
+            }
+            document.getElementById('newsDetailContent').innerHTML = item.content;
+            document.getElementById('newsDetailModal').classList.add('active');
+        };
+
+        window.closeNewsDetailModal = function() {
+            document.getElementById('newsDetailModal').classList.remove('active');
+        };
+
+        // ========== КНОПКА "НАВЕРХ" ==========
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scrollTopBtn');
+            if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        // ========== КАРТА ==========
+        function initMap() {
+            if (typeof ymaps === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ_ЯНДЕКС&lang=ru_RU';
+                script.onload = () => createMap();
+                document.body.appendChild(script);
+            } else {
+                ymaps.ready(createMap);
+            }
+            function createMap() {
+                const map = new ymaps.Map('map', { center: [56.505210, 60.815588], zoom: 16 });
+                map.geoObjects.add(new ymaps.Placemark([56.505210, 60.815588], { hintContent: 'Студия Самоцветы', balloonContent: 'ул. Коммуны, 36' }));
+            }
+        }
+
+        // ========== ПЕРВЫЙ ЗАПУСК ==========
+        (function() {
+            initMap();
+            loadInitialNews();
+        })();
+    </script>
 </body>
 </html>
