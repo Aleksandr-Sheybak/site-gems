@@ -65,7 +65,7 @@
             align-items: center;
             gap: 10px;
         }
-        input {
+        input, textarea {
             width: 100%;
             padding: 14px;
             margin: 10px 0;
@@ -75,8 +75,9 @@
             color: var(--text);
             font-size: 16px;
             transition: 0.2s;
+            font-family: var(--font);
         }
-        input:focus {
+        input:focus, textarea:focus {
             border-color: var(--purple);
             outline: none;
             box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
@@ -110,10 +111,20 @@
             color: var(--text);
             cursor: pointer;
         }
-        .logout-btn {
+        .logout-btn, .back-btn {
             background: #94a3b8;
-            margin-top: 20px;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-weight: 500;
+            transition: 0.2s;
         }
+        .back-btn { margin-bottom: 20px; }
+        .logout-btn:hover, .back-btn:hover { background: #64748b; }
         .admin-panel {
             max-width: 900px;
         }
@@ -175,25 +186,35 @@
             padding: 4px 8px;
             cursor: pointer;
         }
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 12px;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid var(--border);
+        }
     </style>
 </head>
 <body>
     <button class="theme-toggle" id="themeToggle" title="Переключить тему"><i class="fas fa-moon"></i></button>
 
-    <!-- Форма входа (скроется после успешного входа) -->
+    <!-- Форма входа -->
     <div class="container" id="loginBox">
         <h2><i class="fas fa-lock"></i> Вход</h2>
         <input type="text" id="loginUser" placeholder="Логин">
         <input type="password" id="loginPass" placeholder="Пароль">
         <button onclick="login()">Войти</button>
         <div class="error" id="loginError"></div>
+        <p style="text-align:center; margin-top:15px;"><a href="index.html" style="color:var(--purple);">← Вернуться на сайт</a></p>
     </div>
 
-    <!-- Панель управления (изначально скрыта) -->
+    <!-- Панель управления -->
     <div class="container admin-panel" id="adminBox" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Вернуться на сайт</a>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2><i class="fas fa-newspaper"></i> Управление новостями</h2>
-            <button onclick="logout()" class="logout-btn" style="width:auto; padding:8px 16px;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+            <button onclick="logout()" class="logout-btn" style="width:auto;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
         </div>
         <button onclick="openNewsForm()" style="width:auto; margin-bottom:20px;"><i class="fas fa-plus"></i> Новая новость</button>
         <table>
@@ -202,26 +223,28 @@
         </table>
     </div>
 
-    <!-- Модальное окно редактора -->
+    <!-- Редактор новости -->
     <div class="modal" id="editorModal" style="display:none;">
         <div class="modal-content">
             <button class="modal-close" onclick="closeNewsEditor()">&times;</button>
             <h3 id="editorTitle">Новая новость</h3>
             <input type="text" id="newsTitle" placeholder="Заголовок">
-            <textarea id="newsContent" rows="4" placeholder="Текст новости" style="width:100%; margin:10px 0; padding:12px; border:1px solid var(--border); border-radius:14px; background:var(--bg); color:var(--text);"></textarea>
-            <input type="file" id="newsImages" multiple accept="image/*">
+            <textarea id="newsContent" rows="4" placeholder="Текст новости"></textarea>
+            <!-- НОВОЕ: поле ссылки на изображение -->
+            <label style="display:block; margin-top:15px;">📷 Ссылка на изображение (URL):</label>
+            <input type="text" id="newsImageUrl" placeholder="https://example.com/image.jpg" oninput="previewImage()">
+            <img id="imagePreview" class="image-preview" alt="Предпросмотр" />
             <div class="emoji-picker" id="emojiPicker"></div>
-            <input type="text" id="newsPublishDate" placeholder="Дата и время (Екб)">
+            <label style="display:block; margin-top:15px;">📅 Дата и время публикации (Екб):</label>
+            <input type="text" id="newsPublishDate" placeholder="ГГГГ-ММ-ДД ЧЧ:ММ">
             <button onclick="saveNews()">Сохранить</button>
-            <button onclick="closeNewsEditor()" style="background:#cbd5e1; color:#334155; margin-top:5px;">Отмена</button>
+            <button onclick="closeNewsEditor()" style="background:#cbd5e1; color:#334155;">Отмена</button>
             <div class="error" id="editorError"></div>
         </div>
     </div>
 
     <script>
-        // Твой рабочий API
         const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
-        // Логин и пароль теперь проверяются прямо здесь, без API
         const ADMIN_USER = 'Root';
         const ADMIN_PASS = 'anna1981';
 
@@ -243,15 +266,17 @@
             }
         });
 
-        // --- АВТОРИЗАЦИЯ (ЛОКАЛЬНАЯ) ---
+        // Авторизация
+        if (sessionStorage.getItem('admin_logged') === 'true') {
+            showAdmin();
+        }
+
         function login() {
             const u = document.getElementById('loginUser').value.trim();
             const p = document.getElementById('loginPass').value.trim();
             if (u === ADMIN_USER && p === ADMIN_PASS) {
                 sessionStorage.setItem('admin_logged', 'true');
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminBox').style.display = 'block';
-                loadAdminNews();
+                showAdmin();
             } else {
                 document.getElementById('loginError').textContent = 'Неверный логин или пароль';
             }
@@ -262,24 +287,20 @@
             location.reload();
         }
 
-        // Если уже входили – показываем панель
-        if (sessionStorage.getItem('admin_logged') === 'true') {
+        function showAdmin() {
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('adminBox').style.display = 'block';
             loadAdminNews();
         }
 
-        // --- ЗАГРУЗКА НОВОСТЕЙ ---
+        // Загрузка новостей
         async function loadAdminNews() {
             const tbody = document.getElementById('adminNewsTable');
             tbody.innerHTML = '<tr><td colspan="3">Загрузка...</td></tr>';
             try {
                 const resp = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
                 const data = await resp.json();
-                if (!data.news) {
-                    tbody.innerHTML = '<tr><td colspan="3">Новостей нет</td></tr>';
-                    return;
-                }
+                if (!data.news) return;
                 tbody.innerHTML = data.news.map(n => `
                     <tr>
                         <td>${n.title}</td>
@@ -290,19 +311,17 @@
                         </td>
                     </tr>
                 `).join('');
-            } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="3">Ошибка соединения. Проверь API.</td></tr>';
-            }
+            } catch(e) {}
         }
 
-        // --- РЕДАКТИРОВАНИЕ ---
         let currentEditId = null;
         function openNewsForm() {
             currentEditId = null;
             document.getElementById('editorTitle').textContent = 'Новая новость';
             document.getElementById('newsTitle').value = '';
             document.getElementById('newsContent').value = '';
-            document.getElementById('newsImages').value = '';
+            document.getElementById('newsImageUrl').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
             document.getElementById('newsPublishDate').value = '';
             initEmojiPicker();
             flatpickr("#newsPublishDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: new Date() });
@@ -319,6 +338,9 @@
                     document.getElementById('editorTitle').textContent = 'Редактирование';
                     document.getElementById('newsTitle').value = item.title;
                     document.getElementById('newsContent').value = item.content;
+                    // Заполняем поле ссылки, если есть изображение
+                    document.getElementById('newsImageUrl').value = item.images && item.images.length > 0 ? item.images[0] : '';
+                    previewImage();
                     document.getElementById('newsPublishDate').value = item.publishDate;
                     initEmojiPicker();
                     flatpickr("#newsPublishDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: item.publishDate });
@@ -328,6 +350,17 @@
 
         function closeNewsEditor() {
             document.getElementById('editorModal').style.display = 'none';
+        }
+
+        function previewImage() {
+            const url = document.getElementById('newsImageUrl').value.trim();
+            const img = document.getElementById('imagePreview');
+            if (url) {
+                img.src = url;
+                img.style.display = 'block';
+            } else {
+                img.style.display = 'none';
+            }
         }
 
         function initEmojiPicker() {
@@ -340,23 +373,15 @@
             const title = document.getElementById('newsTitle').value.trim();
             const content = document.getElementById('newsContent').value.trim();
             const publishDate = document.getElementById('newsPublishDate').value.trim() || new Date().toISOString();
-            const files = document.getElementById('newsImages').files;
+            const imageUrl = document.getElementById('newsImageUrl').value.trim();
 
             if (!title || !content) {
                 document.getElementById('editorError').textContent = 'Заполните заголовок и текст';
                 return;
             }
 
-            let imageUrls = [];
-            for (const file of files) {
-                const formData = new FormData();
-                formData.append('file', file);
-                try {
-                    const resp = await fetch(`${API_URL}?action=upload&user=${ADMIN_USER}&pass=${ADMIN_PASS}`, { method: 'POST', body: formData });
-                    const data = await resp.json();
-                    if (data.url) imageUrls.push(data.url);
-                } catch(e) {}
-            }
+            // Изображение берётся из поля ссылки (если не пустое)
+            const images = imageUrl ? imageUrl : '';
 
             const params = new URLSearchParams({
                 action: currentEditId ? 'newsUpdate' : 'newsAdd',
@@ -364,7 +389,7 @@
                 pass: ADMIN_PASS,
                 title,
                 content,
-                images: imageUrls.join('|'),
+                images,
                 publishDate
             });
             if (currentEditId) params.append('id', currentEditId);
