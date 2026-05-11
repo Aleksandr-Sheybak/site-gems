@@ -48,6 +48,7 @@
             transition: background 0.3s, color 0.3s;
             overflow-x: hidden;
         }
+        /* Ништяки — анимированная сетка на фоне */
         body::before {
             content: "";
             position: fixed;
@@ -59,6 +60,34 @@
             background-size: 40px 40px, 60px 60px, 25px 25px, 25px 25px;
             pointer-events: none;
             z-index: 0;
+            animation: bg-drift 20s linear infinite;
+        }
+        @keyframes bg-drift {
+            0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+            100% { background-position: 100px 100px, -100px -100px, 50px 50px, -50px -50px; }
+        }
+        /* Декоративные "парящие" точки */
+        .floating-dots {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .floating-dots span {
+            position: absolute;
+            width: 6px; height: 6px;
+            background: var(--purple);
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: float 8s infinite alternate ease-in-out;
+        }
+        .floating-dots span:nth-child(1) { top: 20%; left: 10%; animation-duration: 7s; }
+        .floating-dots span:nth-child(2) { top: 60%; left: 80%; animation-duration: 9s; background: var(--lightblue); }
+        .floating-dots span:nth-child(3) { top: 80%; left: 30%; animation-duration: 10s; background: var(--emerald); }
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-40px) scale(1.5); opacity: 0.4; }
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; position: relative; z-index: 1; }
 
@@ -94,7 +123,18 @@
 
         section { margin: 80px 0; }
         .section-header { text-align: left; margin-bottom: 40px; }
-        .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(135deg, #7c3aed, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-block; }
+        /* СВЕТЛЫЙ заголовок в тёмной теме */
+        .section-title {
+            font-size: 2.5rem; font-weight: 800; margin-bottom: 15px;
+            background: linear-gradient(135deg, #7c3aed, #38bdf8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+        body.dark .section-title {
+            background: linear-gradient(135deg, #a78bfa, #7dd3fc);
+            -webkit-background-clip: text; background-clip: text;
+        }
         .section-underline { width: 70px; height: 4px; background: linear-gradient(to right, #7c3aed, #38bdf8); border-radius: 4px; margin-bottom: 20px; }
 
         /* О студии – увеличенный логотип и таймлайн */
@@ -105,47 +145,39 @@
         .about-logo-large { width: 300px; height: 300px; border-radius: 40px; object-fit: cover; border: 6px solid rgba(124, 58, 237, 0.3); box-shadow: 0 0 60px rgba(124, 58, 237, 0.5); }
         .about-info { flex: 1; min-width: 300px; }
         .about-info h3 { font-size: 2.2rem; margin-bottom: 15px; color: var(--darkblue); }
+        body.dark .about-info h3 { color: #f1f5f9; }
         .about-info p { margin-bottom: 18px; display: flex; align-items: flex-start; gap: 12px; font-size: 1.05rem; }
         .about-info i { color: var(--purple); font-size: 1.2rem; width: 24px; text-align: center; margin-top: 4px; }
 
-        /* Таймлайн */
-        .timeline {
-            position: relative;
-            max-width: 600px;
-            margin: 40px 0 0;
-            padding: 20px 0;
+        /* План работы (ништяк) */
+        .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
         }
-        .timeline::before {
+        .plan-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--card-border);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .plan-card::before {
             content: '';
             position: absolute;
-            left: 18px;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(to bottom, var(--purple), var(--lightblue));
-            border-radius: 3px;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(to right, var(--purple), var(--lightblue));
         }
-        .timeline-item {
-            margin-bottom: 30px;
-            padding-left: 50px;
-            position: relative;
-        }
-        .timeline-dot {
-            position: absolute;
-            left: 11px;
-            top: 0;
-            width: 16px;
-            height: 16px;
-            background: var(--purple);
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
-        }
-        .timeline-content h4 { font-size: 1.3rem; color: var(--darkblue); margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
-        .timeline-content p { color: var(--text); }
-        .timeline-content i { color: var(--purple); }
-
-        .error-report { margin-top: 30px; font-size: 0.95rem; }
-        .error-report a { color: var(--raspberry); font-weight: 600; }
+        .plan-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .plan-card i { font-size: 2.5rem; color: var(--purple); margin-bottom: 15px; }
+        .plan-card h4 { font-size: 1.4rem; color: var(--darkblue); margin-bottom: 10px; }
+        body.dark .plan-card h4 { color: #f1f5f9; }
+        .plan-card p { color: var(--text); }
 
         /* Места */
         .venues-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; }
@@ -154,18 +186,20 @@
         .venue-img { height: 200px; background-size: cover; background-position: center; }
         .venue-body { padding: 25px; }
         .venue-body h3 { font-size: 1.5rem; margin-bottom: 12px; color: var(--darkblue); display: flex; align-items: center; gap: 8px; }
+        body.dark .venue-body h3 { color: #f1f5f9; }
         .venue-body ul { list-style: none; padding: 0; }
         .venue-body li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         .venue-body li i { color: var(--purple); width: 20px; text-align: center; }
 
-        /* Карточки курсов */
+        /* Карточки курсов – кнопки на одном уровне */
         .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 35px; align-items: stretch; }
         .course-card { background: var(--card-bg); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid var(--card-border); display: flex; flex-direction: column; }
         .course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
         .course-img { height: 200px; background-size: cover; background-position: center; display: flex; align-items: flex-end; color: white; padding: 20px; font-size: 1.8rem; font-weight: 700; text-shadow: 0 4px 12px rgba(0,0,0,0.6); }
         .course-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
-        .price-tag { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: white; padding: 8px 20px; border-radius: 40px; font-weight: 600; display: inline-block; margin-bottom: 15px; }
-        .btn-expand { background: var(--lightblue); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; margin-top: auto; align-self: flex-start; }
+        /* Теперь ценник и кнопка "прижаты" к низу */
+        .course-body .price-tag { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: white; padding: 8px 20px; border-radius: 40px; font-weight: 600; display: inline-block; margin-bottom: 15px; margin-top: auto; }
+        .btn-expand { background: var(--lightblue); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; align-self: flex-start; margin-top: 15px; }
         .expanded-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
         .expanded-content.open { max-height: 500px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--card-border); }
 
@@ -174,7 +208,8 @@
         .news-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
         .news-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; }
         .news-date { color: var(--purple); font-size: 0.9rem; margin-bottom: 8px; }
-        .news-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
+        .news-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--darkblue); }
+        body.dark .news-title { color: #f1f5f9; }
         .news-text { max-height: 4.5em; overflow: hidden; transition: max-height 0.4s; }
         .news-text.open { max-height: 600px; }
         .read-more-btn { background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600; }
@@ -197,8 +232,16 @@
         .faq-answer.open { max-height: 300px; }
         .faq-answer-content { padding: 0 30px 25px; color: var(--text); line-height: 1.6; }
 
-        /* Сертификаты */
-        .gift-container { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; background: var(--card-bg); border-radius: var(--radius); padding: 40px; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
+        /* Сертификаты – по центру */
+        .gift-wrapper {
+            display: flex; justify-content: center;
+        }
+        .gift-container {
+            display: flex; flex-wrap: wrap; gap: 40px; align-items: center;
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 40px; box-shadow: var(--shadow); border: 1px solid var(--card-border);
+            width: fit-content;
+        }
         .gift-img { width: 200px; border-radius: 20px; box-shadow: var(--shadow); }
         .contact-badge { display: inline-block; background: var(--lightblue); color: white; padding: 8px 20px; border-radius: 30px; text-decoration: none; margin-right: 10px; }
 
@@ -211,16 +254,31 @@
         .team-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
         .team-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--emerald); }
 
-        /* Тёмная тема */
-        body.dark .feature-icon { color: var(--purple-light); }
-        body.dark .course-body h3, body.dark .news-title { color: #f1f5f9; }
-        body.dark .section-title { background: linear-gradient(135deg, #a78bfa, #38bdf8); -webkit-background-clip: text; background-clip: text; }
-        body.dark .header, body.dark .course-card, body.dark .news-card, body.dark .venue-card, body.dark .gift-container, body.dark .team-card, body.dark .faq-item { background: #1e293b; border-color: #334155; }
+        /* Тёмная тема для элементов */
+        body.dark .course-body h3, body.dark .plan-card h4, body.dark .venue-body h3 { color: #f1f5f9; }
+        body.dark .section-title { background: linear-gradient(135deg, #a78bfa, #7dd3fc); -webkit-background-clip: text; background-clip: text; }
+        body.dark .header, body.dark .course-card, body.dark .news-card, body.dark .venue-card, body.dark .gift-container, body.dark .team-card, body.dark .faq-item, body.dark .plan-card { background: #1e293b; border-color: #334155; }
         body.dark .btn-expand { background: #4c1d95; }
         footer { text-align: center; padding: 30px; border-top: 1px solid var(--card-border); margin-top: 60px; color: var(--text); }
+
+        .error-report { margin-top: 30px; font-size: 0.95rem; }
+        .error-report a { color: var(--raspberry); font-weight: 600; }
+        .phone-btn { background: var(--purple); color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; display: inline-block; margin-top: 10px; }
+
+        /* Ништяк – пульсирующая иконка */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pulse-icon { animation: pulse 2s infinite; color: var(--purple); }
     </style>
 </head>
 <body>
+    <div class="floating-dots">
+        <span></span><span></span><span></span>
+    </div>
+
     <header class="header">
         <div class="logo-container">
             <img class="logo-img" src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип">
@@ -260,32 +318,26 @@
                     <h3>Студия «Самоцветы»</h3>
                     <p><i class="fas fa-map-pin"></i> <strong>Находимся:</strong> г. Сысерть, ул. Коммуны, 36. Вход со двора пятиэтажного панельного дома, недалеко от остановки. Уютное пространство, где дети чувствуют себя как дома.</p>
                     <p><i class="fas fa-star"></i> <strong>Наша миссия:</strong> Раскрыть творческий потенциал каждого ребёнка, научить говорить красиво, писать уверенно и мыслить свободно. Мы верим, что грамотная речь и аккуратный почерк — фундамент успеха в будущем.</p>
-                    <p><i class="fas fa-heart"></i> <strong>Почему мы уникальны:</strong> Авторские методики, малые группы, индивидуальный подход. Мы не просто учим — мы вдохновляем, поддерживаем и создаём среду, в которой ребёнок растёт с радостью. Каждое занятие — это маленькое приключение с играми, творческими заданиями и живым общением.</p>
+                    <p><i class="fas fa-heart pulse-icon"></i> <strong>Почему мы уникальны:</strong> Авторские методики, малые группы, индивидуальный подход. Мы не просто учим — мы вдохновляем, поддерживаем и создаём среду, в которой ребёнок растёт с радостью. Каждое занятие — это маленькое приключение с играми, творческими заданиями и живым общением.</p>
                 </div>
             </div>
 
-            <!-- Таймлайн -->
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h4><i class="fas fa-calendar-alt"></i> Апрель 2025</h4>
-                        <p>Бесплатные мастер‑классы по каллиграфии. Знакомство с пером, первые шаги к красивому почерку.</p>
-                    </div>
+            <!-- План работы (ништяк) -->
+            <div class="plan-grid">
+                <div class="plan-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h4>Апрель 2025</h4>
+                    <p>Бесплатные мастер‑классы по каллиграфии. Знакомство с пером, первые шаги к красивому почерку.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h4><i class="fas fa-calendar-check"></i> Май 2025</h4>
-                        <p>Открытие платных групп. Индивидуальные и групповые занятия по авторским программам.</p>
-                    </div>
+                <div class="plan-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <h4>Май 2025</h4>
+                    <p>Открытие платных групп. Индивидуальные и групповые занятия по авторским программам.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <h4><i class="fas fa-calendar-plus"></i> Июнь 2025</h4>
-                        <p>Запуск Клуба выходного дня и курса ораторского мастерства. Творческие субботы и мастерская слова для детей и подростков.</p>
-                    </div>
+                <div class="plan-card">
+                    <i class="fas fa-calendar-plus"></i>
+                    <h4>Июнь 2025</h4>
+                    <p>Запуск Клуба выходного дня и курса ораторского мастерства. Творческие субботы и мастерская слова для детей и подростков.</p>
                 </div>
             </div>
 
@@ -376,23 +428,25 @@
             </div>
         </section>
 
-        <!-- Сертификаты -->
+        <!-- Сертификаты (по центру) -->
         <section id="gift">
             <div class="section-header">
                 <h2 class="section-title">Подарочные сертификаты</h2>
                 <div class="section-underline"></div>
             </div>
-            <div class="gift-container">
-                <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" class="gift-img">
-                <div>
-                    <h3 style="font-size: 2rem;">Сертификат на одно занятие</h3>
-                    <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Посещение любого курса на выбор</p>
-                    <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Электронный или бумажный формат</p>
-                    <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Прекрасный подарок для ребёнка</p>
-                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--purple); margin: 15px 0;">700 руб.</div>
+            <div class="gift-wrapper">
+                <div class="gift-container">
+                    <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" class="gift-img">
                     <div>
-                        <a href="tel:89667167436" class="contact-badge"><i class="fas fa-phone"></i> Позвонить</a>
-                        <a href="https://vk.com/samotsveti_sysert" target="_blank" class="contact-badge"><i class="fab fa-vk"></i> ВКонтакте</a>
+                        <h3 style="font-size: 2rem;">Сертификат на одно занятие</h3>
+                        <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Посещение любого курса на выбор</p>
+                        <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Электронный или бумажный формат</p>
+                        <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Прекрасный подарок для ребёнка</p>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--purple); margin: 15px 0;">700 руб.</div>
+                        <div>
+                            <a href="tel:89667167436" class="contact-badge"><i class="fas fa-phone"></i> Позвонить</a>
+                            <a href="https://vk.com/samotsveti_sysert" target="_blank" class="contact-badge"><i class="fab fa-vk"></i> ВКонтакте</a>
+                        </div>
                     </div>
                 </div>
             </div>
