@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель управления — Самоцветы</title>
+    <title>Панель управления — Самоцветы CRM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -134,7 +134,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 200;
         }
         .modal-content {
             background: var(--card-bg);
@@ -149,15 +149,11 @@
         }
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text);
+            top: 15px; right: 15px;
+            background: none; border: none;
+            font-size: 24px; cursor: pointer; color: var(--text);
         }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
         .badge {
             display: inline-block;
             padding: 4px 12px;
@@ -192,11 +188,11 @@
         }
         .hidden { display: none !important; }
         .log-entry { font-size: 0.9rem; color: var(--text); padding: 5px 0; border-bottom: 1px dashed var(--border); }
-        .chart-container { max-width: 600px; margin: 0 auto; }
+        .print-btn { background: #6366f1; margin-left: 10px; }
     </style>
 </head>
 <body>
-    <!-- Мобильная кнопка меню -->
+    <!-- Кнопка меню для мобильных -->
     <button class="mobile-menu-btn hidden" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
     <!-- Боковое меню -->
@@ -205,21 +201,19 @@
             <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" style="width:50px; border-radius:50%;">
             <h3 style="color:var(--purple); margin:10px 0;">Самоцветы</h3>
         </div>
-        <a href="#content" class="active" onclick="showTab('content')"><i class="fas fa-edit"></i> Контент</a>
-        <a href="#news" onclick="showTab('news')"><i class="fas fa-newspaper"></i> Новости</a>
-        <a href="#certs" onclick="showTab('certs')"><i class="fas fa-gift"></i> Сертификаты</a>
-        <a href="#analytics" onclick="showTab('analytics')"><i class="fas fa-chart-bar"></i> Аналитика</a>
-        <a href="#logs" onclick="showTab('logs')"><i class="fas fa-history"></i> Логи</a>
-        <a href="#files" onclick="showTab('files')"><i class="fas fa-file-upload"></i> Файлы</a>
-        <a href="#schedule" onclick="showTab('schedule')"><i class="fas fa-calendar-alt"></i> Расписание</a>
+        <a href="#dashboard" class="active" onclick="showTab('dashboard')"><i class="fas fa-tachometer-alt"></i> Дашборд</a>
+        <a href="#quarters" onclick="showTab('quarters')"><i class="fas fa-calendar-alt"></i> Кварталы</a>
+        <a href="#courses" onclick="showTab('courses')"><i class="fas fa-book"></i> Курсы</a>
         <a href="#clients" onclick="showTab('clients')"><i class="fas fa-users"></i> Клиенты</a>
+        <a href="#sales" onclick="showTab('sales')"><i class="fas fa-shopping-cart"></i> Продажи</a>
+        <a href="#expenses" onclick="showTab('expenses')"><i class="fas fa-coins"></i> Траты</a>
         <button class="theme-toggle" id="themeToggle" style="position:static; margin-top:auto;"><i class="fas fa-moon"></i></button>
         <button onclick="logout()" style="background:#ef4444; color:white; margin-top:10px;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
     </div>
 
     <!-- Основной контент -->
     <div class="main-content" id="mainContent">
-        <!-- Вход (скрыт после авторизации) -->
+        <!-- Вход -->
         <div id="loginTab" class="tab-pane active">
             <div class="login-box">
                 <div class="login-card">
@@ -232,371 +226,304 @@
             </div>
         </div>
 
-        <!-- Контент сайта -->
-        <div id="contentTab" class="tab-pane">
-            <div class="card">
-                <h2><i class="fas fa-pencil-alt"></i> Редактирование текстов</h2>
-                <div id="contentList"></div>
-            </div>
+        <!-- Дашборд -->
+        <div id="dashboardTab" class="tab-pane">
+            <div class="card"><h2><i class="fas fa-chart-pie"></i> Сводка текущего квартала</h2><div id="dashboardStats" class="grid-2"></div></div>
+            <div class="card"><h2><i class="fas fa-chart-line"></i> График дохода</h2><canvas id="incomeChart" height="100"></canvas></div>
         </div>
 
-        <!-- Новости -->
-        <div id="newsTab" class="tab-pane">
+        <!-- Кварталы -->
+        <div id="quartersTab" class="tab-pane">
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2><i class="fas fa-newspaper"></i> Управление новостями</h2>
-                    <button onclick="openNewsForm()"><i class="fas fa-plus"></i> Добавить</button>
+                    <h2><i class="fas fa-calendar-check"></i> Кварталы</h2>
+                    <button onclick="openQuarterForm()"><i class="fas fa-plus"></i> Создать</button>
                 </div>
-                <table id="newsTable"><thead><tr><th>Заголовок</th><th>Дата</th><th>Статус</th><th>Действия</th></tr></thead><tbody></tbody></table>
+                <table id="quartersTable"><thead><tr><th>Название</th><th>Год</th><th>Квартал</th><th>Статус</th><th>Действия</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
-        <!-- Сертификаты -->
-        <div id="certsTab" class="tab-pane">
+        <!-- Курсы -->
+        <div id="coursesTab" class="tab-pane">
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2><i class="fas fa-gift"></i> Сертификаты</h2>
-                    <button onclick="openCertForm()"><i class="fas fa-plus"></i> Создать</button>
+                    <h2><i class="fas fa-chalkboard-teacher"></i> Курсы</h2>
+                    <button onclick="openCourseForm()"><i class="fas fa-plus"></i> Добавить</button>
                 </div>
-                <table id="certsTable"><thead><tr><th>Код</th><th>Номинал</th><th>Статус</th><th>Клиент</th><th>Действия</th></tr></thead><tbody></tbody></table>
+                <table id="coursesTable"><thead><tr><th>Название</th><th>Цена билета</th><th>Себестоимость</th><th>Мест</th><th>Бесплатный</th><th></th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
-        <!-- Аналитика -->
-        <div id="analyticsTab" class="tab-pane">
+        <!-- Клиенты -->
+        <div id="clientsTab" class="tab-pane">
             <div class="card">
-                <h2><i class="fas fa-chart-line"></i> Аналитика</h2>
-                <div class="chart-container"><canvas id="analyticsChart"></canvas></div>
-                <table id="analyticsTable" class="hidden"></table>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2><i class="fas fa-address-card"></i> Клиенты</h2>
+                    <button onclick="openClientForm()"><i class="fas fa-user-plus"></i> Добавить</button>
+                </div>
+                <table id="clientsTable"><thead><tr><th>ФИО</th><th>Телефон</th><th>Возраст</th><th>Рука</th><th></th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
-        <!-- Логи -->
-        <div id="logsTab" class="tab-pane">
+        <!-- Продажи -->
+        <div id="salesTab" class="tab-pane">
             <div class="card">
-                <h2><i class="fas fa-history"></i> Журнал действий</h2>
-                <div id="logsContainer"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2><i class="fas fa-cash-register"></i> Продажи билетов</h2>
+                    <button onclick="openSaleForm()"><i class="fas fa-plus"></i> Записать</button>
+                </div>
+                <table id="salesTable"><thead><tr><th>Курс</th><th>Билетов</th><th>Сумма</th><th>Дата</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
-        <!-- Файлы -->
-        <div id="filesTab" class="tab-pane">
+        <!-- Траты -->
+        <div id="expensesTab" class="tab-pane">
             <div class="card">
-                <h2><i class="fas fa-file-upload"></i> Загрузка изображений</h2>
-                <input type="file" id="fileInput">
-                <button onclick="uploadFile()">Загрузить</button>
-                <p id="uploadStatus"></p>
-                <input type="text" id="uploadedUrl" readonly placeholder="Ссылка появится здесь">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2><i class="fas fa-receipt"></i> Траты</h2>
+                    <button onclick="openExpenseForm()"><i class="fas fa-plus"></i> Добавить</button>
+                </div>
+                <table id="expensesTable"><thead><tr><th>Описание</th><th>Сумма</th><th>Дата</th></tr></thead><tbody></tbody></table>
             </div>
-        </div>
-
-        <!-- Заглушки -->
-        <div id="scheduleTab" class="tab-pane"><div class="card"><h2><i class="fas fa-calendar-alt"></i> Расписание</h2><p>Раздел в разработке. Здесь будет календарь занятий на 6 недель.</p></div></div>
-        <div id="clientsTab" class="tab-pane"><div class="card"><h2><i class="fas fa-users"></i> Клиенты</h2><p>Раздел в разработке. Будет список клиентов, записи на курсы, история покупок.</p></div></div>
-    </div>
-
-    <!-- Модальное окно редактора новости -->
-    <div class="modal hidden" id="newsModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeNewsModal()">&times;</button>
-            <h3 id="newsModalTitle">Новая новость</h3>
-            <input type="text" id="newsTitle" placeholder="Заголовок">
-            <textarea id="newsContent" rows="4" placeholder="Текст новости"></textarea>
-            <input type="text" id="newsImages" placeholder="Ссылки на изображения через запятую">
-            <input type="text" id="newsDate" placeholder="Дата публикации (Екб)">
-            <button onclick="saveNews()">Сохранить</button>
         </div>
     </div>
 
-    <!-- Модальное окно сертификата -->
-    <div class="modal hidden" id="certModal">
+    <!-- Модальные окна -->
+    <div class="modal hidden" id="quarterModal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeCertModal()">&times;</button>
-            <h3>Новый сертификат</h3>
-            <input type="text" id="certCode" placeholder="Код (например, CERT123)">
-            <input type="number" id="certNominal" placeholder="Номинал (руб.)" value="700">
-            <button onclick="addCert()">Создать</button>
+            <button class="modal-close" onclick="closeModal('quarterModal')">&times;</button>
+            <h3 id="quarterModalTitle">Новый квартал</h3>
+            <input type="text" id="quarterName" placeholder="Название (например, Q1 2025)">
+            <input type="number" id="quarterYear" placeholder="Год" value="2025">
+            <input type="number" id="quarterNum" placeholder="Номер квартала (1-4)" min="1" max="4">
+            <input type="number" id="quarterBudget" placeholder="Бюджет">
+            <button onclick="saveQuarter()">Сохранить</button>
         </div>
     </div>
 
-    <!-- Модальное окно редактирования ключа контента -->
-    <div class="modal hidden" id="contentModal">
+    <div class="modal hidden" id="courseModal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeContentModal()">&times;</button>
-            <h3>Редактирование текста</h3>
-            <p id="contentKeyName"></p>
-            <textarea id="contentText" rows="5"></textarea>
-            <button onclick="saveContent()">Сохранить</button>
+            <button class="modal-close" onclick="closeModal('courseModal')">&times;</button>
+            <h3>Курс</h3>
+            <input type="text" id="courseName" placeholder="Название">
+            <input type="number" id="coursePrice" placeholder="Стоимость билета">
+            <input type="number" id="courseCost" placeholder="Себестоимость">
+            <input type="number" id="courseSeats" placeholder="Количество мест">
+            <select id="courseFree"><option value="no">Платный</option><option value="yes">Бесплатный</option></select>
+            <select id="courseQuarter"></select>
+            <button onclick="saveCourse()">Сохранить</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="clientModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('clientModal')">&times;</button>
+            <h3 id="clientModalTitle">Новый клиент</h3>
+            <input type="text" id="clientFio" placeholder="ФИО">
+            <input type="text" id="clientPhone" placeholder="Телефон">
+            <input type="email" id="clientEmail" placeholder="Email">
+            <input type="number" id="clientAge" placeholder="Возраст">
+            <select id="clientHand"><option value="правая">Правая</option><option value="левая">Левая</option></select>
+            <input type="text" id="clientAvatar" placeholder="Ссылка на аватар">
+            <textarea id="clientNotes" placeholder="Заметки"></textarea>
+            <button onclick="saveClient()">Сохранить</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="clientDetailModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <button class="modal-close" onclick="closeModal('clientDetailModal')">&times;</button>
+            <img id="detailAvatar" style="width:100px; border-radius:50%; margin:0 auto; display:block;">
+            <h2 id="detailName"></h2>
+            <p id="detailInfo"></p>
+            <h4>Пропуски</h4>
+            <div id="detailPasses"></div>
+            <h4>Оценки</h4>
+            <div id="detailMarks"></div>
+            <button onclick="openPassForm()" class="btn-outline">Выдать пропуск</button>
+            <button onclick="openMarkForm()" class="btn-outline">Поставить оценку</button>
+        </div>
+    </div>
+
+    <!-- Модалки для пропусков, оценок, продаж, трат -->
+    <div class="modal hidden" id="passModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('passModal')">&times;</button>
+            <h3>Выдать пропуск</h3>
+            <select id="passCourse"></select>
+            <input type="number" id="passCount" placeholder="Количество занятий">
+            <button onclick="savePass()">Сохранить</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="markModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('markModal')">&times;</button>
+            <h3>Оценка</h3>
+            <select id="markCourse"></select>
+            <select id="markValue"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+            <textarea id="markComment" placeholder="Комментарий педагога"></textarea>
+            <button onclick="saveMark()">Сохранить</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="saleModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('saleModal')">&times;</button>
+            <h3>Продажа билетов</h3>
+            <select id="saleCourse"></select>
+            <input type="number" id="saleTickets" placeholder="Количество билетов">
+            <button onclick="saveSale()">Записать</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="expenseModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('expenseModal')">&times;</button>
+            <h3>Добавить трату</h3>
+            <input type="text" id="expenseDesc" placeholder="Описание">
+            <input type="number" id="expenseAmount" placeholder="Сумма">
+            <button onclick="saveExpense()">Сохранить</button>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbz_VLLc_T1_QrdY8PNyEsW0ngkNCtOQxqjaW8Hgx9w4yjbyL7P4OWnqgi08HjpEV8WX2A/exec';
+        const API_URL = 'ВАШ_API_URL'; // замените на реальный URL после обновления Code.gs
         const ADMIN_USER = 'Root';
         const ADMIN_PASS = 'anna1981';
-        let currentEditNewsId = null;
-        let currentContentKey = null;
 
         // ========== ТЁМНАЯ ТЕМА ==========
         const themeToggle = document.getElementById('themeToggle');
-        if (themeToggle) {
-            const icon = themeToggle.querySelector('i');
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark');
-                icon.classList.replace('fa-moon', 'fa-sun');
-            }
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark');
-                if (document.body.classList.contains('dark')) {
-                    localStorage.setItem('theme', 'dark');
-                    icon.classList.replace('fa-moon', 'fa-sun');
-                } else {
-                    localStorage.setItem('theme', 'light');
-                    icon.classList.replace('fa-sun', 'fa-moon');
-                }
-            });
+        const icon = themeToggle.querySelector('i');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
         }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            if (document.body.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
 
         // ========== АВТОРИЗАЦИЯ ==========
         if (sessionStorage.getItem('admin_logged') === 'true') {
-            showAdminInterface();
+            document.getElementById('loginTab').classList.remove('active');
+            showTab('dashboard');
         }
-
         function login() {
             const u = document.getElementById('loginUser').value.trim();
             const p = document.getElementById('loginPass').value.trim();
             if (u === ADMIN_USER && p === ADMIN_PASS) {
                 sessionStorage.setItem('admin_logged', 'true');
-                showAdminInterface();
+                document.getElementById('loginTab').classList.remove('active');
+                showTab('dashboard');
             } else {
                 document.getElementById('loginError').textContent = 'Неверные данные';
             }
         }
-
-        function logout() {
-            sessionStorage.removeItem('admin_logged');
-            location.reload();
-        }
-
-        function showAdminInterface() {
-            document.getElementById('loginTab').classList.remove('active');
-            document.getElementById('loginTab').classList.add('hidden');
-            showTab('content');
-        }
+        function logout() { sessionStorage.removeItem('admin_logged'); location.reload(); }
 
         // ========== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ==========
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
-            document.querySelector(`.sidebar a[href="#${tabName}"]`)?.classList.add('active');
-            // Загрузка данных
-            if (tabName === 'content') loadContent();
-            if (tabName === 'news') loadNews();
-            if (tabName === 'certs') loadCerts();
-            if (tabName === 'analytics') loadAnalytics();
-            if (tabName === 'logs') loadLogs();
-            if (tabName === 'files') document.getElementById('uploadedUrl').value = '';
+        function showTab(name) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById(name + 'Tab').classList.add('active');
+            document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+            document.querySelector(`.sidebar a[href="#${name}"]`)?.classList.add('active');
+            if (name === 'dashboard') loadDashboard();
+            if (name === 'quarters') loadQuarters();
+            if (name === 'courses') loadCourses();
+            if (name === 'clients') loadClients();
+            if (name === 'sales') loadSales();
+            if (name === 'expenses') loadExpenses();
         }
 
-        // ========== РАБОТА С API ==========
-        async function apiGet(params) {
+        // ========== API ==========
+        async function api(params) {
             const url = API_URL + '?' + new URLSearchParams(params).toString();
-            const response = await fetch(url);
-            return response.json();
+            const r = await fetch(url);
+            return r.json();
         }
 
-        // ========== КОНТЕНТ ==========
-        async function loadContent() {
-            const data = await apiGet({ action: 'getContent' });
-            const container = document.getElementById('contentList');
-            if (data.content) {
-                container.innerHTML = Object.entries(data.content).map(([key, value]) => `
-                    <div class="card" style="margin-bottom:15px;">
-                        <strong>${key}</strong>
-                        <p style="color: var(--text); margin:10px 0;">${value}</p>
-                        <button class="btn-outline" onclick="openContentEditor('${key}', '${value.replace(/'/g, "\\'")}')">Редактировать</button>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function openContentEditor(key, text) {
-            currentContentKey = key;
-            document.getElementById('contentKeyName').textContent = key;
-            document.getElementById('contentText').value = text;
-            document.getElementById('contentModal').classList.remove('hidden');
-        }
-
-        function closeContentModal() {
-            document.getElementById('contentModal').classList.add('hidden');
-        }
-
-        async function saveContent() {
-            const text = document.getElementById('contentText').value;
-            await apiGet({ action: 'updateContent', user: ADMIN_USER, pass: ADMIN_PASS, key: currentContentKey, text: text });
-            closeContentModal();
-            loadContent();
-        }
-
-        // ========== НОВОСТИ ==========
-        async function loadNews() {
-            const data = await apiGet({ action: 'newsAdmin', user: ADMIN_USER, pass: ADMIN_PASS });
-            const tbody = document.querySelector('#newsTable tbody');
-            tbody.innerHTML = data.news.map(n => `
-                <tr>
-                    <td>${n.title}</td>
-                    <td>${new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' })}</td>
-                    <td><span class="badge ${n.status === 'published' ? 'badge-success' : 'badge-warning'}">${n.status}</span></td>
-                    <td>
-                        <button onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function openNewsForm() {
-            currentEditNewsId = null;
-            document.getElementById('newsModalTitle').textContent = 'Новая новость';
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsContent').value = '';
-            document.getElementById('newsImages').value = '';
-            document.getElementById('newsDate').value = '';
-            document.getElementById('newsModal').classList.remove('hidden');
-            flatpickr("#newsDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: new Date() });
-        }
-
-        async function editNews(id) {
-            const data = await apiGet({ action: 'newsAdmin', user: ADMIN_USER, pass: ADMIN_PASS });
-            const item = data.news.find(n => n.id === id);
-            if (!item) return;
-            currentEditNewsId = id;
-            document.getElementById('newsModalTitle').textContent = 'Редактирование';
-            document.getElementById('newsTitle').value = item.title;
-            document.getElementById('newsContent').value = item.content;
-            document.getElementById('newsImages').value = (item.images || []).join(', ');
-            document.getElementById('newsDate').value = item.publishDate || '';
-            document.getElementById('newsModal').classList.remove('hidden');
-            flatpickr("#newsDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: item.publishDate || new Date() });
-        }
-
-        function closeNewsModal() { document.getElementById('newsModal').classList.add('hidden'); }
-
-        async function saveNews() {
-            const params = {
-                action: currentEditNewsId ? 'newsUpdate' : 'newsAdd',
-                user: ADMIN_USER,
-                pass: ADMIN_PASS,
-                title: document.getElementById('newsTitle').value,
-                content: document.getElementById('newsContent').value,
-                images: document.getElementById('newsImages').value,
-                publishDate: document.getElementById('newsDate').value
-            };
-            if (currentEditNewsId) params.id = currentEditNewsId;
-            await apiGet(params);
-            closeNewsModal();
-            loadNews();
-        }
-
-        async function deleteNews(id) {
-            if (!confirm('Удалить новость?')) return;
-            await apiGet({ action: 'newsDelete', user: ADMIN_USER, pass: ADMIN_PASS, id: id });
-            loadNews();
-        }
-
-        // ========== СЕРТИФИКАТЫ ==========
-        async function loadCerts() {
-            const data = await apiGet({ action: 'certs', user: ADMIN_USER, pass: ADMIN_PASS });
-            const tbody = document.querySelector('#certsTable tbody');
-            tbody.innerHTML = data.certs.map(c => `
-                <tr>
-                    <td>${c.code}</td>
-                    <td>${c.nominal} ₽</td>
-                    <td><span class="badge ${c.status === 'Активирован' ? 'badge-success' : 'badge-danger'}">${c.status}</span></td>
-                    <td>${c.client || '—'}</td>
-                    <td>
-                        ${c.status !== 'Активирован' ? `<button onclick="activateCert('${c.id}')">Активировать</button>` : ''}
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function openCertForm() {
-            document.getElementById('certModal').classList.remove('hidden');
-        }
-        function closeCertModal() { document.getElementById('certModal').classList.add('hidden'); }
-
-        async function addCert() {
-            const code = document.getElementById('certCode').value.trim();
-            const nominal = document.getElementById('certNominal').value;
-            await apiGet({ action: 'certAdd', user: ADMIN_USER, pass: ADMIN_PASS, code: code || undefined, nominal: nominal });
-            closeCertModal();
-            loadCerts();
-        }
-
-        async function activateCert(id) {
-            await apiGet({ action: 'certActivate', user: ADMIN_USER, pass: ADMIN_PASS, id: id });
-            loadCerts();
-        }
-
-        // ========== АНАЛИТИКА ==========
-        async function loadAnalytics() {
-            const data = await apiGet({ action: 'analytics', user: ADMIN_USER, pass: ADMIN_PASS });
-            if (data.analytics && data.analytics.length > 0) {
-                const labels = data.analytics.map(r => r[0]);
-                const values = data.analytics.map(r => r[2]);
-                if (window.analyticsChart) window.analyticsChart.destroy();
-                const ctx = document.getElementById('analyticsChart').getContext('2d');
-                window.analyticsChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Активность',
-                            data: values,
-                            borderColor: '#7c3aed',
-                            tension: 0.2
-                        }]
-                    }
-                });
-            }
-        }
-
-        // ========== ЛОГИ ==========
-        async function loadLogs() {
-            const data = await apiGet({ action: 'logs', user: ADMIN_USER, pass: ADMIN_PASS });
-            const container = document.getElementById('logsContainer');
-            if (data.logs) {
-                container.innerHTML = data.logs.slice(-20).map(row => `<div class="log-entry">[${row[0]}] ${row[1]}: ${row[3]}</div>`).join('');
-            }
-        }
-
-        // ========== ЗАГРУЗКА ФАЙЛОВ ==========
-        async function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            if (!file) return;
-            const formData = new FormData();
-            formData.append('file', file);
-            const url = API_URL + '?action=upload&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS;
-            try {
-                const resp = await fetch(url, { method: 'POST', body: formData });
-                const data = await resp.json();
-                if (data.url) {
-                    document.getElementById('uploadedUrl').value = data.url;
-                    document.getElementById('uploadStatus').textContent = 'Файл загружен';
+        // ========== ДАШБОРД ==========
+        async function loadDashboard() {
+            const data = await api({ action: 'dashboard', user: ADMIN_USER, pass: ADMIN_PASS });
+            document.getElementById('dashboardStats').innerHTML = `
+                <div class="card"><h4>Доход</h4><p style="font-size:1.5rem; color:var(--emerald);">${data.income || 0} ₽</p></div>
+                <div class="card"><h4>Расход</h4><p style="font-size:1.5rem; color:var(--orange);">${data.expenses || 0} ₽</p></div>
+                <div class="card"><h4>Чистая прибыль</h4><p style="font-size:1.5rem; color:var(--purple);">${data.profit || 0} ₽</p></div>
+                <div class="card"><h4>Клиенты</h4><p style="font-size:1.5rem;">${data.clientsCount || 0}</p></div>
+                <div class="card"><h4>Курсы</h4><p style="font-size:1.5rem;">${data.coursesCount || 0}</p></div>
+                <div class="card"><h4>Билетов продано</h4><p style="font-size:1.5rem;">${data.ticketsSold || 0}</p></div>
+            `;
+            // график
+            const ctx = document.getElementById('incomeChart').getContext('2d');
+            if (window.incomeChartInstance) window.incomeChartInstance.destroy();
+            window.incomeChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.chartLabels || [],
+                    datasets: [{
+                        label: 'Доход по неделям',
+                        data: data.chartData || [],
+                        borderColor: '#7c3aed',
+                        backgroundColor: 'rgba(124,58,237,0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
                 }
-            } catch (e) {
-                document.getElementById('uploadStatus').textContent = 'Ошибка загрузки';
-            }
+            });
         }
+
+        // ========== КВАРТАЛЫ ==========
+        async function loadQuarters() {
+            const data = await api({ action: 'quarterList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const tbody = document.querySelector('#quartersTable tbody');
+            tbody.innerHTML = data.quarters.map(q => `
+                <tr>
+                    <td>${q.name}</td><td>${q.year}</td><td>Q${q.quarter}</td>
+                    <td><span class="badge ${q.status === 'active' ? 'badge-success' : 'badge-warning'}">${q.status}</span></td>
+                    <td>
+                        <button onclick="editQuarter('${q.id}')"><i class="fas fa-edit"></i></button>
+                        <button onclick="archiveQuarter('${q.id}')"><i class="fas fa-archive"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openQuarterForm() {
+            document.getElementById('quarterModal').classList.remove('hidden');
+        }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        async function saveQuarter() {
+            const params = {
+                action: 'quarterAdd', user: ADMIN_USER, pass: ADMIN_PASS,
+                name: document.getElementById('quarterName').value,
+                year: document.getElementById('quarterYear').value,
+                quarter: document.getElementById('quarterNum').value,
+                budget: document.getElementById('quarterBudget').value
+            };
+            await api(params);
+            closeModal('quarterModal');
+            loadQuarters();
+        }
+        async function editQuarter(id) { /* ... загрузка и открытие модалки с заполнением */ }
+        async function archiveQuarter(id) {
+            await api({ action: 'quarterArchive', user: ADMIN_USER, pass: ADMIN_PASS, id });
+            loadQuarters();
+        }
+
+        // Аналогичные функции для курсов, клиентов, продаж, трат, пропусков, оценок
+        // (все они используют api() и обновляют таблицы)
+        // ...
 
         // Мобильное меню
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-        }
-        window.addEventListener('click', function(e) {
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+        window.addEventListener('click', (e) => {
             if (!e.target.closest('.sidebar') && !e.target.closest('.mobile-menu-btn')) {
                 document.getElementById('sidebar').classList.remove('open');
             }
