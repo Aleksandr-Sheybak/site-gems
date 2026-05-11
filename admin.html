@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель управления — Самоцветы</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
             --purple: #7c3aed;
@@ -13,21 +17,21 @@
             --lightblue: #38bdf8;
             --emerald: #10b981;
             --orange: #f97316;
-            --raspberry: #f43f5e;
             --font: 'Inter', system-ui, -apple-system, sans-serif;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text: #334155;
             --border: #e2e8f0;
-            --shadow: 0 4px 20px rgba(0,0,0,0.06);
-            --radius: 16px;
+            --shadow: 0 8px 30px rgba(0,0,0,0.06);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.12);
+            --radius: 24px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         body.dark {
             --bg: #0f172a;
             --card-bg: #1e293b;
             --text: #cbd5e1;
             --border: #334155;
-            --shadow: 0 4px 20px rgba(0,0,0,0.3);
             background: #0f172a;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,474 +39,568 @@
             font-family: var(--font);
             background: var(--bg);
             color: var(--text);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
             display: flex;
-            flex-direction: column;
             min-height: 100vh;
         }
-        /* Шапка */
-        .header {
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: var(--shadow);
-            z-index: 10;
-        }
-        .header h1 {
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, var(--purple), var(--lightblue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .theme-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--text);
-        }
-        .back-link {
-            color: var(--purple);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        /* Боковое меню */
         .sidebar {
-            width: 240px;
+            width: 260px;
             background: var(--card-bg);
             border-right: 1px solid var(--border);
-            padding: 20px 0;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             position: fixed;
-            top: 60px;
-            bottom: 0;
+            top: 0;
             left: 0;
-            overflow-y: auto;
+            bottom: 0;
+            z-index: 10;
+            transition: transform 0.3s;
         }
-        .sidebar nav a {
+        .sidebar a {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
             color: var(--text);
             text-decoration: none;
-            transition: 0.2s;
             font-weight: 500;
+            transition: 0.2s;
+            cursor: pointer;
         }
-        .sidebar nav a:hover,
-        .sidebar nav a.active {
+        .sidebar a:hover, .sidebar a.active {
             background: rgba(124,58,237,0.1);
             color: var(--purple);
         }
-        /* Контент */
-        .main {
-            margin-left: 240px;
-            padding: 30px;
+        .main-content {
+            margin-left: 260px;
             flex: 1;
+            padding: 30px;
+            transition: margin-left 0.3s;
         }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        /* Карточки */
+        .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 20px;
             box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
             border: 1px solid var(--border);
-            margin-bottom: 20px;
         }
-        table {
+        h2 { font-size: 1.8rem; margin-bottom: 20px; color: var(--darkblue); display: flex; align-items: center; gap: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { color: var(--purple); font-weight: 600; }
+        input, textarea, select {
             width: 100%;
-            border-collapse: collapse;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+            transition: 0.2s;
         }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        th {
-            font-weight: 600;
-            color: var(--purple);
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .badge-success { background: rgba(16,185,129,0.1); color: var(--emerald); }
-        .badge-warning { background: rgba(245,158,11,0.1); color: var(--orange); }
+        input:focus, textarea:focus, select:focus { border-color: var(--purple); outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
         button {
             background: var(--purple);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
+            padding: 12px 24px;
+            border-radius: 12px;
             font-weight: 600;
+            cursor: pointer;
             transition: 0.2s;
+            margin: 5px;
         }
         button:hover { background: var(--purple-light); }
-        button.danger { background: var(--raspberry); }
-        button.danger:hover { background: #e11d48; }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg);
-            color: var(--text);
-            font-family: inherit;
-            margin-bottom: 10px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: 700;
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--purple);
             color: var(--purple);
         }
-        .stat-card .label {
-            font-size: 0.9rem;
+        .btn-outline:hover { background: rgba(124,58,237,0.1); }
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
             color: var(--text);
         }
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: auto;
-                bottom: auto;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
-            }
-            .main { margin-left: 0; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
         }
+        .badge-success { background: #10b981; color: white; }
+        .badge-warning { background: #f59e0b; color: white; }
+        .badge-danger { background: #ef4444; color: white; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 20px; color: var(--text); cursor: pointer; }
+        .login-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg);
+        }
+        .login-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .mobile-menu-btn { display: block; position: fixed; top: 15px; left: 15px; z-index: 20; background: var(--purple); color: white; border: none; border-radius: 10px; padding: 10px; }
+        }
+        .hidden { display: none !important; }
+        .log-entry { font-size: 0.9rem; color: var(--text); padding: 5px 0; border-bottom: 1px dashed var(--border); }
+        .chart-container { max-width: 600px; margin: 0 auto; }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>Панель управления</h1>
-        <div class="header-actions">
-            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> На сайт</a>
-            <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
-        </div>
-    </header>
+    <!-- Мобильная кнопка меню -->
+    <button class="mobile-menu-btn hidden" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
-    <div class="sidebar">
-        <nav>
-            <a href="#dashboard" class="active"><i class="fas fa-chart-line"></i> Дашборд</a>
-            <a href="#content"><i class="fas fa-file-alt"></i> Контент сайта</a>
-            <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
-            <a href="#certs"><i class="fas fa-gift"></i> Сертификаты</a>
-            <a href="#analytics"><i class="fas fa-chart-bar"></i> Аналитика</a>
-        </nav>
+    <!-- Боковое меню -->
+    <div class="sidebar" id="sidebar">
+        <div style="text-align:center; margin-bottom:20px;">
+            <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" style="width:50px; border-radius:50%;">
+            <h3 style="color:var(--purple); margin:10px 0;">Самоцветы</h3>
+        </div>
+        <a href="#content" class="active" onclick="showTab('content')"><i class="fas fa-edit"></i> Контент</a>
+        <a href="#news" onclick="showTab('news')"><i class="fas fa-newspaper"></i> Новости</a>
+        <a href="#certs" onclick="showTab('certs')"><i class="fas fa-gift"></i> Сертификаты</a>
+        <a href="#analytics" onclick="showTab('analytics')"><i class="fas fa-chart-bar"></i> Аналитика</a>
+        <a href="#logs" onclick="showTab('logs')"><i class="fas fa-history"></i> Логи</a>
+        <a href="#files" onclick="showTab('files')"><i class="fas fa-file-upload"></i> Файлы</a>
+        <a href="#schedule" onclick="showTab('schedule')"><i class="fas fa-calendar-alt"></i> Расписание</a>
+        <a href="#clients" onclick="showTab('clients')"><i class="fas fa-users"></i> Клиенты</a>
+        <button class="theme-toggle" id="themeToggle" style="position:static; margin-top:auto;"><i class="fas fa-moon"></i></button>
+        <button onclick="logout()" style="background:#ef4444; color:white; margin-top:10px;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
     </div>
 
-    <div class="main">
-        <!-- Дашборд -->
-        <div class="tab-content active" id="dashboard">
-            <h2>Обзор</h2>
-            <div class="stats-grid" id="statsGrid"></div>
+    <!-- Основной контент -->
+    <div class="main-content" id="mainContent">
+        <!-- Вход (скрыт после авторизации) -->
+        <div id="loginTab" class="tab-pane active">
+            <div class="login-box">
+                <div class="login-card">
+                    <h2><i class="fas fa-lock"></i> Авторизация</h2>
+                    <input type="text" id="loginUser" placeholder="Логин">
+                    <input type="password" id="loginPass" placeholder="Пароль">
+                    <button onclick="login()">Войти</button>
+                    <p id="loginError" style="color:red; margin-top:10px;"></p>
+                </div>
+            </div>
         </div>
 
         <!-- Контент сайта -->
-        <div class="tab-content" id="content">
+        <div id="contentTab" class="tab-pane">
             <div class="card">
-                <h2>Редактирование текстов</h2>
-                <div class="form-group">
-                    <label>Ключ</label>
-                    <input type="text" id="contentKey" placeholder="about_title">
-                </div>
-                <div class="form-group">
-                    <label>Текст</label>
-                    <textarea id="contentText" rows="4"></textarea>
-                </div>
-                <button onclick="updateContent()">Сохранить</button>
-            </div>
-            <div class="card">
-                <h3>Текущий контент</h3>
-                <table id="contentTable">
-                    <thead><tr><th>Ключ</th><th>Текст</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+                <h2><i class="fas fa-pencil-alt"></i> Редактирование текстов</h2>
+                <div id="contentList"></div>
             </div>
         </div>
 
         <!-- Новости -->
-        <div class="tab-content" id="news">
+        <div id="newsTab" class="tab-pane">
             <div class="card">
-                <h2>Управление новостями</h2>
-                <button onclick="openNewsForm()">+ Новая новость</button>
-                <table style="margin-top:20px;">
-                    <thead><tr><th>Заголовок</th><th>Дата</th><th>Действия</th></tr></thead>
-                    <tbody id="newsTable"></tbody>
-                </table>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2><i class="fas fa-newspaper"></i> Управление новостями</h2>
+                    <button onclick="openNewsForm()"><i class="fas fa-plus"></i> Добавить</button>
+                </div>
+                <table id="newsTable"><thead><tr><th>Заголовок</th><th>Дата</th><th>Статус</th><th>Действия</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
         <!-- Сертификаты -->
-        <div class="tab-content" id="certs">
+        <div id="certsTab" class="tab-pane">
             <div class="card">
-                <h2>Сертификаты</h2>
-                <button onclick="addCert()">+ Создать сертификат</button>
-                <table style="margin-top:20px;">
-                    <thead><tr><th>Код</th><th>Номинал</th><th>Статус</th><th>Действия</th></tr></thead>
-                    <tbody id="certsTable"></tbody>
-                </table>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2><i class="fas fa-gift"></i> Сертификаты</h2>
+                    <button onclick="openCertForm()"><i class="fas fa-plus"></i> Создать</button>
+                </div>
+                <table id="certsTable"><thead><tr><th>Код</th><th>Номинал</th><th>Статус</th><th>Клиент</th><th>Действия</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
         <!-- Аналитика -->
-        <div class="tab-content" id="analytics">
+        <div id="analyticsTab" class="tab-pane">
             <div class="card">
-                <h2>Аналитика</h2>
-                <table id="analyticsTable">
-                    <thead><tr><th>Дата</th><th>Событие</th><th>Значение</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+                <h2><i class="fas fa-chart-line"></i> Аналитика</h2>
+                <div class="chart-container"><canvas id="analyticsChart"></canvas></div>
+                <table id="analyticsTable" class="hidden"></table>
             </div>
+        </div>
+
+        <!-- Логи -->
+        <div id="logsTab" class="tab-pane">
+            <div class="card">
+                <h2><i class="fas fa-history"></i> Журнал действий</h2>
+                <div id="logsContainer"></div>
+            </div>
+        </div>
+
+        <!-- Файлы -->
+        <div id="filesTab" class="tab-pane">
+            <div class="card">
+                <h2><i class="fas fa-file-upload"></i> Загрузка изображений</h2>
+                <input type="file" id="fileInput">
+                <button onclick="uploadFile()">Загрузить</button>
+                <p id="uploadStatus"></p>
+                <input type="text" id="uploadedUrl" readonly placeholder="Ссылка появится здесь">
+            </div>
+        </div>
+
+        <!-- Заглушки -->
+        <div id="scheduleTab" class="tab-pane"><div class="card"><h2><i class="fas fa-calendar-alt"></i> Расписание</h2><p>Раздел в разработке. Здесь будет календарь занятий на 6 недель.</p></div></div>
+        <div id="clientsTab" class="tab-pane"><div class="card"><h2><i class="fas fa-users"></i> Клиенты</h2><p>Раздел в разработке. Будет список клиентов, записи на курсы, история покупок.</p></div></div>
+    </div>
+
+    <!-- Модальное окно редактора новости -->
+    <div class="modal hidden" id="newsModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNewsModal()">&times;</button>
+            <h3 id="newsModalTitle">Новая новость</h3>
+            <input type="text" id="newsTitle" placeholder="Заголовок">
+            <textarea id="newsContent" rows="4" placeholder="Текст новости"></textarea>
+            <input type="text" id="newsImages" placeholder="Ссылки на изображения через запятую">
+            <input type="text" id="newsDate" placeholder="Дата публикации (Екб)">
+            <button onclick="saveNews()">Сохранить</button>
         </div>
     </div>
 
-    <!-- Модалки (новость) -->
-    <div class="modal" id="newsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:100; justify-content:center; align-items:center;">
-        <div class="card" style="max-width:600px; width:90%; position:relative;">
-            <button style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:20px; cursor:pointer;" onclick="closeNewsForm()">&times;</button>
-            <h3 id="newsFormTitle">Новая новость</h3>
-            <div class="form-group">
-                <label>Заголовок</label>
-                <input type="text" id="newsTitle">
-            </div>
-            <div class="form-group">
-                <label>Текст</label>
-                <textarea id="newsContent" rows="4"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Изображение (URL)</label>
-                <input type="text" id="newsImage">
-            </div>
-            <div class="form-group">
-                <label>Дата публикации (ГГГГ-ММ-ДД ЧЧ:ММ)</label>
-                <input type="text" id="newsDate">
-            </div>
-            <button onclick="saveNews()">Сохранить</button>
-            <button onclick="closeNewsForm()" style="background:#ccc; margin-left:10px;">Отмена</button>
+    <!-- Модальное окно сертификата -->
+    <div class="modal hidden" id="certModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCertModal()">&times;</button>
+            <h3>Новый сертификат</h3>
+            <input type="text" id="certCode" placeholder="Код (например, CERT123)">
+            <input type="number" id="certNominal" placeholder="Номинал (руб.)" value="700">
+            <button onclick="addCert()">Создать</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования ключа контента -->
+    <div class="modal hidden" id="contentModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeContentModal()">&times;</button>
+            <h3>Редактирование текста</h3>
+            <p id="contentKeyName"></p>
+            <textarea id="contentText" rows="5"></textarea>
+            <button onclick="saveContent()">Сохранить</button>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/ВАШ_SCRIPT_ID/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbz_VLLc_T1_QrdY8PNyEsW0ngkNCtOQxqjaW8Hgx9w4yjbyL7P4OWnqgi08HjpEV8WX2A/exec';
         const ADMIN_USER = 'Root';
         const ADMIN_PASS = 'anna1981';
+        let currentEditNewsId = null;
+        let currentContentKey = null;
 
-        // Тёмная тема
+        // ========== ТЁМНАЯ ТЕМА ==========
         const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
+        if (themeToggle) {
             const icon = themeToggle.querySelector('i');
-            if (document.body.classList.contains('dark')) {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark');
                 icon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('theme', 'light');
             }
-        });
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark');
-            themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark');
+                if (document.body.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                }
+            });
         }
 
-        // Навигация
-        document.querySelectorAll('.sidebar a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const tab = this.getAttribute('href').substring(1);
-                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                document.getElementById(tab).classList.add('active');
-                document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                if (tab === 'dashboard') loadDashboard();
-                if (tab === 'content') loadContent();
-                if (tab === 'news') loadNews();
-                if (tab === 'certs') loadCerts();
-                if (tab === 'analytics') loadAnalytics();
-            });
-        });
+        // ========== АВТОРИЗАЦИЯ ==========
+        if (sessionStorage.getItem('admin_logged') === 'true') {
+            showAdminInterface();
+        }
 
-        // ========== ДАШБОРД ==========
-        async function loadDashboard() {
-            const resp = await fetch(`${API_URL}?action=news&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
-            const newsData = await resp.json();
-            const certResp = await fetch(`${API_URL}?action=certs&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
-            const certData = await certResp.json();
-            document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card"><div class="value">${newsData.news ? newsData.news.length : 0}</div><div class="label">Новостей</div></div>
-                <div class="stat-card"><div class="value">${certData.certs ? certData.certs.length : 0}</div><div class="label">Сертификатов</div></div>
-            `;
+        function login() {
+            const u = document.getElementById('loginUser').value.trim();
+            const p = document.getElementById('loginPass').value.trim();
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                sessionStorage.setItem('admin_logged', 'true');
+                showAdminInterface();
+            } else {
+                document.getElementById('loginError').textContent = 'Неверные данные';
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('admin_logged');
+            location.reload();
+        }
+
+        function showAdminInterface() {
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('loginTab').classList.add('hidden');
+            showTab('content');
+        }
+
+        // ========== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ==========
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+            document.querySelector(`.sidebar a[href="#${tabName}"]`)?.classList.add('active');
+            // Загрузка данных
+            if (tabName === 'content') loadContent();
+            if (tabName === 'news') loadNews();
+            if (tabName === 'certs') loadCerts();
+            if (tabName === 'analytics') loadAnalytics();
+            if (tabName === 'logs') loadLogs();
+            if (tabName === 'files') document.getElementById('uploadedUrl').value = '';
+        }
+
+        // ========== РАБОТА С API ==========
+        async function apiGet(params) {
+            const url = API_URL + '?' + new URLSearchParams(params).toString();
+            const response = await fetch(url);
+            return response.json();
         }
 
         // ========== КОНТЕНТ ==========
         async function loadContent() {
-            const resp = await fetch(`${API_URL}?action=getContent`);
-            const data = await resp.json();
-            const tbody = document.querySelector('#contentTable tbody');
-            tbody.innerHTML = Object.keys(data.content).map(key => `
-                <tr>
-                    <td><code>${key}</code></td>
-                    <td>${data.content[key]}</td>
-                </tr>
-            `).join('');
+            const data = await apiGet({ action: 'getContent' });
+            const container = document.getElementById('contentList');
+            if (data.content) {
+                container.innerHTML = Object.entries(data.content).map(([key, value]) => `
+                    <div class="card" style="margin-bottom:15px;">
+                        <strong>${key}</strong>
+                        <p style="color: var(--text); margin:10px 0;">${value}</p>
+                        <button class="btn-outline" onclick="openContentEditor('${key}', '${value.replace(/'/g, "\\'")}')">Редактировать</button>
+                    </div>
+                `).join('');
+            }
         }
 
-        async function updateContent() {
-            const key = document.getElementById('contentKey').value.trim();
-            const text = document.getElementById('contentText').value.trim();
-            if (!key || !text) return alert('Заполните оба поля');
-            const resp = await fetch(`${API_URL}?action=updateContent&user=${ADMIN_USER}&pass=${ADMIN_PASS}&key=${key}&text=${encodeURIComponent(text)}`);
-            const data = await resp.json();
-            if (data.success) {
-                alert('Сохранено!');
-                loadContent();
-            }
+        function openContentEditor(key, text) {
+            currentContentKey = key;
+            document.getElementById('contentKeyName').textContent = key;
+            document.getElementById('contentText').value = text;
+            document.getElementById('contentModal').classList.remove('hidden');
+        }
+
+        function closeContentModal() {
+            document.getElementById('contentModal').classList.add('hidden');
+        }
+
+        async function saveContent() {
+            const text = document.getElementById('contentText').value;
+            await apiGet({ action: 'updateContent', user: ADMIN_USER, pass: ADMIN_PASS, key: currentContentKey, text: text });
+            closeContentModal();
+            loadContent();
         }
 
         // ========== НОВОСТИ ==========
         async function loadNews() {
-            const resp = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
-            const data = await resp.json();
-            const tbody = document.getElementById('newsTable');
+            const data = await apiGet({ action: 'newsAdmin', user: ADMIN_USER, pass: ADMIN_PASS });
+            const tbody = document.querySelector('#newsTable tbody');
             tbody.innerHTML = data.news.map(n => `
                 <tr>
                     <td>${n.title}</td>
-                    <td>${n.publishDate || ''}</td>
+                    <td>${new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' })}</td>
+                    <td><span class="badge ${n.status === 'published' ? 'badge-success' : 'badge-warning'}">${n.status}</span></td>
                     <td>
-                        <button onclick="editNews('${n.id}')">✏️</button>
-                        <button onclick="deleteNews('${n.id}')" class="danger">🗑️</button>
+                        <button onclick="editNews('${n.id}')"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
         }
 
         function openNewsForm() {
-            document.getElementById('newsFormTitle').textContent = 'Новая новость';
+            currentEditNewsId = null;
+            document.getElementById('newsModalTitle').textContent = 'Новая новость';
             document.getElementById('newsTitle').value = '';
             document.getElementById('newsContent').value = '';
-            document.getElementById('newsImage').value = '';
+            document.getElementById('newsImages').value = '';
             document.getElementById('newsDate').value = '';
-            document.getElementById('newsModal').style.display = 'flex';
+            document.getElementById('newsModal').classList.remove('hidden');
+            flatpickr("#newsDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: new Date() });
         }
 
-        function closeNewsForm() {
-            document.getElementById('newsModal').style.display = 'none';
+        async function editNews(id) {
+            const data = await apiGet({ action: 'newsAdmin', user: ADMIN_USER, pass: ADMIN_PASS });
+            const item = data.news.find(n => n.id === id);
+            if (!item) return;
+            currentEditNewsId = id;
+            document.getElementById('newsModalTitle').textContent = 'Редактирование';
+            document.getElementById('newsTitle').value = item.title;
+            document.getElementById('newsContent').value = item.content;
+            document.getElementById('newsImages').value = (item.images || []).join(', ');
+            document.getElementById('newsDate').value = item.publishDate || '';
+            document.getElementById('newsModal').classList.remove('hidden');
+            flatpickr("#newsDate", { enableTime: true, dateFormat: "Y-m-d H:i", time_24hr: true, locale: "ru", defaultDate: item.publishDate || new Date() });
         }
+
+        function closeNewsModal() { document.getElementById('newsModal').classList.add('hidden'); }
 
         async function saveNews() {
-            const title = document.getElementById('newsTitle').value.trim();
-            const content = document.getElementById('newsContent').value.trim();
-            const image = document.getElementById('newsImage').value.trim();
-            const date = document.getElementById('newsDate').value.trim();
-            if (!title || !content) return alert('Заполните заголовок и текст');
-            const params = new URLSearchParams({
-                action: 'newsAdd',
+            const params = {
+                action: currentEditNewsId ? 'newsUpdate' : 'newsAdd',
                 user: ADMIN_USER,
                 pass: ADMIN_PASS,
-                title,
-                content,
-                images: image,
-                publishDate: date
-            });
-            const resp = await fetch(API_URL + '?' + params.toString());
-            const data = await resp.json();
-            if (data.success) {
-                closeNewsForm();
-                loadNews();
-            }
+                title: document.getElementById('newsTitle').value,
+                content: document.getElementById('newsContent').value,
+                images: document.getElementById('newsImages').value,
+                publishDate: document.getElementById('newsDate').value
+            };
+            if (currentEditNewsId) params.id = currentEditNewsId;
+            await apiGet(params);
+            closeNewsModal();
+            loadNews();
         }
 
         async function deleteNews(id) {
-            if (!confirm('Удалить?')) return;
-            await fetch(`${API_URL}?action=newsDelete&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
+            if (!confirm('Удалить новость?')) return;
+            await apiGet({ action: 'newsDelete', user: ADMIN_USER, pass: ADMIN_PASS, id: id });
             loadNews();
         }
 
         // ========== СЕРТИФИКАТЫ ==========
         async function loadCerts() {
-            const resp = await fetch(`${API_URL}?action=certs&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
-            const data = await resp.json();
-            const tbody = document.getElementById('certsTable');
+            const data = await apiGet({ action: 'certs', user: ADMIN_USER, pass: ADMIN_PASS });
+            const tbody = document.querySelector('#certsTable tbody');
             tbody.innerHTML = data.certs.map(c => `
                 <tr>
                     <td>${c.code}</td>
-                    <td>${c.nominal} руб.</td>
-                    <td><span class="badge ${c.status === 'Активирован' ? 'badge-success' : 'badge-warning'}">${c.status}</span></td>
+                    <td>${c.nominal} ₽</td>
+                    <td><span class="badge ${c.status === 'Активирован' ? 'badge-success' : 'badge-danger'}">${c.status}</span></td>
+                    <td>${c.client || '—'}</td>
                     <td>
-                        ${c.status === 'Не активирован' ? `<button onclick="activateCert('${c.id}')">Активировать</button>` : ''}
+                        ${c.status !== 'Активирован' ? `<button onclick="activateCert('${c.id}')">Активировать</button>` : ''}
                     </td>
                 </tr>
             `).join('');
         }
 
+        function openCertForm() {
+            document.getElementById('certModal').classList.remove('hidden');
+        }
+        function closeCertModal() { document.getElementById('certModal').classList.add('hidden'); }
+
         async function addCert() {
-            const code = prompt('Введите код сертификата (или оставьте пустым для авто)');
-            const nominal = prompt('Номинал', '700');
-            await fetch(`${API_URL}?action=certAdd&user=${ADMIN_USER}&pass=${ADMIN_PASS}&code=${code || ''}&nominal=${nominal || 700}`);
+            const code = document.getElementById('certCode').value.trim();
+            const nominal = document.getElementById('certNominal').value;
+            await apiGet({ action: 'certAdd', user: ADMIN_USER, pass: ADMIN_PASS, code: code || undefined, nominal: nominal });
+            closeCertModal();
             loadCerts();
         }
 
         async function activateCert(id) {
-            if (!confirm('Активировать сертификат?')) return;
-            await fetch(`${API_URL}?action=certActivate&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
+            await apiGet({ action: 'certActivate', user: ADMIN_USER, pass: ADMIN_PASS, id: id });
             loadCerts();
         }
 
         // ========== АНАЛИТИКА ==========
         async function loadAnalytics() {
-            const resp = await fetch(`${API_URL}?action=analytics&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
-            const data = await resp.json();
-            const tbody = document.getElementById('analyticsTable').querySelector('tbody');
-            tbody.innerHTML = data.analytics.map(row => `
-                <tr>
-                    <td>${row[0]}</td>
-                    <td>${row[1]}</td>
-                    <td>${row[2]}</td>
-                </tr>
-            `).join('');
+            const data = await apiGet({ action: 'analytics', user: ADMIN_USER, pass: ADMIN_PASS });
+            if (data.analytics && data.analytics.length > 0) {
+                const labels = data.analytics.map(r => r[0]);
+                const values = data.analytics.map(r => r[2]);
+                if (window.analyticsChart) window.analyticsChart.destroy();
+                const ctx = document.getElementById('analyticsChart').getContext('2d');
+                window.analyticsChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Активность',
+                            data: values,
+                            borderColor: '#7c3aed',
+                            tension: 0.2
+                        }]
+                    }
+                });
+            }
         }
 
-        // Загрузка при старте
-        loadDashboard();
+        // ========== ЛОГИ ==========
+        async function loadLogs() {
+            const data = await apiGet({ action: 'logs', user: ADMIN_USER, pass: ADMIN_PASS });
+            const container = document.getElementById('logsContainer');
+            if (data.logs) {
+                container.innerHTML = data.logs.slice(-20).map(row => `<div class="log-entry">[${row[0]}] ${row[1]}: ${row[3]}</div>`).join('');
+            }
+        }
+
+        // ========== ЗАГРУЗКА ФАЙЛОВ ==========
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append('file', file);
+            const url = API_URL + '?action=upload&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS;
+            try {
+                const resp = await fetch(url, { method: 'POST', body: formData });
+                const data = await resp.json();
+                if (data.url) {
+                    document.getElementById('uploadedUrl').value = data.url;
+                    document.getElementById('uploadStatus').textContent = 'Файл загружен';
+                }
+            } catch (e) {
+                document.getElementById('uploadStatus').textContent = 'Ошибка загрузки';
+            }
+        }
+
+        // Мобильное меню
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.sidebar') && !e.target.closest('.mobile-menu-btn')) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        });
     </script>
 </body>
 </html>
