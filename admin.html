@@ -3,108 +3,506 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Самоцветы — студия развития детей (Сысерть, 66)</title>
-    <meta name="description" content="Студия каллиграфии, творчества и выразительного чтения в Сысерти. Занятия для детей от 6 лет.">
-    <link rel="icon" type="image/png" href="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4">
-    <!-- Font Awesome -->
+    <title>Панель управления — Самоцветы</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Основной CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- API Яндекс.Карт (загружается только на странице контактов) -->
+    <style>
+        :root {
+            --purple: #7c3aed;
+            --purple-light: #a78bfa;
+            --darkblue: #1e293b;
+            --lightblue: #38bdf8;
+            --emerald: #10b981;
+            --orange: #f97316;
+            --raspberry: #f43f5e;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #334155;
+            --border: #e2e8f0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --radius: 16px;
+        }
+        body.dark {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #cbd5e1;
+            --border: #334155;
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: #0f172a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* Шапка */
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--purple), var(--lightblue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .theme-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text);
+        }
+        .back-link {
+            color: var(--purple);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        /* Боковое меню */
+        .sidebar {
+            width: 240px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 20px 0;
+            position: fixed;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+        }
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: rgba(124,58,237,0.1);
+            color: var(--purple);
+        }
+        /* Контент */
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+            flex: 1;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Карточки */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            font-weight: 600;
+            color: var(--purple);
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge-success { background: rgba(16,185,129,0.1); color: var(--emerald); }
+        .badge-warning { background: rgba(245,158,11,0.1); color: var(--orange); }
+        button {
+            background: var(--purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        button:hover { background: var(--purple-light); }
+        button.danger { background: var(--raspberry); }
+        button.danger:hover { background: #e11d48; }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--purple);
+        }
+        .stat-card .label {
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: auto;
+                bottom: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .main { margin-left: 0; }
+        }
+    </style>
 </head>
 <body>
-    <div class="floating-dots"><span></span><span></span><span></span></div>
-
-    <!-- Шапка -->
     <header class="header">
-        <div class="logo-container">
-            <img class="logo-img" src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип">
-            <div class="logo-text">Самоцветы</div>
-            <span class="city-tag"><i class="fas fa-map-marker-alt"></i> г. Сысерть (66)</span>
-        </div>
-        <div class="nav-links" id="desktopNav">
-            <a href="#about"><i class="fas fa-gem"></i> О студии</a>
-            <a href="#venue"><i class="fas fa-map-pin"></i> Где проходят</a>
-            <a href="#workshops"><i class="fas fa-paint-brush"></i> Мастер-классы</a>
-            <a href="#gift"><i class="fas fa-gift"></i> Сертификаты</a>
-            <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
-            <a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a>
-            <a href="#contacts"><i class="fas fa-phone-alt"></i> Контакты</a>
-            <a href="tel:89667167436" class="header-phone"><i class="fas fa-phone"></i> 89667167436</a>
-            <div class="header-socials">
-                <a href="https://web.max.ru/-73411458885837" target="_blank" title="MAX"><i class="fas fa-comment"></i></a>
-                <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i></a>
-            </div>
-            <a href="admin.html" class="header-phone" style="margin-left:10px; background:rgba(124,58,237,0.1);"><i class="fas fa-lock"></i> Панель</a>
-            <button class="theme-toggle" id="themeToggle" title="Переключить тему"><i class="fas fa-moon"></i></button>
+        <h1>Панель управления</h1>
+        <div class="header-actions">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> На сайт</a>
+            <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
         </div>
     </header>
 
-    <!-- Мобильное нижнее меню -->
-    <div class="mobile-nav">
-        <a href="tel:89667167436"><i class="fas fa-phone"></i> Звонок</a>
-        <a href="#workshops"><i class="fas fa-paint-brush"></i> Курсы</a>
-        <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
-        <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i> ВКонтакте</a>
+    <div class="sidebar">
+        <nav>
+            <a href="#dashboard" class="active"><i class="fas fa-chart-line"></i> Дашборд</a>
+            <a href="#content"><i class="fas fa-file-alt"></i> Контент сайта</a>
+            <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
+            <a href="#certs"><i class="fas fa-gift"></i> Сертификаты</a>
+            <a href="#analytics"><i class="fas fa-chart-bar"></i> Аналитика</a>
+        </nav>
     </div>
 
-    <!-- Основной контейнер для разделов -->
-    <main class="container" id="content">
-        <!-- Содержимое будет подгружаться динамически -->
-    </main>
-
-    <!-- Футер -->
-    <footer>
-        <p>© 2025 Самоцветы, г. Сысерть</p>
-        <p style="font-size:0.9rem;">Самозанятый: Шейбак Светлана Сергеевна | ИНН: ______________</p>
-    </footer>
-
-    <!-- Кнопка "Наверх" -->
-    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
-
-    <!-- Модальные окна (общие) -->
-    <div class="modal" id="newsDetailModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeNewsDetailModal()">&times;</button>
-            <h2 id="newsDetailTitle"></h2>
-            <div class="news-date" id="newsDetailDate" style="margin-bottom: 15px;"></div>
-            <div class="gallery-slider" id="newsDetailImages"></div>
-            <div id="newsDetailContent" style="line-height: 1.7;"></div>
+    <div class="main">
+        <!-- Дашборд -->
+        <div class="tab-content active" id="dashboard">
+            <h2>Обзор</h2>
+            <div class="stats-grid" id="statsGrid"></div>
         </div>
-    </div>
-    <div class="modal" id="venueModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeVenueModal()">&times;</button>
-            <h2><i class="fas fa-landmark"></i> Районная библиотека — наш уютный дом</h2>
-            <p style="margin: 10px 0;"><i class="fas fa-map-marker-alt"></i> ул. Коммуны, 36, г. Сысерть</p>
-            <div class="gallery-slider" id="venueGallery">
-                <img src="https://cdn.culture.ru/images/58826fd3-1837-577b-ab24-c23332c549f9" alt="Библиотека снаружи">
-                <img src="https://www.culture.ru/_next/image?url=https%3A%2F%2Fcdn.culture.ru%2Fimages%2Ff2f7c922-ac43-5f1b-b555-5d1eca488359%2Fw_392%2Ch_281%2Cc_fill%2Cg_center%2F8d1d40ffdaf53ecc0e52b2eccf888ec3-jpg&w=1920&q=75" alt="Интерьер библиотеки">
+
+        <!-- Контент сайта -->
+        <div class="tab-content" id="content">
+            <div class="card">
+                <h2>Редактирование текстов</h2>
+                <div class="form-group">
+                    <label>Ключ</label>
+                    <input type="text" id="contentKey" placeholder="about_title">
+                </div>
+                <div class="form-group">
+                    <label>Текст</label>
+                    <textarea id="contentText" rows="4"></textarea>
+                </div>
+                <button onclick="updateContent()">Сохранить</button>
             </div>
-            <p>Просторное помещение с удобными столами, проектором и мягким светом. Рядом парковка и остановка.</p>
-            <a href="https://bibl-sysert.ru/" target="_blank" class="btn-expand" style="display: inline-block; margin-top: 10px;"><i class="fas fa-external-link-alt"></i> Сайт библиотеки</a>
-        </div>
-    </div>
-    <div class="modal" id="giftModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeGiftModal()">&times;</button>
-            <h2><i class="fas fa-gift"></i> Подарочный сертификат</h2>
-            <div class="gallery-slider" style="justify-content: center;">
-                <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" style="max-width: 250px;">
+            <div class="card">
+                <h3>Текущий контент</h3>
+                <table id="contentTable">
+                    <thead><tr><th>Ключ</th><th>Текст</th></tr></thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            <h3>Сертификат на одно занятие</h3>
-            <p><strong>Цена онлайн-версии (электронная):</strong> 700 руб.</p>
-            <p><strong>Распечатка + ламинирование:</strong> 800 руб.</p>
-            <p style="margin-top: 15px;"><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Можно привязать к личному кабинету</p>
-            <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Сертификат действителен на любое разовое занятие</p>
-            <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Предъявить в электронном или бумажном виде</p>
-            <h4 style="margin-top: 15px;">Правила и возврат</h4>
-            <p>Сертификат не подлежит возврату после активации. Срок действия — 3 месяца с даты покупки. Можно передать другому ребёнку.</p>
-            <a href="tel:89667167436" class="btn-expand" style="display: inline-block; margin-top: 10px;"><i class="fas fa-phone"></i> Заказать</a>
+        </div>
+
+        <!-- Новости -->
+        <div class="tab-content" id="news">
+            <div class="card">
+                <h2>Управление новостями</h2>
+                <button onclick="openNewsForm()">+ Новая новость</button>
+                <table style="margin-top:20px;">
+                    <thead><tr><th>Заголовок</th><th>Дата</th><th>Действия</th></tr></thead>
+                    <tbody id="newsTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Сертификаты -->
+        <div class="tab-content" id="certs">
+            <div class="card">
+                <h2>Сертификаты</h2>
+                <button onclick="addCert()">+ Создать сертификат</button>
+                <table style="margin-top:20px;">
+                    <thead><tr><th>Код</th><th>Номинал</th><th>Статус</th><th>Действия</th></tr></thead>
+                    <tbody id="certsTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Аналитика -->
+        <div class="tab-content" id="analytics">
+            <div class="card">
+                <h2>Аналитика</h2>
+                <table id="analyticsTable">
+                    <thead><tr><th>Дата</th><th>Событие</th><th>Значение</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- Подключаем основной скрипт -->
-    <script src="js/main.js"></script>
+    <!-- Модалки (новость) -->
+    <div class="modal" id="newsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:100; justify-content:center; align-items:center;">
+        <div class="card" style="max-width:600px; width:90%; position:relative;">
+            <button style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:20px; cursor:pointer;" onclick="closeNewsForm()">&times;</button>
+            <h3 id="newsFormTitle">Новая новость</h3>
+            <div class="form-group">
+                <label>Заголовок</label>
+                <input type="text" id="newsTitle">
+            </div>
+            <div class="form-group">
+                <label>Текст</label>
+                <textarea id="newsContent" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Изображение (URL)</label>
+                <input type="text" id="newsImage">
+            </div>
+            <div class="form-group">
+                <label>Дата публикации (ГГГГ-ММ-ДД ЧЧ:ММ)</label>
+                <input type="text" id="newsDate">
+            </div>
+            <button onclick="saveNews()">Сохранить</button>
+            <button onclick="closeNewsForm()" style="background:#ccc; margin-left:10px;">Отмена</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/ВАШ_SCRIPT_ID/exec';
+        const ADMIN_USER = 'Root';
+        const ADMIN_PASS = 'anna1981';
+
+        // Тёмная тема
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('dark')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+        }
+
+        // Навигация
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tab = this.getAttribute('href').substring(1);
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                document.getElementById(tab).classList.add('active');
+                document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                if (tab === 'dashboard') loadDashboard();
+                if (tab === 'content') loadContent();
+                if (tab === 'news') loadNews();
+                if (tab === 'certs') loadCerts();
+                if (tab === 'analytics') loadAnalytics();
+            });
+        });
+
+        // ========== ДАШБОРД ==========
+        async function loadDashboard() {
+            const resp = await fetch(`${API_URL}?action=news&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
+            const newsData = await resp.json();
+            const certResp = await fetch(`${API_URL}?action=certs&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
+            const certData = await certResp.json();
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="value">${newsData.news ? newsData.news.length : 0}</div><div class="label">Новостей</div></div>
+                <div class="stat-card"><div class="value">${certData.certs ? certData.certs.length : 0}</div><div class="label">Сертификатов</div></div>
+            `;
+        }
+
+        // ========== КОНТЕНТ ==========
+        async function loadContent() {
+            const resp = await fetch(`${API_URL}?action=getContent`);
+            const data = await resp.json();
+            const tbody = document.querySelector('#contentTable tbody');
+            tbody.innerHTML = Object.keys(data.content).map(key => `
+                <tr>
+                    <td><code>${key}</code></td>
+                    <td>${data.content[key]}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function updateContent() {
+            const key = document.getElementById('contentKey').value.trim();
+            const text = document.getElementById('contentText').value.trim();
+            if (!key || !text) return alert('Заполните оба поля');
+            const resp = await fetch(`${API_URL}?action=updateContent&user=${ADMIN_USER}&pass=${ADMIN_PASS}&key=${key}&text=${encodeURIComponent(text)}`);
+            const data = await resp.json();
+            if (data.success) {
+                alert('Сохранено!');
+                loadContent();
+            }
+        }
+
+        // ========== НОВОСТИ ==========
+        async function loadNews() {
+            const resp = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
+            const data = await resp.json();
+            const tbody = document.getElementById('newsTable');
+            tbody.innerHTML = data.news.map(n => `
+                <tr>
+                    <td>${n.title}</td>
+                    <td>${n.publishDate || ''}</td>
+                    <td>
+                        <button onclick="editNews('${n.id}')">✏️</button>
+                        <button onclick="deleteNews('${n.id}')" class="danger">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openNewsForm() {
+            document.getElementById('newsFormTitle').textContent = 'Новая новость';
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsContent').value = '';
+            document.getElementById('newsImage').value = '';
+            document.getElementById('newsDate').value = '';
+            document.getElementById('newsModal').style.display = 'flex';
+        }
+
+        function closeNewsForm() {
+            document.getElementById('newsModal').style.display = 'none';
+        }
+
+        async function saveNews() {
+            const title = document.getElementById('newsTitle').value.trim();
+            const content = document.getElementById('newsContent').value.trim();
+            const image = document.getElementById('newsImage').value.trim();
+            const date = document.getElementById('newsDate').value.trim();
+            if (!title || !content) return alert('Заполните заголовок и текст');
+            const params = new URLSearchParams({
+                action: 'newsAdd',
+                user: ADMIN_USER,
+                pass: ADMIN_PASS,
+                title,
+                content,
+                images: image,
+                publishDate: date
+            });
+            const resp = await fetch(API_URL + '?' + params.toString());
+            const data = await resp.json();
+            if (data.success) {
+                closeNewsForm();
+                loadNews();
+            }
+        }
+
+        async function deleteNews(id) {
+            if (!confirm('Удалить?')) return;
+            await fetch(`${API_URL}?action=newsDelete&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
+            loadNews();
+        }
+
+        // ========== СЕРТИФИКАТЫ ==========
+        async function loadCerts() {
+            const resp = await fetch(`${API_URL}?action=certs&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
+            const data = await resp.json();
+            const tbody = document.getElementById('certsTable');
+            tbody.innerHTML = data.certs.map(c => `
+                <tr>
+                    <td>${c.code}</td>
+                    <td>${c.nominal} руб.</td>
+                    <td><span class="badge ${c.status === 'Активирован' ? 'badge-success' : 'badge-warning'}">${c.status}</span></td>
+                    <td>
+                        ${c.status === 'Не активирован' ? `<button onclick="activateCert('${c.id}')">Активировать</button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function addCert() {
+            const code = prompt('Введите код сертификата (или оставьте пустым для авто)');
+            const nominal = prompt('Номинал', '700');
+            await fetch(`${API_URL}?action=certAdd&user=${ADMIN_USER}&pass=${ADMIN_PASS}&code=${code || ''}&nominal=${nominal || 700}`);
+            loadCerts();
+        }
+
+        async function activateCert(id) {
+            if (!confirm('Активировать сертификат?')) return;
+            await fetch(`${API_URL}?action=certActivate&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
+            loadCerts();
+        }
+
+        // ========== АНАЛИТИКА ==========
+        async function loadAnalytics() {
+            const resp = await fetch(`${API_URL}?action=analytics&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
+            const data = await resp.json();
+            const tbody = document.getElementById('analyticsTable').querySelector('tbody');
+            tbody.innerHTML = data.analytics.map(row => `
+                <tr>
+                    <td>${row[0]}</td>
+                    <td>${row[1]}</td>
+                    <td>${row[2]}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Загрузка при старте
+        loadDashboard();
+    </script>
 </body>
 </html>
