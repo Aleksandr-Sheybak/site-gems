@@ -6,12 +6,15 @@
     <title>Самоцветы — студия развития детей (Сысерть, 66)</title>
     <meta name="description" content="Студия каллиграфии, творчества и выразительного чтения в Сысерти. Занятия для детей от 6 лет.">
     <link rel="icon" type="image/png" href="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4">
+    <!-- Яндекс.Карты -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ_ЯНДЕКС&lang=ru_RU"></script>
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Подключаем стили -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="floating-dots"><span></span><span></span><span></span></div>
-
     <!-- Шапка -->
     <header class="header">
         <div class="logo-container">
@@ -19,7 +22,7 @@
             <div class="logo-text">Самоцветы</div>
             <span class="city-tag"><i class="fas fa-map-marker-alt"></i> г. Сысерть (66)</span>
         </div>
-        <div class="nav-links" id="desktopNav">
+        <div class="nav-links">
             <a href="#about"><i class="fas fa-gem"></i> О студии</a>
             <a href="#venue"><i class="fas fa-map-pin"></i> Где проходят</a>
             <a href="#workshops"><i class="fas fa-paint-brush"></i> Мастер-классы</a>
@@ -36,28 +39,170 @@
             <button class="theme-toggle" id="themeToggle" title="Переключить тему"><i class="fas fa-moon"></i></button>
         </div>
     </header>
-
-    <!-- Мобильное нижнее меню -->
+    <!-- Мобильное меню -->
     <div class="mobile-nav">
         <a href="tel:89667167436"><i class="fas fa-phone"></i> Звонок</a>
         <a href="#workshops"><i class="fas fa-paint-brush"></i> Курсы</a>
         <a href="#news"><i class="fas fa-newspaper"></i> Новости</a>
         <a href="https://vk.com/samotsveti_sysert" target="_blank"><i class="fab fa-vk"></i> ВКонтакте</a>
     </div>
-
-    <!-- ОСНОВНОЙ КОНТЕЙНЕР ДЛЯ РАЗДЕЛОВ -->
-    <main class="container" id="content"></main>
-
+    <!-- Основной контент -->
+    <main class="container">
+        <!-- О студии -->
+        <section id="about" style="margin-top: 30px;">
+            <div class="about-hero">
+                <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" alt="Логотип" class="about-logo-large">
+                <div class="about-info">
+                    <h3><i class="fas fa-star" style="color: var(--purple); margin-right: 10px;"></i>Студия «Самоцветы»</h3>
+                    <p><i class="fas fa-map-pin"></i> <strong>Находимся:</strong> г. Сысерть, ул. Коммуны, 36. Уютный уголок для творчества и самовыражения детей.</p>
+                    <p><i class="fas fa-bullseye pulse-icon"></i> <strong>Миссия:</strong> Мы не просто учим писать и говорить – мы воспитываем в детях любовь к языку, аккуратность и уверенность в себе, которые пригодятся на всю жизнь.</p>
+                    <p><i class="fas fa-heart"></i> <strong>Почему мы уникальны:</strong> Собственные методики, маленькие группы до 8 человек, внимание к каждому ребёнку. Мы создаём атмосферу, где хочется учиться и творить. Родители видят результат уже после первого месяца занятий.</p>
+                </div>
+            </div>
+            <div class="plan-grid">
+                <div class="plan-card"><i class="fas fa-calendar-alt"></i><h4>Апрель 2025</h4><p>Бесплатные мастер‑классы по каллиграфии. Знакомство с пером, первые шаги к красивому почерку.</p></div>
+                <div class="plan-card"><i class="fas fa-calendar-check"></i><h4>Май 2025</h4><p>Открытие платных групп. Индивидуальные и групповые занятия по авторским программам.</p></div>
+                <div class="plan-card"><i class="fas fa-calendar-plus"></i><h4>Июнь 2025</h4><p>Запуск Клуба выходного дня и ораторского мастерства. Творческие субботы и мастерская слова.</p></div>
+            </div>
+            <div class="error-report"><i class="fas fa-bug"></i> Нашли ошибку или есть предложение? Напишите или позвоните: <a href="tel:89090226229">89090226229</a></div>
+        </section>
+        <!-- Где проходят -->
+        <section id="venue">
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-map-signs"></i> Где проходят занятия</h2><div class="section-underline"></div></div>
+            <p style="margin-bottom:30px;"><i class="fas fa-map-marker-alt" style="color:var(--purple); margin-right:8px;"></i>Все занятия проходят по адресу: <strong>г. Сысерть, ул. Коммуны, 36</strong>.</p>
+            <div class="venue-grid">
+                <div class="venue-card" onclick="openVenueModal()">
+                    <div class="venue-img" style="background-image: url('https://cdn.culture.ru/images/58826fd3-1837-577b-ab24-c23332c549f9');"></div>
+                    <div class="venue-body">
+                        <h3><i class="fas fa-tree"></i> Условия снаружи</h3>
+                        <ul>
+                            <li><i class="fas fa-door-open"></i> Вход со двора пятиэтажного дома</li>
+                            <li><i class="fas fa-bus"></i> Остановка в 2 минутах</li>
+                            <li><i class="fas fa-parking"></i> Бесплатная парковка</li>
+                            <li><i class="fas fa-wheelchair"></i> Пандус</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="venue-card" onclick="openVenueModal()">
+                    <div class="venue-img" style="background-image: url('https://avatars.mds.yandex.net/get-altay/15285331/2a0000019680f5e6044e52f8b1341cb2b1dd/L_height');"></div>
+                    <div class="venue-body">
+                        <h3><i class="fas fa-couch"></i> Внутреннее пространство</h3>
+                        <ul>
+                            <li><i class="fas fa-chair"></i> Новые столы и стулья</li>
+                            <li><i class="fas fa-projector"></i> Проектор и экран</li>
+                            <li><i class="fas fa-users"></i> До 15 человек</li>
+                            <li><i class="fas fa-wifi"></i> Бесплатный Wi‑Fi</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Мастер-классы -->
+        <section id="workshops">
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-paint-brush"></i> Мастер-классы</h2><div class="section-underline"></div></div>
+            <div class="courses-grid">
+                <div class="course-card">
+                    <div class="course-img" style="background-image: url('https://kanzoboz.ru/data/images/article/3/487403_d1ab2_th.jpg');"><span>Каллиграфия</span></div>
+                    <div class="course-body">
+                        <h3><i class="fas fa-pen-fancy"></i> Основы каллиграфии</h3>
+                        <p>Для детей 6–9 лет. Исправление почерка, постановка руки.</p>
+                        <div class="price-tag">500 руб. / занятие</div>
+                        <button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button>
+                        <div class="expanded-content"><p>Расписание: суббота 15:00, воскресенье 15:00.</p></div>
+                    </div>
+                </div>
+                <div class="course-card">
+                    <div class="course-img" style="background-image: url('https://treningminsk.by/wp-content/uploads/2020/10/oratorskoe-iskusstvo-minsk.jpg');"><span>Ораторское искусство</span></div>
+                    <div class="course-body">
+                        <h3><i class="fas fa-microphone-alt"></i> Мастерская слова</h3>
+                        <p>Постановка голоса, снятие страха выступлений.</p>
+                        <div class="price-tag">Старт в июне</div>
+                        <button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button>
+                        <div class="expanded-content"><p>Программа будет запущена в июне. Следите за новостями!</p></div>
+                    </div>
+                </div>
+                <div class="course-card">
+                    <div class="course-img" style="background-image: url('https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not4GMkR1X1Dm2GMT6pYkobVaheFIFzMaeTRu44FG2MMX4');"><span>Клуб выходного дня</span></div>
+                    <div class="course-body">
+                        <h3><i class="fas fa-palette"></i> Творческие субботы</h3>
+                        <p>Рисование, лепка, скрапбукинг. От 5 лет.</p>
+                        <div class="price-tag">от 350 руб. (с июня)</div>
+                        <button class="btn-expand" onclick="toggleExpand(this)">Подробнее</button>
+                        <div class="expanded-content"><p>Суббота 11:00–13:00 в библиотеке на ул. Коммуны, 36.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Сертификаты -->
+        <section id="gift">
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-gift"></i> Подарочные сертификаты</h2><div class="section-underline"></div></div>
+            <div class="gift-wrapper" onclick="openGiftModal()">
+                <div class="gift-container">
+                    <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Not6cSqld053BrGhh5xQg0L-6heFIFzMaeTRu44FG2MMX4" alt="Сертификат" class="gift-img">
+                    <div>
+                        <h3 style="font-size: 2rem;">Сертификат на одно занятие</h3>
+                        <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Посещение любого курса</p>
+                        <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Электронный или бумажный формат</p>
+                        <p><i class="fas fa-check-circle" style="color: var(--emerald);"></i> Прекрасный подарок</p>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--purple); margin: 15px 0;">от 700 руб.</div>
+                        <div><span class="contact-badge"><i class="fas fa-phone"></i> 89667167436</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Новости -->
+        <section id="news">
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div><h2 class="section-title"><i class="fas fa-newspaper"></i> Новости</h2><div class="section-underline"></div></div>
+                <button class="show-all-news-btn" onclick="renderAllNews()" style="font-size: 1rem; background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-list"></i> Все новости
+                </button>
+            </div>
+            <div class="news-grid" id="newsContainer">Загрузка...</div>
+        </section>
+        <!-- FAQ -->
+        <section id="faq">
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-question-circle"></i> Частые вопросы</h2><div class="section-underline"></div></div>
+            <div>
+                <div class="faq-item"><button class="faq-question"><i class="fas fa-child" style="margin-right:10px;"></i> С какого возраста принимаете детей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Основные программы рассчитаны на детей с 6 лет. Клуб выходного дня доступен с 5 лет. Для каждой возрастной группы мы подбираем задания, которые соответствуют их развитию и интересам.</div></div></div>
+                <div class="faq-item"><button class="faq-question"><i class="fas fa-clock" style="margin-right:10px;"></i> Сколько длится одно занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Каллиграфия длится 60 минут — это оптимальное время, чтобы ребёнок не уставал и сохранял концентрацию. Клуб выходного дня проходит в формате 2‑х часов с небольшим перерывом на отдых и игры.</div></div></div>
+                <div class="faq-item"><button class="faq-question"><i class="fas fa-user-friends" style="margin-right:10px;"></i> Нужно ли присутствие родителей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">На мастер‑классах родители могут оставаться в зале, наблюдать и после занятия получить короткие комментарии педагога. На регулярных занятиях присутствие не обязательно — многие дети занимаются самостоятельно и потом делятся впечатлениями.</div></div></div>
+                <div class="faq-item"><button class="faq-question"><i class="fas fa-pencil-alt" style="margin-right:10px;"></i> Как записаться на пробное занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Просто позвоните по телефону <a href="tel:89667167436">89667167436</a> или напишите в сообщения нашей группы ВКонтакте. Мы согласуем удобное время и ответим на все вопросы.</div></div></div>
+            </div>
+        </section>
+        <!-- Контакты -->
+        <section id="contacts">
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-address-book"></i> Контакты</h2><div class="section-underline"></div></div>
+            <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+                <div style="flex: 1;">
+                    <p><i class="fas fa-phone"></i> <strong>Запись на занятия:</strong> <a href="tel:89667167436">89667167436</a></p>
+                    <p><i class="fas fa-headset"></i> <strong>Техподдержка (сайт):</strong> <a href="tel:89090226229">89090226229</a></p>
+                    <div class="qr-section">
+                        <div><img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotROfZ0VWf-MCfWNgpYPA5EqheFIFzMaeTRu44FG2MMX4" alt="MAX QR" class="qr-code"><p style="font-size:0.8rem; text-align:center;">MAX</p></div>
+                        <div><img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2Noto-apB3ohaP21INdXypLpJKheFIFzMaeTRu44FG2MMX4" alt="VK QR" class="qr-code"><p style="font-size:0.8rem; text-align:center;">ВКонтакте</p></div>
+                    </div>
+                </div>
+                <div id="map" style="height:200px; border-radius:20px; flex:1; min-width:250px;"></div>
+            </div>
+        </section>
+        <!-- Команда -->
+        <section>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-users"></i> Наша команда</h2><div class="section-underline"></div></div>
+            <div class="team-grid">
+                <div class="team-card"><img src="https://sun9-38.userapi.com/s/v1/ig2/nuPCIcGJ6D3yYfZL47ig_7XNs95a0jYPp8jDE31_CN9oPOTI_-5NyHLJnVtedCrB7h2ZSxp7YISluKOaW7E7KOWb.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1280x1707,1440x1920,1920x2560&from=bu&u=P1z34IBA8ylP8TkeihIRe2r43afh2iiqAjelFhv7Yus&cs=1920x0" alt="Педагог" class="team-avatar"><h4><i class="fas fa-chalkboard-teacher"></i> Шейбак Светлана</h4><p>Педагог, филолог</p></div>
+                <div class="team-card"><img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotF17Yinlc6F5MU7WOOd39VKheFIFzMaeTRu44FG2MMX4" alt="Программист" class="team-avatar" style="border-color: var(--lightblue);"><h4><i class="fas fa-code"></i> Александр Шейбак</h4><p>Веб-специалист, Java / Python</p></div>
+                <div class="team-card"><img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotrcMnzy0vA-xdqV6dHBg4NaheFIFzMaeTRu44FG2MMX4" alt="Психолог" class="team-avatar" style="border-color: var(--orange);"><h4><i class="fas fa-brain"></i> Павел Абдуллов</h4><p>Бизнес-психолог</p></div>
+            </div>
+        </section>
+    </main>
     <!-- Футер -->
     <footer>
         <p>© 2025 Самоцветы, г. Сысерть</p>
         <p style="font-size:0.9rem;">Самозанятый: Шейбак Светлана Сергеевна | ИНН: ______________</p>
     </footer>
-
-    <!-- Кнопка "Наверх" -->
+    <!-- Кнопка наверх -->
     <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
-
-    <!-- Модальные окна -->
+    <!-- Модалки -->
     <div class="modal" id="newsDetailModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeNewsDetailModal()">&times;</button>
@@ -98,7 +243,7 @@
             <a href="tel:89667167436" class="btn-expand" style="display: inline-block; margin-top: 10px;"><i class="fas fa-phone"></i> Заказать</a>
         </div>
     </div>
-
+    <!-- Подключаем скрипты -->
     <script src="js/main.js"></script>
 </body>
 </html>
