@@ -6,16 +6,16 @@
     <title>Панель управления — Самоцветы</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* скопируйте сюда все стили из предыдущего рабочего admin.html, они остаются без изменений */
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .hidden { display: none; }
-        input, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; }
-        button { background: #7c3aed; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin: 5px; }
+        .hidden { display: none !important; }
+        input, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
+        button { background: #7c3aed; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin: 5px; font-weight: 600; }
         button:hover { background: #5b2ec9; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
         .error { color: red; }
+        .back-link { display: block; margin-top: 15px; color: #7c3aed; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -25,6 +25,7 @@
         <input type="password" id="loginPass" placeholder="Пароль">
         <button onclick="login()">Войти</button>
         <p class="error" id="loginError"></p>
+        <a href="index.html" class="back-link">← Вернуться на сайт</a>
     </div>
 
     <div class="container hidden" id="adminBox">
@@ -39,7 +40,7 @@
         </table>
     </div>
 
-    <!-- Модальное окно редактора -->
+    <!-- Редактор -->
     <div class="container hidden" id="editorBox" style="margin-top:20px;">
         <h3 id="editorTitle">Новая новость</h3>
         <input type="text" id="newsTitle" placeholder="Заголовок">
@@ -52,14 +53,27 @@
     </div>
 
     <script>
-        // ⚠️ ЗАМЕНИТЕ НА ВАШ РАБОЧИЙ URL ВЕБ-ПРИЛОЖЕНИЯ
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
+        var API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
+        var ADMIN_USER = 'Root';
+        var ADMIN_PASS = 'anna1981';
+        var currentEditId = null;
 
-        const ADMIN_USER = 'Root';
-        const ADMIN_PASS = 'anna1981';
-        let currentEditId = null;
+        // JSONP-запрос
+        function jsonp(url, callback) {
+            var cb = 'jsonp_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+            window[cb] = function(data) {
+                delete window[cb];
+                var script = document.getElementById(cb);
+                if (script) script.remove();
+                callback(data);
+            };
+            var s = document.createElement('script');
+            s.id = cb;
+            s.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cb;
+            document.body.appendChild(s);
+        }
 
-        // Проверка сессии
+        // Сессия
         if (sessionStorage.getItem('admin_logged') === 'true') {
             document.getElementById('loginBox').classList.add('hidden');
             document.getElementById('adminBox').classList.remove('hidden');
@@ -67,8 +81,8 @@
         }
 
         function login() {
-            const u = document.getElementById('loginUser').value.trim();
-            const p = document.getElementById('loginPass').value.trim();
+            var u = document.getElementById('loginUser').value.trim();
+            var p = document.getElementById('loginPass').value.trim();
             if (u === ADMIN_USER && p === ADMIN_PASS) {
                 sessionStorage.setItem('admin_logged', 'true');
                 document.getElementById('loginBox').classList.add('hidden');
@@ -79,29 +93,21 @@
             }
         }
 
-        async function loadNews() {
-            const tbody = document.getElementById('newsTable');
+        function loadNews() {
+            var tbody = document.getElementById('newsTable');
             tbody.innerHTML = '<tr><td colspan="2">Загрузка...</td></tr>';
-            try {
-                const resp = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
-                const data = await resp.json();
+            jsonp(API_URL + '?action=newsAdmin&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS, function(data) {
                 if (!data.news || !data.news.length) {
                     tbody.innerHTML = '<tr><td colspan="2">Нет новостей</td></tr>';
                     return;
                 }
-                tbody.innerHTML = data.news.map(n => `
-                    <tr>
-                        <td>${n.title}</td>
-                        <td>
-                            <button onclick="editNews('${n.id}')">✏️</button>
-                            <button onclick="deleteNews('${n.id}')">🗑️</button>
-                        </td>
-                    </tr>
-                `).join('');
-            } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="2" style="color:red;">Ошибка соединения</td></tr>';
-                console.error(e);
-            }
+                tbody.innerHTML = data.news.map(function(n) {
+                    return '<tr><td>' + n.title + '</td><td>' +
+                        '<button onclick="editNews(\'' + n.id + '\')">✏️</button> ' +
+                        '<button onclick="deleteNews(\'' + n.id + '\')">🗑️</button>' +
+                    '</td></tr>';
+                }).join('');
+            });
         }
 
         function createNews() {
@@ -114,57 +120,56 @@
             document.getElementById('editorBox').classList.remove('hidden');
         }
 
-        async function editNews(id) {
-            const resp = await fetch(`${API_URL}?action=newsAdmin&user=${ADMIN_USER}&pass=${ADMIN_PASS}`);
-            const data = await resp.json();
-            const item = data.news.find(n => n.id === id);
-            if (!item) return alert('Новость не найдена');
-            currentEditId = id;
-            document.getElementById('editorTitle').textContent = 'Редактирование';
-            document.getElementById('newsTitle').value = item.title;
-            document.getElementById('newsContent').value = item.content;
-            document.getElementById('newsImage').value = item.images ? item.images[0] || '' : '';
-            document.getElementById('newsDate').value = item.publishDate || '';
-            document.getElementById('editorBox').classList.remove('hidden');
+        function editNews(id) {
+            jsonp(API_URL + '?action=newsAdmin&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS, function(data) {
+                var item = data.news.find(function(n) { return n.id === id; });
+                if (!item) { alert('Новость не найдена'); return; }
+                currentEditId = id;
+                document.getElementById('editorTitle').textContent = 'Редактирование';
+                document.getElementById('newsTitle').value = item.title;
+                document.getElementById('newsContent').value = item.content;
+                document.getElementById('newsImage').value = item.images && item.images.length ? item.images[0] : '';
+                document.getElementById('newsDate').value = item.publishDate || '';
+                document.getElementById('editorBox').classList.remove('hidden');
+            });
         }
 
         function closeEditor() {
             document.getElementById('editorBox').classList.add('hidden');
         }
 
-        async function saveNews() {
-            const title = document.getElementById('newsTitle').value.trim();
-            const content = document.getElementById('newsContent').value.trim();
-            const image = document.getElementById('newsImage').value.trim();
-            const date = document.getElementById('newsDate').value.trim() || new Date().toISOString();
+        function saveNews() {
+            var title = document.getElementById('newsTitle').value.trim();
+            var content = document.getElementById('newsContent').value.trim();
+            var image = document.getElementById('newsImage').value.trim();
+            var date = document.getElementById('newsDate').value.trim() || new Date().toISOString().slice(0,16).replace('T',' ');
             if (!title || !content) {
                 document.getElementById('editorError').textContent = 'Заполните заголовок и текст';
                 return;
             }
-            const params = new URLSearchParams({
-                action: currentEditId ? 'newsUpdate' : 'newsAdd',
-                user: ADMIN_USER,
-                pass: ADMIN_PASS,
-                title,
-                content,
-                images: image,
-                publishDate: date
+            var params = 'action=' + (currentEditId ? 'newsUpdate' : 'newsAdd') +
+                         '&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS +
+                         '&title=' + encodeURIComponent(title) +
+                         '&content=' + encodeURIComponent(content) +
+                         '&images=' + encodeURIComponent(image) +
+                         '&publishDate=' + encodeURIComponent(date);
+            if (currentEditId) params += '&id=' + encodeURIComponent(currentEditId);
+            jsonp(API_URL + '?' + params, function(result) {
+                if (result.success) {
+                    closeEditor();
+                    loadNews();
+                } else {
+                    document.getElementById('editorError').textContent = 'Ошибка: ' + (result.message || '');
+                }
             });
-            if (currentEditId) params.append('id', currentEditId);
-            const resp = await fetch(API_URL + '?' + params.toString());
-            const result = await resp.json();
-            if (result.success) {
-                closeEditor();
-                loadNews();
-            } else {
-                document.getElementById('editorError').textContent = 'Ошибка: ' + (result.message || '');
-            }
         }
 
-        async function deleteNews(id) {
+        function deleteNews(id) {
             if (!confirm('Точно удалить?')) return;
-            await fetch(`${API_URL}?action=newsDelete&user=${ADMIN_USER}&pass=${ADMIN_PASS}&id=${id}`);
-            loadNews();
+            jsonp(API_URL + '?action=newsDelete&user=' + ADMIN_USER + '&pass=' + ADMIN_PASS + '&id=' + id, function(result) {
+                if (result.success) loadNews();
+                else alert('Не удалось удалить');
+            });
         }
     </script>
 </body>
