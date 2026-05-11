@@ -6,7 +6,7 @@
     <title>Самоцветы — студия развития детей (Сысерть, 66)</title>
     <meta name="description" content="Студия каллиграфии, творчества и выразительного чтения в Сысерти. Занятия для детей от 6 лет.">
     <link rel="icon" type="image/png" href="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4">
-    <!-- Яндекс.Карты -->
+    <!-- Яндекс.Карты (замените API-ключ) -->
     <script src="https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ_ЯНДЕКС&lang=ru_RU"></script>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -176,9 +176,9 @@
         .news-date { color: var(--purple); font-size: 0.9rem; margin-bottom: 8px; }
         .news-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--darkblue); }
         body.dark .news-title { color: #f1f5f9; }
+        .read-more-btn, .show-all-news-btn { background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600; }
         .news-text { max-height: 4.5em; overflow: hidden; transition: max-height 0.4s; }
-        .news-text.open { max-height: 600px; }
-        .read-more-btn, .show-all-news-btn, .collapse-news-btn { background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600; }
+        .news-text.open { max-height: 1000px; }
 
         /* FAQ */
         .faq-item { background: var(--card-bg); border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--card-border); overflow: hidden; }
@@ -199,13 +199,6 @@
         .qr-section { display: flex; gap: 30px; justify-content: flex-start; align-items: center; margin-top: 20px; }
         .qr-code { width: 100px; border-radius: 16px; }
 
-        /* Отзывы */
-        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .testimonial-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid var(--card-border); position: relative; }
-        .testimonial-card::before { content: "“"; font-size: 4rem; color: var(--purple-light); position: absolute; top: -10px; left: 15px; opacity: 0.3; }
-        .testimonial-text { font-style: italic; margin-bottom: 10px; color: var(--text); }
-        .testimonial-author { font-weight: 600; color: var(--purple); }
-
         /* Команда */
         .team-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
         .team-card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--card-border); }
@@ -223,24 +216,16 @@
         /* Тёмная тема */
         body.dark .course-body h3, body.dark .plan-card h4, body.dark .venue-body h3, body.dark .testimonial-text { color: #f1f5f9; }
         body.dark .section-title { background: linear-gradient(135deg, #a78bfa, #7dd3fc); -webkit-background-clip: text; background-clip: text; }
-        body.dark .header, body.dark .course-card, body.dark .news-card, body.dark .venue-card, body.dark .gift-container, body.dark .team-card, body.dark .faq-item, body.dark .plan-card, body.dark .testimonial-card, body.dark .modal-content { background: #1e293b; border-color: #334155; }
+        body.dark .header, body.dark .course-card, body.dark .news-card, body.dark .venue-card, body.dark .gift-container, body.dark .team-card, body.dark .faq-item, body.dark .plan-card, body.dark .modal-content { background: #1e293b; border-color: #334155; }
         body.dark .btn-expand { background: #4c1d95; }
-        footer { text-align: center; padding: 30px; border-top: 1px solid var(--card-border); margin-top: 60px; color: var(--text); }
 
+        footer { text-align: center; padding: 30px; border-top: 1px solid var(--card-border); margin-top: 60px; color: var(--text); }
         .error-report { margin-top: 30px; font-size: 0.95rem; }
         .error-report a { color: var(--raspberry); font-weight: 600; }
         .pulse-icon { animation: pulse 2s infinite; color: var(--purple); }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.08); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
-
         .scroll-top-btn { position: fixed; bottom: 90px; right: 30px; width: 45px; height: 45px; background: var(--purple); color: white; border: none; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: var(--shadow); display: none; z-index: 50; }
         .scroll-top-btn.visible { display: flex; align-items: center; justify-content: center; }
-
-        @media (max-width: 768px) {
-            .about-hero { flex-direction: column; align-items: center; text-align: center; }
-            .about-logo-large { width: 200px; height: 200px; }
-            .section-title { font-size: 2rem; }
-            .gift-container { flex-direction: column; }
-        }
     </style>
 </head>
 <body>
@@ -271,7 +256,7 @@
         </div>
     </header>
 
-    <!-- Мобильное меню -->
+    <!-- Мобильное нижнее меню -->
     <div class="mobile-nav">
         <a href="tel:89667167436"><i class="fas fa-phone"></i> Звонок</a>
         <a href="#workshops"><i class="fas fa-paint-brush"></i> Курсы</a>
@@ -280,7 +265,7 @@
     </div>
 
     <!-- Основной контент -->
-    <main class="container">
+    <div class="container">
         <!-- О студии -->
         <section id="about" style="margin-top: 30px;">
             <div class="about-hero">
@@ -300,7 +285,7 @@
             <div class="error-report"><i class="fas fa-bug"></i> Нашли ошибку или есть предложение? Напишите или позвоните: <a href="tel:89090226229">89090226229</a></div>
         </section>
 
-        <!-- Где проходят -->
+        <!-- Где проходят занятия -->
         <section id="venue">
             <div class="section-header"><h2 class="section-title"><i class="fas fa-map-signs"></i> Где проходят занятия</h2><div class="section-underline"></div></div>
             <p style="margin-bottom:30px;"><i class="fas fa-map-marker-alt" style="color:var(--purple); margin-right:8px;"></i>Все занятия проходят по адресу: <strong>г. Сысерть, ул. Коммуны, 36</strong>.</p>
@@ -387,18 +372,13 @@
             </div>
         </section>
 
-        <!-- Новости -->
+        <!-- Новости (динамическая подгрузка) -->
         <section id="news">
             <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <div><h2 class="section-title"><i class="fas fa-newspaper"></i> Новости</h2><div class="section-underline"></div></div>
-                <div>
-                    <button class="show-all-news-btn" onclick="renderAllNews()" style="font-size: 1rem; background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600; margin-right: 15px;">
-                        <i class="fas fa-list"></i> Все новости
-                    </button>
-                    <button class="collapse-news-btn" onclick="collapseAllNews()" style="font-size: 1rem; background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600;">
-                        <i class="fas fa-compress-alt"></i> Свернуть
-                    </button>
-                </div>
+                <button class="show-all-news-btn" onclick="renderAllNews()" style="font-size: 1rem; background: none; border: none; color: var(--purple); cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-list"></i> Все новости
+                </button>
             </div>
             <div class="news-grid" id="newsContainer">Загрузка...</div>
         </section>
@@ -407,10 +387,10 @@
         <section id="faq">
             <div class="section-header"><h2 class="section-title"><i class="fas fa-question-circle"></i> Частые вопросы</h2><div class="section-underline"></div></div>
             <div>
-                <div class="faq-item"><button class="faq-question"><i class="fas fa-child" style="margin-right:10px;"></i> С какого возраста принимаете детей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Основные программы рассчитаны на детей с 6 лет. Клуб выходного дня доступен с 5 лет. Для каждой возрастной группы мы подбираем задания, которые соответствуют их развитию и интересам.</div></div></div>
-                <div class="faq-item"><button class="faq-question"><i class="fas fa-clock" style="margin-right:10px;"></i> Сколько длится одно занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Каллиграфия длится 60 минут — это оптимальное время, чтобы ребёнок не уставал и сохранял концентрацию. Клуб выходного дня проходит в формате 2‑х часов с небольшим перерывом на отдых и игры.</div></div></div>
-                <div class="faq-item"><button class="faq-question"><i class="fas fa-user-friends" style="margin-right:10px;"></i> Нужно ли присутствие родителей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">На мастер‑классах родители могут оставаться в зале, наблюдать и после занятия получить короткие комментарии педагога. На регулярных занятиях присутствие не обязательно — многие дети занимаются самостоятельно и потом делятся впечатлениями.</div></div></div>
-                <div class="faq-item"><button class="faq-question"><i class="fas fa-pencil-alt" style="margin-right:10px;"></i> Как записаться на пробное занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Просто позвоните по телефону <a href="tel:89667167436">89667167436</a> или напишите в сообщения нашей группы ВКонтакте. Мы согласуем удобное время и ответим на все вопросы.</div></div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)"><i class="fas fa-child" style="margin-right:10px;"></i> С какого возраста принимаете детей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Основные программы рассчитаны на детей с 6 лет. Клуб выходного дня доступен с 5 лет. Для каждой возрастной группы мы подбираем задания, которые соответствуют их развитию и интересам.</div></div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)"><i class="fas fa-clock" style="margin-right:10px;"></i> Сколько длится одно занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Каллиграфия длится 60 минут — это оптимальное время, чтобы ребёнок не уставал и сохранял концентрацию. Клуб выходного дня проходит в формате 2‑х часов с небольшим перерывом на отдых и игры.</div></div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)"><i class="fas fa-user-friends" style="margin-right:10px;"></i> Нужно ли присутствие родителей? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">На мастер‑классах родители могут оставаться в зале, наблюдать и после занятия получить короткие комментарии педагога. На регулярных занятиях присутствие не обязательно — многие дети занимаются самостоятельно и потом делятся впечатлениями.</div></div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFAQ(this)"><i class="fas fa-pencil-alt" style="margin-right:10px;"></i> Как записаться на пробное занятие? <i class="fas fa-chevron-down"></i></button><div class="faq-answer"><div class="faq-answer-content">Просто позвоните по телефону <a href="tel:89667167436">89667167436</a> или напишите в сообщения нашей группы ВКонтакте. Мы согласуем удобное время и ответим на все вопросы.</div></div></div>
             </div>
         </section>
 
@@ -439,7 +419,7 @@
                 <div class="team-card"><img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotrcMnzy0vA-xdqV6dHBg4NaheFIFzMaeTRu44FG2MMX4" alt="Психолог" class="team-avatar" style="border-color: var(--orange);"><h4><i class="fas fa-brain"></i> Павел Абдуллов</h4><p>Бизнес-психолог</p></div>
             </div>
         </section>
-    </main>
+    </div>
 
     <!-- Футер -->
     <footer>
@@ -450,7 +430,7 @@
     <!-- Кнопка наверх -->
     <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
 
-    <!-- Модальные окна -->
+    <!-- Модалки -->
     <div class="modal" id="newsDetailModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeNewsDetailModal()">&times;</button>
@@ -492,31 +472,12 @@
         </div>
     </div>
 
-    <!-- Подключаем скрипты -->
+    <!-- Скрипты -->
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbxid7p2qdp7qaCPQ7MevszgHIohE-RuoDvOutmNLhfGgAVKTwptK9Rn4wA38i5fb2Igpw/exec';
         let allNewsData = [];
 
-        // ========== ГЛОБАЛЬНЫЕ ФУНКЦИИ ==========
-        window.toggleExpand = function(btn) {
-            const content = btn.nextElementSibling;
-            if (content) content.classList.toggle('open');
-        };
-
-        window.openVenueModal = function() {
-            document.getElementById('venueModal').classList.add('active');
-        };
-        window.closeVenueModal = function() {
-            document.getElementById('venueModal').classList.remove('active');
-        };
-        window.openGiftModal = function() {
-            document.getElementById('giftModal').classList.add('active');
-        };
-        window.closeGiftModal = function() {
-            document.getElementById('giftModal').classList.remove('active');
-        };
-
-        // ========== ТЁМНАЯ ТЕМА ==========
+        // Тёмная тема
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
             const icon = themeToggle.querySelector('i');
@@ -536,26 +497,47 @@
             });
         }
 
-        // ========== FAQ АККОРДЕОН ==========
-        document.addEventListener('click', e => {
-            const btn = e.target.closest('.faq-question');
-            if (btn) {
-                const answer = btn.nextElementSibling;
-                const icon = btn.querySelector('i.fa-chevron-down, i.fa-chevron-up');
-                if (answer) {
-                    answer.classList.toggle('open');
-                    if (icon) {
-                        icon.classList.toggle('fa-chevron-down');
-                        icon.classList.toggle('fa-chevron-up');
-                    }
+        // Карта
+        function initMap() {
+            if (typeof ymaps !== 'undefined') {
+                ymaps.ready(() => {
+                    new ymaps.Map('map', {
+                        center: [56.505210, 60.815588],
+                        zoom: 16,
+                        controls: ['zoomControl', 'fullscreenControl']
+                    });
+                });
+            }
+        }
+        window.addEventListener('load', initMap);
+
+        // Аккордеон FAQ
+        function toggleFAQ(btn) {
+            const answer = btn.nextElementSibling;
+            const icon = btn.querySelector('i.fa-chevron-down, i.fa-chevron-up');
+            if (answer) {
+                answer.classList.toggle('open');
+                if (icon) {
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
                 }
             }
-            if (e.target.classList.contains('modal') && e.target.classList.contains('active')) {
-                e.target.classList.remove('active');
-            }
-        });
+        }
 
-        // ========== НОВОСТИ (JSONP) ==========
+        // Разворачивание блоков
+        function toggleExpand(btn) {
+            const content = btn.nextElementSibling;
+            if (content) content.classList.toggle('open');
+        }
+
+        // Модальные окна
+        window.openVenueModal = () => document.getElementById('venueModal').classList.add('active');
+        window.closeVenueModal = () => document.getElementById('venueModal').classList.remove('active');
+        window.openGiftModal = () => document.getElementById('giftModal').classList.add('active');
+        window.closeGiftModal = () => document.getElementById('giftModal').classList.remove('active');
+        window.closeNewsDetailModal = () => document.getElementById('newsDetailModal').classList.remove('active');
+
+        // JSONP
         function jsonp(url, callback) {
             const cbName = 'jsonp_' + Date.now() + '_' + Math.random().toString(36).substr(2);
             window[cbName] = function(data) {
@@ -570,6 +552,7 @@
             document.body.appendChild(script);
         }
 
+        // Загрузка новостей
         function loadInitialNews() {
             const container = document.getElementById('newsContainer');
             if (!container) return;
@@ -593,25 +576,35 @@
             }
             container.innerHTML = newsArray.map(n => {
                 const dateStr = n.publishDate ? new Date(n.publishDate).toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' }) : '';
+                const textId = 'text-' + n.id;
                 return `<div class="news-card">
                     ${n.images && n.images.length ? `<img src="${n.images[0]}" onerror="this.style.display='none'" style="height:180px; object-fit:cover;">` : ''}
                     ${dateStr ? `<div class="news-date">${dateStr}</div>` : ''}
                     <div class="news-title">${n.title}</div>
-                    <button class="read-more-btn" onclick="openNewsDetail('${n.id}')">Читать далее</button>
+                    <div class="news-text" id="${textId}">${n.content}</div>
+                    <button class="read-more-btn" onclick="toggleNewsText('${textId}', this)">Читать далее</button>
+                    <button class="read-more-btn" onclick="openNewsDetail('${n.id}')" style="margin-left:10px;">Открыть полностью</button>
                 </div>`;
             }).join('');
         }
 
-        window.renderAllNews = function() {
+        function toggleNewsText(id, btn) {
+            const textEl = document.getElementById(id);
+            if (textEl.classList.contains('open')) {
+                textEl.classList.remove('open');
+                btn.textContent = 'Читать далее';
+            } else {
+                textEl.classList.add('open');
+                btn.textContent = 'Свернуть';
+            }
+        }
+
+        function renderAllNews() {
             if (allNewsData.length > 0) renderNews(allNewsData);
             else loadInitialNews();
-        };
+        }
 
-        window.collapseAllNews = function() {
-            renderNews(allNewsData.slice(0, 3));
-        };
-
-        window.openNewsDetail = function(newsId) {
+        function openNewsDetail(newsId) {
             const item = allNewsData.find(n => n.id === newsId);
             if (!item) return alert('Новость не найдена');
             document.getElementById('newsDetailTitle').textContent = item.title;
@@ -624,39 +617,26 @@
             }
             document.getElementById('newsDetailContent').innerHTML = item.content;
             document.getElementById('newsDetailModal').classList.add('active');
-        };
+        }
 
-        window.closeNewsDetailModal = function() {
-            document.getElementById('newsDetailModal').classList.remove('active');
-        };
+        // Закрытие модалок при клике на фон
+        document.addEventListener('click', e => {
+            if (e.target.classList.contains('modal') && e.target.classList.contains('active')) {
+                e.target.classList.remove('active');
+            }
+        });
 
-        // ========== КНОПКА "НАВЕРХ" ==========
+        // Кнопка наверх
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('scrollTopBtn');
             if (btn) btn.classList.toggle('visible', window.scrollY > 400);
         });
 
-        // ========== КАРТА ==========
-        function initMap() {
-            if (typeof ymaps === 'undefined') {
-                const script = document.createElement('script');
-                script.src = 'https://api-maps.yandex.ru/2.1/?apikey=ВАШ_API_КЛЮЧ_ЯНДЕКС&lang=ru_RU';
-                script.onload = () => createMap();
-                document.body.appendChild(script);
-            } else {
-                ymaps.ready(createMap);
-            }
-            function createMap() {
-                const map = new ymaps.Map('map', { center: [56.505210, 60.815588], zoom: 16 });
-                map.geoObjects.add(new ymaps.Placemark([56.505210, 60.815588], { hintContent: 'Студия Самоцветы', balloonContent: 'ул. Коммуны, 36' }));
-            }
-        }
-
-        // ========== ПЕРВЫЙ ЗАПУСК ==========
-        (function() {
-            initMap();
+        // Запуск
+        window.addEventListener('DOMContentLoaded', () => {
             loadInitialNews();
-        })();
+            initMap();
+        });
     </script>
 </body>
 </html>
