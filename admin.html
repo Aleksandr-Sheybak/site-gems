@@ -11,195 +11,93 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            --purple: #7c3aed;
-            --purple-light: #a78bfa;
-            --darkblue: #1e293b;
-            --lightblue: #38bdf8;
-            --emerald: #10b981;
-            --orange: #f97316;
-            --font: 'Inter', system-ui, -apple-system, sans-serif;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #334155;
-            --border: #e2e8f0;
-            --shadow: 0 8px 30px rgba(0,0,0,0.06);
-            --shadow-lg: 0 20px 50px rgba(0,0,0,0.12);
-            --radius: 24px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --purple: #7c3aed; --purple-light: #a78bfa; --darkblue: #1e293b; --lightblue: #38bdf8;
+            --emerald: #10b981; --orange: #f97316; --font: 'Inter', system-ui, -apple-system, sans-serif;
+            --bg: #f8fafc; --card-bg: #ffffff; --text: #334155; --border: #e2e8f0;
+            --shadow: 0 8px 30px rgba(0,0,0,0.06); --shadow-lg: 0 20px 50px rgba(0,0,0,0.12);
+            --radius: 24px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         body.dark {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #cbd5e1;
-            --border: #334155;
-            background: #0f172a;
+            --bg: #0f172a; --card-bg: #1e293b; --text: #cbd5e1; --border: #334155; background: #0f172a;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            transition: background 0.3s, color 0.3s;
-            display: flex;
-            min-height: 100vh;
+            font-family: var(--font); background: var(--bg); color: var(--text);
+            line-height: 1.6; transition: background 0.3s, color 0.3s; display: flex; min-height: 100vh;
         }
         .sidebar {
-            width: 260px;
-            background: var(--card-bg);
-            border-right: 1px solid var(--border);
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            z-index: 10;
-            transition: transform 0.3s;
+            width: 260px; background: var(--card-bg); border-right: 1px solid var(--border);
+            padding: 30px 20px; display: flex; flex-direction: column; gap: 8px;
+            position: fixed; top: 0; left: 0; bottom: 0; z-index: 10; transition: transform 0.3s;
+            overflow-y: auto;
         }
         .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 14px;
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.2s;
-            cursor: pointer;
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px;
+            color: var(--text); text-decoration: none; font-weight: 500; transition: 0.2s; cursor: pointer;
         }
-        .sidebar a:hover, .sidebar a.active {
-            background: rgba(124,58,237,0.1);
-            color: var(--purple);
-        }
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 30px;
-            transition: margin-left 0.3s;
-        }
+        .sidebar a:hover, .sidebar a.active { background: rgba(124,58,237,0.1); color: var(--purple); }
+        .main-content { margin-left: 260px; flex: 1; padding: 30px; transition: margin-left 0.3s; }
         .tab-pane { display: none; animation: fadeIn 0.3s ease; }
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
+            background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+            padding: 25px; margin-bottom: 25px; border: 1px solid var(--border);
         }
         h2 { font-size: 1.8rem; margin-bottom: 20px; color: var(--darkblue); display: flex; align-items: center; gap: 10px; }
+        body.dark h2 { color: #f1f5f9; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); }
         th { color: var(--purple); font-weight: 600; }
         input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg);
-            color: var(--text);
-            font-size: 15px;
-            transition: 0.2s;
+            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border);
+            border-radius: 12px; background: var(--bg); color: var(--text); font-size: 15px; transition: 0.2s;
         }
         input:focus, textarea:focus, select:focus { border-color: var(--purple); outline: none; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
         button {
-            background: var(--purple);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            margin: 5px;
+            background: var(--purple); color: white; border: none; padding: 12px 24px;
+            border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; margin: 5px;
         }
         button:hover { background: var(--purple-light); }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--purple);
-            color: var(--purple);
-        }
+        .btn-outline { background: transparent; border: 1px solid var(--purple); color: var(--purple); }
         .btn-outline:hover { background: rgba(124,58,237,0.1); }
+        .btn-danger { background: #ef4444; }
+        .btn-danger:hover { background: #dc2626; }
         .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 200;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center; z-index: 200;
         }
         .modal-content {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: var(--shadow-lg);
+            background: var(--card-bg); border-radius: var(--radius); padding: 30px;
+            width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto;
+            position: relative; box-shadow: var(--shadow-lg);
         }
-        .modal-close {
-            position: absolute;
-            top: 15px; right: 15px;
-            background: none; border: none;
-            font-size: 24px; cursor: pointer; color: var(--text);
-        }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-        }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
         .badge-success { background: #10b981; color: white; }
         .badge-warning { background: #f59e0b; color: white; }
         .badge-danger { background: #ef4444; color: white; }
-        .theme-toggle { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 20px; color: var(--text); cursor: pointer; }
-        .login-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: var(--bg);
-        }
-        .login-card {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            width: 100%;
-            max-width: 400px;
-        }
+        .login-box { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--bg); }
+        .login-card { background: var(--card-bg); padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 100%; max-width: 400px; }
+        .hidden { display: none !important; }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
             .main-content { margin-left: 0; }
             .mobile-menu-btn { display: block; position: fixed; top: 15px; left: 15px; z-index: 20; background: var(--purple); color: white; border: none; border-radius: 10px; padding: 10px; }
         }
-        .hidden { display: none !important; }
-        .log-entry { font-size: 0.9rem; color: var(--text); padding: 5px 0; border-bottom: 1px dashed var(--border); }
-        .print-btn { background: #6366f1; margin-left: 10px; }
+        .print-btn { background: #6366f1; }
     </style>
 </head>
 <body>
-    <!-- Кнопка меню для мобильных -->
     <button class="mobile-menu-btn hidden" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
-    <!-- Боковое меню -->
     <div class="sidebar" id="sidebar">
         <div style="text-align:center; margin-bottom:20px;">
             <img src="https://i.oneme.ru/i?r=BTE2sh_eZW7g8kugOdIm2NotLFLhNa0tc0_UaeuflAmBbaheFIFzMaeTRu44FG2MMX4" style="width:50px; border-radius:50%;">
-            <h3 style="color:var(--purple); margin:10px 0;">Самоцветы</h3>
+            <h3 style="color:var(--purple); margin:10px 0;">Самоцветы CRM</h3>
         </div>
         <a href="#dashboard" class="active" onclick="showTab('dashboard')"><i class="fas fa-tachometer-alt"></i> Дашборд</a>
         <a href="#quarters" onclick="showTab('quarters')"><i class="fas fa-calendar-alt"></i> Кварталы</a>
@@ -207,13 +105,17 @@
         <a href="#clients" onclick="showTab('clients')"><i class="fas fa-users"></i> Клиенты</a>
         <a href="#sales" onclick="showTab('sales')"><i class="fas fa-shopping-cart"></i> Продажи</a>
         <a href="#expenses" onclick="showTab('expenses')"><i class="fas fa-coins"></i> Траты</a>
+        <a href="#news" onclick="showTab('news')"><i class="fas fa-newspaper"></i> Новости</a>
+        <a href="#certs" onclick="showTab('certs')"><i class="fas fa-gift"></i> Сертификаты</a>
+        <a href="#content" onclick="showTab('content')"><i class="fas fa-edit"></i> Контент сайта</a>
+        <a href="#logs" onclick="showTab('logs')"><i class="fas fa-history"></i> Логи</a>
+        <a href="#files" onclick="showTab('files')"><i class="fas fa-file-upload"></i> Файлы</a>
         <button class="theme-toggle" id="themeToggle" style="position:static; margin-top:auto;"><i class="fas fa-moon"></i></button>
-        <button onclick="logout()" style="background:#ef4444; color:white; margin-top:10px;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        <button onclick="logout()" class="btn-danger" style="margin-top:10px;"><i class="fas fa-sign-out-alt"></i> Выйти</button>
     </div>
 
-    <!-- Основной контент -->
     <div class="main-content" id="mainContent">
-        <!-- Вход -->
+        <!-- Логин -->
         <div id="loginTab" class="tab-pane active">
             <div class="login-box">
                 <div class="login-card">
@@ -229,16 +131,12 @@
         <!-- Дашборд -->
         <div id="dashboardTab" class="tab-pane">
             <div class="card"><h2><i class="fas fa-chart-pie"></i> Сводка текущего квартала</h2><div id="dashboardStats" class="grid-2"></div></div>
-            <div class="card"><h2><i class="fas fa-chart-line"></i> График дохода</h2><canvas id="incomeChart" height="100"></canvas></div>
         </div>
 
         <!-- Кварталы -->
         <div id="quartersTab" class="tab-pane">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2><i class="fas fa-calendar-check"></i> Кварталы</h2>
-                    <button onclick="openQuarterForm()"><i class="fas fa-plus"></i> Создать</button>
-                </div>
+                <div style="display:flex; justify-content:space-between;"><h2><i class="fas fa-calendar-check"></i> Кварталы</h2><button onclick="openQuarterForm()"><i class="fas fa-plus"></i> Создать</button></div>
                 <table id="quartersTable"><thead><tr><th>Название</th><th>Год</th><th>Квартал</th><th>Статус</th><th>Действия</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
@@ -246,32 +144,23 @@
         <!-- Курсы -->
         <div id="coursesTab" class="tab-pane">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2><i class="fas fa-chalkboard-teacher"></i> Курсы</h2>
-                    <button onclick="openCourseForm()"><i class="fas fa-plus"></i> Добавить</button>
-                </div>
-                <table id="coursesTable"><thead><tr><th>Название</th><th>Цена билета</th><th>Себестоимость</th><th>Мест</th><th>Бесплатный</th><th></th></tr></thead><tbody></tbody></table>
+                <div style="display:flex; justify-content:space-between;"><h2><i class="fas fa-chalkboard-teacher"></i> Курсы</h2><button onclick="openCourseForm()"><i class="fas fa-plus"></i> Добавить</button></div>
+                <table id="coursesTable"><thead><tr><th>Название</th><th>Цена</th><th>Себест.</th><th>Мест</th><th>Беспл.</th><th>Действия</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
         <!-- Клиенты -->
         <div id="clientsTab" class="tab-pane">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2><i class="fas fa-address-card"></i> Клиенты</h2>
-                    <button onclick="openClientForm()"><i class="fas fa-user-plus"></i> Добавить</button>
-                </div>
-                <table id="clientsTable"><thead><tr><th>ФИО</th><th>Телефон</th><th>Возраст</th><th>Рука</th><th></th></tr></thead><tbody></tbody></table>
+                <div style="display:flex; justify-content:space-between;"><h2><i class="fas fa-address-card"></i> Клиенты</h2><button onclick="openClientForm()"><i class="fas fa-user-plus"></i> Добавить</button></div>
+                <table id="clientsTable"><thead><tr><th>ФИО</th><th>Телефон</th><th>Возраст</th><th>Рука</th><th>Действия</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
         <!-- Продажи -->
         <div id="salesTab" class="tab-pane">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2><i class="fas fa-cash-register"></i> Продажи билетов</h2>
-                    <button onclick="openSaleForm()"><i class="fas fa-plus"></i> Записать</button>
-                </div>
+                <div style="display:flex; justify-content:space-between;"><h2><i class="fas fa-cash-register"></i> Продажи билетов</h2><button onclick="openSaleForm()"><i class="fas fa-plus"></i> Записать</button></div>
                 <table id="salesTable"><thead><tr><th>Курс</th><th>Билетов</th><th>Сумма</th><th>Дата</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
@@ -279,379 +168,274 @@
         <!-- Траты -->
         <div id="expensesTab" class="tab-pane">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h2><i class="fas fa-receipt"></i> Траты</h2>
-                    <button onclick="openExpenseForm()"><i class="fas fa-plus"></i> Добавить</button>
-                </div>
+                <div style="display:flex; justify-content:space-between;"><h2><i class="fas fa-receipt"></i> Траты</h2><button onclick="openExpenseForm()"><i class="fas fa-plus"></i> Добавить</button></div>
                 <table id="expensesTable"><thead><tr><th>Описание</th><th>Сумма</th><th>Дата</th></tr></thead><tbody></tbody></table>
+            </div>
+        </div>
+
+        <!-- Новости -->
+        <div id="newsTab" class="tab-pane">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between;"><h2><i class="fas fa-newspaper"></i> Новости</h2><button onclick="openNewsForm()"><i class="fas fa-plus"></i> Добавить</button></div>
+                <table id="newsTable"><thead><tr><th>Заголовок</th><th>Дата</th><th>Статус</th><th>Действия</th></tr></thead><tbody></tbody></table>
+            </div>
+        </div>
+
+        <!-- Сертификаты -->
+        <div id="certsTab" class="tab-pane">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between;"><h2><i class="fas fa-gift"></i> Сертификаты</h2><button onclick="openCertForm()"><i class="fas fa-plus"></i> Создать</button></div>
+                <table id="certsTable"><thead><tr><th>Код</th><th>Номинал</th><th>Статус</th><th>Действия</th></tr></thead><tbody></tbody></table>
+            </div>
+        </div>
+
+        <!-- Контент сайта -->
+        <div id="contentTab" class="tab-pane">
+            <div class="card"><h2><i class="fas fa-pencil-alt"></i> Редактирование текстов</h2><div id="contentList"></div></div>
+        </div>
+
+        <!-- Логи -->
+        <div id="logsTab" class="tab-pane">
+            <div class="card"><h2><i class="fas fa-history"></i> Журнал действий</h2><div id="logsContainer"></div></div>
+        </div>
+
+        <!-- Файлы -->
+        <div id="filesTab" class="tab-pane">
+            <div class="card">
+                <h2><i class="fas fa-file-upload"></i> Загрузка изображений</h2>
+                <input type="file" id="fileInput"><button onclick="uploadFile()">Загрузить</button>
+                <p id="uploadStatus"></p><input type="text" id="uploadedUrl" readonly placeholder="Ссылка появится здесь">
             </div>
         </div>
     </div>
 
-    <!-- Модальные окна -->
-    <div class="modal hidden" id="quarterModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('quarterModal')">&times;</button>
-            <h3 id="quarterModalTitle">Новый квартал</h3>
-            <input type="text" id="quarterName" placeholder="Название (например, Q1 2025)">
-            <input type="number" id="quarterYear" placeholder="Год" value="2025">
-            <input type="number" id="quarterNum" placeholder="Номер квартала (1-4)" min="1" max="4">
-            <input type="number" id="quarterBudget" placeholder="Бюджет">
-            <button onclick="saveQuarter()">Сохранить</button>
-        </div>
-    </div>
-
-    <div class="modal hidden" id="courseModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('courseModal')">&times;</button>
-            <h3>Курс</h3>
-            <input type="text" id="courseName" placeholder="Название">
-            <input type="number" id="coursePrice" placeholder="Стоимость билета">
-            <input type="number" id="courseCost" placeholder="Себестоимость">
-            <input type="number" id="courseSeats" placeholder="Количество мест">
-            <select id="courseFree"><option value="no">Платный</option><option value="yes">Бесплатный</option></select>
-            <select id="courseQuarter"></select>
-            <button onclick="saveCourse()">Сохранить</button>
-        </div>
-    </div>
-
-    <div class="modal hidden" id="clientModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('clientModal')">&times;</button>
-            <h3 id="clientModalTitle">Новый клиент</h3>
-            <input type="text" id="clientFio" placeholder="ФИО">
-            <input type="text" id="clientPhone" placeholder="Телефон">
-            <input type="email" id="clientEmail" placeholder="Email">
-            <input type="number" id="clientAge" placeholder="Возраст">
-            <select id="clientHand"><option value="правая">Правая</option><option value="левая">Левая</option></select>
-            <input type="text" id="clientAvatar" placeholder="Ссылка на аватар">
-            <textarea id="clientNotes" placeholder="Заметки"></textarea>
-            <button onclick="saveClient()">Сохранить</button>
-        </div>
-    </div>
-
-    <div class="modal hidden" id="clientDetailModal">
-        <div class="modal-content" style="max-width: 700px;">
-            <button class="modal-close" onclick="closeModal('clientDetailModal')">&times;</button>
-            <img id="detailAvatar" style="width:100px; border-radius:50%; margin:0 auto; display:block;">
-            <h2 id="detailName"></h2>
-            <p id="detailInfo"></p>
-            <h4>Пропуски</h4>
-            <div id="detailPasses"></div>
-            <h4>Оценки</h4>
-            <div id="detailMarks"></div>
-            <button onclick="openPassForm()" class="btn-outline">Выдать пропуск</button>
-            <button onclick="openMarkForm()" class="btn-outline">Поставить оценку</button>
-        </div>
-    </div>
-
-    <div class="modal hidden" id="passModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('passModal')">&times;</button>
-            <h3>Выдать пропуск</h3>
-            <select id="passCourse"></select>
-            <input type="number" id="passCount" placeholder="Количество занятий">
-            <button onclick="savePass()">Сохранить</button>
-        </div>
-    </div>
-
-    <div class="modal hidden" id="markModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('markModal')">&times;</button>
-            <h3>Оценка</h3>
-            <select id="markCourse"></select>
-            <select id="markValue"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-            <textarea id="markComment" placeholder="Комментарий педагога"></textarea>
-            <button onclick="saveMark()">Сохранить</button>
-        </div>
-    </div>
-
-    <div class="modal hidden" id="saleModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('saleModal')">&times;</button>
-            <h3>Продажа билетов</h3>
-            <select id="saleCourse"></select>
-            <input type="number" id="saleTickets" placeholder="Количество билетов">
-            <button onclick="saveSale()">Записать</button>
-        </div>
-    </div>
-
-    <div class="modal hidden" id="expenseModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('expenseModal')">&times;</button>
-            <h3>Добавить трату</h3>
-            <input type="text" id="expenseDesc" placeholder="Описание">
-            <input type="number" id="expenseAmount" placeholder="Сумма">
-            <button onclick="saveExpense()">Сохранить</button>
-        </div>
-    </div>
+    <!-- Модальные окна (квартал, курс, клиент, продажа, трата, новость, сертификат) -->
+    <div class="modal hidden" id="quarterModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('quarterModal')">&times;</button><h3>Квартал</h3><input type="text" id="quarterName" placeholder="Название"><input type="number" id="quarterYear" placeholder="Год" value="2025"><input type="number" id="quarterNum" placeholder="Квартал (1-4)"><input type="number" id="quarterBudget" placeholder="Бюджет"><button onclick="saveQuarter()">Сохранить</button></div></div>
+    <div class="modal hidden" id="courseModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('courseModal')">&times;</button><h3>Курс</h3><input type="text" id="courseName" placeholder="Название"><input type="number" id="coursePrice" placeholder="Цена билета"><input type="number" id="courseCost" placeholder="Себестоимость"><input type="number" id="courseSeats" placeholder="Мест"><select id="courseFree"><option value="no">Платный</option><option value="yes">Бесплатный</option></select><button onclick="saveCourse()">Сохранить</button></div></div>
+    <div class="modal hidden" id="clientModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('clientModal')">&times;</button><h3>Клиент</h3><input type="text" id="clientFio" placeholder="ФИО"><input type="text" id="clientPhone" placeholder="Телефон"><input type="email" id="clientEmail" placeholder="Email"><input type="number" id="clientAge" placeholder="Возраст"><select id="clientHand"><option value="правая">Правая</option><option value="левая">Левая</option></select><input type="text" id="clientAvatar" placeholder="Ссылка на аватар"><textarea id="clientNotes" placeholder="Заметки"></textarea><button onclick="saveClient()">Сохранить</button></div></div>
+    <div class="modal hidden" id="clientDetailModal"><div class="modal-content" style="max-width:700px;"><button class="modal-close" onclick="closeModal('clientDetailModal')">&times;</button><img id="detailAvatar" style="width:100px; border-radius:50%; margin:0 auto; display:block;"><h2 id="detailName"></h2><p id="detailInfo"></p><h4>Пропуски</h4><div id="detailPasses"></div><h4>Оценки</h4><div id="detailMarks"></div><button onclick="openPassForm()" class="btn-outline">Выдать пропуск</button><button onclick="openMarkForm()" class="btn-outline">Поставить оценку</button></div></div>
+    <div class="modal hidden" id="passModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('passModal')">&times;</button><h3>Пропуск</h3><select id="passCourse"></select><input type="number" id="passCount" placeholder="Количество"><button onclick="savePass()">Сохранить</button></div></div>
+    <div class="modal hidden" id="markModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('markModal')">&times;</button><h3>Оценка</h3><select id="markCourse"></select><select id="markValue"><option>1</option><option>2</option><option>3</option></select><textarea id="markComment" placeholder="Комментарий"></textarea><button onclick="saveMark()">Сохранить</button></div></div>
+    <div class="modal hidden" id="saleModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('saleModal')">&times;</button><h3>Продажа</h3><select id="saleCourse"></select><input type="number" id="saleTickets" placeholder="Количество билетов"><button onclick="saveSale()">Записать</button></div></div>
+    <div class="modal hidden" id="expenseModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('expenseModal')">&times;</button><h3>Трата</h3><input type="text" id="expenseDesc" placeholder="Описание"><input type="number" id="expenseAmount" placeholder="Сумма"><button onclick="saveExpense()">Сохранить</button></div></div>
+    <div class="modal hidden" id="newsModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('newsModal')">&times;</button><h3>Новость</h3><input type="text" id="newsTitle" placeholder="Заголовок"><textarea id="newsContent" placeholder="Текст"></textarea><input type="text" id="newsImages" placeholder="Ссылки на изображения через запятую"><input type="text" id="newsDate" placeholder="Дата (ГГГГ-ММ-ДД ЧЧ:ММ)"><button onclick="saveNews()">Сохранить</button></div></div>
+    <div class="modal hidden" id="certModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('certModal')">&times;</button><h3>Сертификат</h3><input type="text" id="certCode" placeholder="Код"><input type="number" id="certNominal" placeholder="Номинал" value="700"><button onclick="addCert()">Создать</button></div></div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzWHWQqNVh5mFoRWtn042mmn4V_xwiO3z0ok8bebOzHzflcoe1ej-IFEHZwXAsMGyb2xQ/exec'; // замените на реальный URL после обновления Code.gs
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxZvyp9hy8euTQJT-eVF-BUgNLgYf9Ial1U-iWQPf6RRzRyDSVH-8TC5Rq4LgyqDJh6rA/exec';
         const ADMIN_USER = 'Root';
         const ADMIN_PASS = 'anna1981';
+        let currentDetailClientId = null;
 
-        // ========== ТЁМНАЯ ТЕМА ==========
+        // Тёмная тема
         const themeToggle = document.getElementById('themeToggle');
         const icon = themeToggle.querySelector('i');
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark');
-            icon.classList.replace('fa-moon', 'fa-sun');
-        }
-        themeToggle.addEventListener('click', () => {
+        if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark'); icon.classList.replace('fa-moon','fa-sun'); }
+        themeToggle.addEventListener('click', ()=>{
             document.body.classList.toggle('dark');
-            if (document.body.classList.contains('dark')) {
-                localStorage.setItem('theme', 'dark');
-                icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                localStorage.setItem('theme', 'light');
-                icon.classList.replace('fa-sun', 'fa-moon');
-            }
+            if(document.body.classList.contains('dark')){ localStorage.setItem('theme','dark'); icon.classList.replace('fa-moon','fa-sun'); }
+            else { localStorage.setItem('theme','light'); icon.classList.replace('fa-sun','fa-moon'); }
         });
 
-        // ========== АВТОРИЗАЦИЯ ==========
-        if (sessionStorage.getItem('admin_logged') === 'true') {
-            document.getElementById('loginTab').classList.remove('active');
-            showTab('dashboard');
+        // Авторизация
+        if(sessionStorage.getItem('admin_logged')==='true'){ document.getElementById('loginTab').classList.remove('active'); showTab('dashboard'); }
+        function login(){
+            const u=document.getElementById('loginUser').value.trim(), p=document.getElementById('loginPass').value.trim();
+            if(u===ADMIN_USER&&p===ADMIN_PASS){ sessionStorage.setItem('admin_logged','true'); document.getElementById('loginTab').classList.remove('active'); showTab('dashboard'); }
+            else { document.getElementById('loginError').textContent='Неверные данные'; }
         }
-        function login() {
-            const u = document.getElementById('loginUser').value.trim();
-            const p = document.getElementById('loginPass').value.trim();
-            if (u === ADMIN_USER && p === ADMIN_PASS) {
-                sessionStorage.setItem('admin_logged', 'true');
-                document.getElementById('loginTab').classList.remove('active');
-                showTab('dashboard');
-            } else {
-                document.getElementById('loginError').textContent = 'Неверные данные';
-            }
-        }
-        function logout() { sessionStorage.removeItem('admin_logged'); location.reload(); }
+        function logout(){ sessionStorage.removeItem('admin_logged'); location.reload(); }
 
-        // ========== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ==========
-        function showTab(name) {
-            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-            document.getElementById(name + 'Tab').classList.add('active');
-            document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+        // Переключение вкладок
+        function showTab(name){
+            document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+            document.getElementById(name+'Tab').classList.add('active');
+            document.querySelectorAll('.sidebar a').forEach(l=>l.classList.remove('active'));
             document.querySelector(`.sidebar a[href="#${name}"]`)?.classList.add('active');
-            if (name === 'dashboard') loadDashboard();
-            if (name === 'quarters') loadQuarters();
-            if (name === 'courses') loadCourses();
-            if (name === 'clients') loadClients();
-            if (name === 'sales') loadSales();
-            if (name === 'expenses') loadExpenses();
+            if(name==='dashboard') loadDashboard();
+            if(name==='quarters') loadQuarters();
+            if(name==='courses') loadCourses();
+            if(name==='clients') loadClients();
+            if(name==='sales') loadSales();
+            if(name==='expenses') loadExpenses();
+            if(name==='news') loadNews();
+            if(name==='certs') loadCerts();
+            if(name==='content') loadContent();
+            if(name==='logs') loadLogs();
         }
 
-        // ========== API ==========
-        async function api(params) {
-            const url = API_URL + '?' + new URLSearchParams(params).toString();
-            const r = await fetch(url);
-            return r.json();
+        async function api(params){
+            const url=API_URL+'?'+new URLSearchParams(params).toString();
+            const r=await fetch(url); return r.json();
         }
 
-        // ========== ДАШБОРД ==========
-        async function loadDashboard() {
-            const data = await api({ action: 'dashboard', user: ADMIN_USER, pass: ADMIN_PASS });
-            document.getElementById('dashboardStats').innerHTML = `
-                <div class="card"><h4>Доход</h4><p style="font-size:1.5rem; color:var(--emerald);">${data.income || 0} ₽</p></div>
-                <div class="card"><h4>Расход</h4><p style="font-size:1.5rem; color:var(--orange);">${data.expenses || 0} ₽</p></div>
-                <div class="card"><h4>Чистая прибыль</h4><p style="font-size:1.5rem; color:var(--purple);">${data.profit || 0} ₽</p></div>
-                <div class="card"><h4>Клиенты</h4><p style="font-size:1.5rem;">${data.clientsCount || 0}</p></div>
-                <div class="card"><h4>Курсы</h4><p style="font-size:1.5rem;">${data.coursesCount || 0}</p></div>
-                <div class="card"><h4>Билетов продано</h4><p style="font-size:1.5rem;">${data.ticketsSold || 0}</p></div>
-            `;
-            const ctx = document.getElementById('incomeChart').getContext('2d');
-            if (window.incomeChartInstance) window.incomeChartInstance.destroy();
-            window.incomeChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.chartLabels || [],
-                    datasets: [{
-                        label: 'Доход по неделям',
-                        data: data.chartData || [],
-                        borderColor: '#7c3aed',
-                        backgroundColor: 'rgba(124,58,237,0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                }
-            });
+        // Дашборд
+        async function loadDashboard(){
+            const d=await api({action:'dashboard',user:ADMIN_USER,pass:ADMIN_PASS});
+            document.getElementById('dashboardStats').innerHTML=`
+                <div class="card"><h4>Доход</h4><p style="font-size:1.5rem;color:var(--emerald);">${d.income||0} ₽</p></div>
+                <div class="card"><h4>Расход</h4><p style="font-size:1.5rem;color:var(--orange);">${d.expenses||0} ₽</p></div>
+                <div class="card"><h4>Прибыль</h4><p style="font-size:1.5rem;color:var(--purple);">${d.profit||0} ₽</p></div>
+                <div class="card"><h4>Клиенты</h4><p style="font-size:1.5rem;">${d.clientsCount||0}</p></div>
+                <div class="card"><h4>Билетов</h4><p style="font-size:1.5rem;">${d.ticketsSold||0}</p></div>
+                <div class="card"><h4>Курсы</h4><p style="font-size:1.5rem;">${d.coursesCount||0}</p></div>`;
         }
 
-        // ========== КВАРТАЛЫ ==========
-        async function loadQuarters() {
-            const data = await api({ action: 'quarterList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const tbody = document.querySelector('#quartersTable tbody');
-            tbody.innerHTML = data.quarters.map(q => `
-                <tr>
-                    <td>${q.name}</td><td>${q.year}</td><td>Q${q.quarter}</td>
-                    <td><span class="badge ${q.status === 'active' ? 'badge-success' : 'badge-warning'}">${q.status}</span></td>
-                    <td>
-                        <button onclick="archiveQuarter('${q.id}')"><i class="fas fa-archive"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+        // Кварталы
+        async function loadQuarters(){
+            const d=await api({action:'quarterList',user:ADMIN_USER,pass:ADMIN_PASS});
+            const tbody=document.querySelector('#quartersTable tbody');
+            tbody.innerHTML=d.quarters.map(q=>`<tr><td>${q.name}</td><td>${q.year}</td><td>Q${q.quarter}</td><td><span class="badge ${q.status==='active'?'badge-success':'badge-warning'}">${q.status}</span></td><td><button onclick="archiveQuarter('${q.id}')"><i class="fas fa-archive"></i></button></td></tr>`).join('');
         }
+        function openQuarterForm(){ document.getElementById('quarterModal').classList.remove('hidden'); }
+        function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+        async function saveQuarter(){
+            await api({action:'quarterAdd',user:ADMIN_USER,pass:ADMIN_PASS,name:document.getElementById('quarterName').value,year:document.getElementById('quarterYear').value,quarter:document.getElementById('quarterNum').value,budget:document.getElementById('quarterBudget').value});
+            closeModal('quarterModal'); loadQuarters();
+        }
+        async function archiveQuarter(id){ await api({action:'quarterArchive',user:ADMIN_USER,pass:ADMIN_PASS,id}); loadQuarters(); }
 
-        function openQuarterForm() {
-            document.getElementById('quarterModal').classList.remove('hidden');
+        // Курсы
+        async function loadCourses(){
+            const d=await api({action:'courseList',user:ADMIN_USER,pass:ADMIN_PASS});
+            const tbody=document.querySelector('#coursesTable tbody');
+            tbody.innerHTML=d.courses.map(c=>`<tr><td>${c.name}</td><td>${c.price} ₽</td><td>${c.cost} ₽</td><td>${c.seats}</td><td>${c.free==='yes'?'Да':'Нет'}</td><td><button onclick="editCourse('${c.id}')"><i class="fas fa-edit"></i></button><button class="btn-danger" onclick="deleteCourse('${c.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('');
         }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        async function saveQuarter() {
-            const params = {
-                action: 'quarterAdd', user: ADMIN_USER, pass: ADMIN_PASS,
-                name: document.getElementById('quarterName').value,
-                year: document.getElementById('quarterYear').value,
-                quarter: document.getElementById('quarterNum').value,
-                budget: document.getElementById('quarterBudget').value
-            };
-            await api(params);
-            closeModal('quarterModal');
-            loadQuarters();
+        function openCourseForm(){ document.getElementById('courseModal').classList.remove('hidden'); }
+        async function saveCourse(){
+            await api({action:'courseAdd',user:ADMIN_USER,pass:ADMIN_PASS,name:document.getElementById('courseName').value,price:document.getElementById('coursePrice').value,cost:document.getElementById('courseCost').value,seats:document.getElementById('courseSeats').value,free:document.getElementById('courseFree').value});
+            closeModal('courseModal'); loadCourses();
         }
-        async function archiveQuarter(id) {
-            await api({ action: 'quarterArchive', user: ADMIN_USER, pass: ADMIN_PASS, id });
-            loadQuarters();
-        }
+        async function deleteCourse(id){ if(confirm('Удалить курс?')){ await api({action:'courseDelete',user:ADMIN_USER,pass:ADMIN_PASS,id}); loadCourses(); } }
 
-        // ========== КУРСЫ ==========
-        async function loadCourses() {
-            const data = await api({ action: 'courseList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const tbody = document.querySelector('#coursesTable tbody');
-            tbody.innerHTML = data.courses.map(c => `
-                <tr>
-                    <td>${c.name}</td><td>${c.price} ₽</td><td>${c.cost} ₽</td><td>${c.seats}</td>
-                    <td>${c.free === 'yes' ? 'Бесплатный' : 'Платный'}</td>
-                    <td><button onclick="editCourse('${c.id}')"><i class="fas fa-edit"></i></button></td>
-                </tr>
-            `).join('');
-            // заполним список кварталов в модалке
-            const quarters = await api({ action: 'quarterList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const select = document.getElementById('courseQuarter');
-            select.innerHTML = quarters.quarters.map(q => `<option value="${q.id}">${q.name}</option>`).join('');
+        // Клиенты
+        async function loadClients(){
+            const d=await api({action:'clientList',user:ADMIN_USER,pass:ADMIN_PASS});
+            const tbody=document.querySelector('#clientsTable tbody');
+            tbody.innerHTML=d.clients.map(c=>`<tr><td>${c.fio}</td><td>${c.phone}</td><td>${c.age||'—'}</td><td>${c.hand||'—'}</td><td><button onclick="openClientDetail('${c.id}')"><i class="fas fa-eye"></i></button></td></tr>`).join('');
         }
-
-        function openCourseForm() {
-            document.getElementById('courseModal').classList.remove('hidden');
+        function openClientForm(){ document.getElementById('clientModal').classList.remove('hidden'); }
+        async function saveClient(){
+            await api({action:'clientAdd',user:ADMIN_USER,pass:ADMIN_PASS,fio:document.getElementById('clientFio').value,phone:document.getElementById('clientPhone').value,email:document.getElementById('clientEmail').value,age:document.getElementById('clientAge').value,hand:document.getElementById('clientHand').value,avatar:document.getElementById('clientAvatar').value,notes:document.getElementById('clientNotes').value});
+            closeModal('clientModal'); loadClients();
         }
-        async function saveCourse() {
-            const params = {
-                action: 'courseAdd', user: ADMIN_USER, pass: ADMIN_PASS,
-                name: document.getElementById('courseName').value,
-                price: document.getElementById('coursePrice').value,
-                cost: document.getElementById('courseCost').value,
-                seats: document.getElementById('courseSeats').value,
-                free: document.getElementById('courseFree').value,
-                quarter: document.getElementById('courseQuarter').value
-            };
-            await api(params);
-            closeModal('courseModal');
-            loadCourses();
-        }
-
-        // ========== КЛИЕНТЫ ==========
-        async function loadClients() {
-            const data = await api({ action: 'clientList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const tbody = document.querySelector('#clientsTable tbody');
-            tbody.innerHTML = data.clients.map(c => `
-                <tr>
-                    <td>${c.fio}</td><td>${c.phone}</td><td>${c.age}</td><td>${c.hand}</td>
-                    <td>
-                        <button onclick="openClientDetail('${c.id}')"><i class="fas fa-eye"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function openClientForm() {
-            document.getElementById('clientModal').classList.remove('hidden');
-        }
-        async function saveClient() {
-            const params = {
-                action: 'clientAdd', user: ADMIN_USER, pass: ADMIN_PASS,
-                fio: document.getElementById('clientFio').value,
-                phone: document.getElementById('clientPhone').value,
-                email: document.getElementById('clientEmail').value,
-                age: document.getElementById('clientAge').value,
-                hand: document.getElementById('clientHand').value,
-                avatar: document.getElementById('clientAvatar').value,
-                notes: document.getElementById('clientNotes').value
-            };
-            await api(params);
-            closeModal('clientModal');
-            loadClients();
-        }
-
-        async function openClientDetail(id) {
-            const clients = await api({ action: 'clientList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const client = clients.clients.find(c => c.id === id);
-            if (!client) return;
-            document.getElementById('detailAvatar').src = client.avatar || 'https://via.placeholder.com/100';
-            document.getElementById('detailName').textContent = client.fio;
-            document.getElementById('detailInfo').innerHTML = `Возраст: ${client.age}, Рука: ${client.hand}, Tel: ${client.phone}`;
-            // пропуски и оценки подгрузятся позже
+        async function openClientDetail(id){
+            currentDetailClientId=id;
+            const d=await api({action:'clientGet',user:ADMIN_USER,pass:ADMIN_PASS,id});
+            document.getElementById('detailAvatar').src=d.avatar||'https://via.placeholder.com/100';
+            document.getElementById('detailName').textContent=d.fio;
+            document.getElementById('detailInfo').innerHTML=`Возраст: ${d.age||'—'}<br>Рука: ${d.hand||'—'}<br>Заметки: ${d.notes||'—'}`;
+            const passes=await api({action:'passList',user:ADMIN_USER,pass:ADMIN_PASS});
+            document.getElementById('detailPasses').innerHTML=passes.passes.filter(p=>p.clientId===id).map(p=>`<span class="badge badge-warning">Курс: ${p.courseId} | Осталось: ${p.count - p.used}</span>`).join(' ');
+            const marks=await api({action:'markList',user:ADMIN_USER,pass:ADMIN_PASS});
+            document.getElementById('detailMarks').innerHTML=marks.marks.filter(m=>m.clientId===id).map(m=>`<div class="card"><strong>Оценка: ${m.value}</strong><br>${m.comment}</div>`).join('');
             document.getElementById('clientDetailModal').classList.remove('hidden');
-            window.currentClientId = id;
+        }
+        async function openPassForm(){
+            const d=await api({action:'courseList',user:ADMIN_USER,pass:ADMIN_PASS});
+            document.getElementById('passCourse').innerHTML=d.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+            document.getElementById('passModal').classList.remove('hidden');
+        }
+        async function savePass(){
+            await api({action:'passAdd',user:ADMIN_USER,pass:ADMIN_PASS,clientId:currentDetailClientId,courseId:document.getElementById('passCourse').value,count:document.getElementById('passCount').value});
+            closeModal('passModal'); openClientDetail(currentDetailClientId);
+        }
+        async function openMarkForm(){
+            const d=await api({action:'courseList',user:ADMIN_USER,pass:ADMIN_PASS});
+            document.getElementById('markCourse').innerHTML=d.courses.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+            document.getElementById('markModal').classList.remove('hidden');
+        }
+        async function saveMark(){
+            await api({action:'markAdd',user:ADMIN_USER,pass:ADMIN_PASS,clientId:currentDetailClientId,courseId:document.getElementById('markCourse').value,value:document.getElementById('markValue').value,comment:document.getElementById('markComment').value});
+            closeModal('markModal'); openClientDetail(currentDetailClientId);
         }
 
-        // ========== ПРОДАЖИ ==========
-        async function loadSales() {
-            const data = await api({ action: 'saleList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const tbody = document.querySelector('#salesTable tbody');
-            tbody.innerHTML = data.sales.map(s => `
-                <tr><td>${s.courseId}</td><td>${s.tickets}</td><td>${s.amount} ₽</td><td>${new Date(s.date).toLocaleDateString()}</td></tr>
-            `).join('');
-            // заполним список курсов
-            const courses = await api({ action: 'courseList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const select = document.getElementById('saleCourse');
-            select.innerHTML = courses.courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        // Продажи
+        async function loadSales(){
+            const d=await api({action:'saleList',user:ADMIN_USER,pass:ADMIN_PASS});
+            const tbody=document.querySelector('#salesTable tbody');
+            tbody.innerHTML=d.sales.map(s=>`<tr><td>${s.courseId}</td><td>${s.tickets}</td><td>${s.sum} ₽</td><td>${new Date(s.date).toLocaleDateString('ru-RU')}</td></tr>`).join('');
+        }
+        async function openSaleForm(){
+            const d=await api({action:'courseList',user:ADMIN_USER,pass:ADMIN_PASS});
+            document.getElementById('saleCourse').innerHTML=d.courses.map(c=>`<option value="${c.id}">${c.name} (${c.price} ₽)</option>`).join('');
+            document.getElementById('saleModal').classList.remove('hidden');
+        }
+        async function saveSale(){
+            const courseId=document.getElementById('saleCourse').value;
+            const tickets=document.getElementById('saleTickets').value;
+            const courses=await api({action:'courseList',user:ADMIN_USER,pass:ADMIN_PASS});
+            const course=courses.courses.find(c=>c.id===courseId);
+            const price=course?course.price:0;
+            await api({action:'saleAdd',user:ADMIN_USER,pass:ADMIN_PASS,courseId,tickets,price});
+            closeModal('saleModal'); loadSales(); loadDashboard();
         }
 
-        function openSaleForm() { document.getElementById('saleModal').classList.remove('hidden'); }
-        async function saveSale() {
-            const params = {
-                action: 'saleAdd', user: ADMIN_USER, pass: ADMIN_PASS,
-                courseId: document.getElementById('saleCourse').value,
-                tickets: document.getElementById('saleTickets').value,
-                amount: document.getElementById('saleTickets').value * (await getCoursePrice(document.getElementById('saleCourse').value))
-            };
-            await api(params);
-            closeModal('saleModal');
-            loadSales();
+        // Траты
+        async function loadExpenses(){
+            const d=await api({action:'expenseList',user:ADMIN_USER,pass:ADMIN_PASS});
+            const tbody=document.querySelector('#expensesTable tbody');
+            tbody.innerHTML=d.expenses.map(e=>`<tr><td>${e.desc}</td><td>${e.amount} ₽</td><td>${new Date(e.date).toLocaleDateString('ru-RU')}</td></tr>`).join('');
         }
-        async function getCoursePrice(id) {
-            const courses = await api({ action: 'courseList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const c = courses.courses.find(x => x.id === id);
-            return c ? c.price : 0;
+        function openExpenseForm(){ document.getElementById('expenseModal').classList.remove('hidden'); }
+        async function saveExpense(){
+            await api({action:'expenseAdd',user:ADMIN_USER,pass:ADMIN_PASS,desc:document.getElementById('expenseDesc').value,amount:document.getElementById('expenseAmount').value});
+            closeModal('expenseModal'); loadExpenses(); loadDashboard();
         }
 
-        // ========== ТРАТЫ ==========
-        async function loadExpenses() {
-            const data = await api({ action: 'expenseList', user: ADMIN_USER, pass: ADMIN_PASS });
-            const tbody = document.querySelector('#expensesTable tbody');
-            tbody.innerHTML = data.expenses.map(e => `
-                <tr><td>${e.desc}</td><td>${e.amount} ₽</td><td>${new Date(e.date).toLocaleDateString()}</td></tr>
-            `).join('');
+        // Новости
+        async function loadNews(){
+            const d=await api({action:'newsAdmin',user:ADMIN_USER,pass:ADMIN_PASS});
+            const tbody=document.querySelector('#newsTable tbody');
+            tbody.innerHTML=d.news.map(n=>`<tr><td>${n.title}</td><td>${new Date(n.publishDate).toLocaleString('ru-RU')}</td><td><span class="badge badge-success">${n.status}</span></td><td><button onclick="deleteNews('${n.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+        }
+        function openNewsForm(){ document.getElementById('newsModal').classList.remove('hidden'); }
+        async function saveNews(){
+            await api({action:'newsAdd',user:ADMIN_USER,pass:ADMIN_PASS,title:document.getElementById('newsTitle').value,content:document.getElementById('newsContent').value,images:document.getElementById('newsImages').value,publishDate:document.getElementById('newsDate').value});
+            closeModal('newsModal'); loadNews();
+        }
+        async function deleteNews(id){ if(confirm('Удалить?')){ await api({action:'newsDelete',user:ADMIN_USER,pass:ADMIN_PASS,id}); loadNews(); } }
+
+        // Сертификаты
+        async function loadCerts(){
+            const d=await api({action:'certs',user:ADMIN_USER,pass:ADMIN_PASS});
+            const tbody=document.querySelector('#certsTable tbody');
+            tbody.innerHTML=d.certs.map(c=>`<tr><td>${c.code}</td><td>${c.nominal} ₽</td><td><span class="badge ${c.status==='Активирован'?'badge-success':'badge-warning'}">${c.status}</span></td><td>${c.status!=='Активирован'?`<button onclick="activateCert('${c.id}')">Активировать</button>`:''}</td></tr>`).join('');
+        }
+        function openCertForm(){ document.getElementById('certModal').classList.remove('hidden'); }
+        async function addCert(){
+            await api({action:'certAdd',user:ADMIN_USER,pass:ADMIN_PASS,code:document.getElementById('certCode').value,nominal:document.getElementById('certNominal').value});
+            closeModal('certModal'); loadCerts();
+        }
+        async function activateCert(id){ await api({action:'certActivate',user:ADMIN_USER,pass:ADMIN_PASS,id}); loadCerts(); }
+
+        // Контент
+        async function loadContent(){
+            const d=await api({action:'getContent'});
+            const container=document.getElementById('contentList');
+            container.innerHTML=Object.entries(d.content||{}).map(([k,v])=>`<div class="card" style="margin-bottom:15px;"><strong>${k}</strong><p>${v}</p><button class="btn-outline" onclick="editContent('${k}','${v.replace(/'/g,"\\'")}')">Редактировать</button></div>`).join('');
+        }
+        function editContent(key,text){ const t=prompt('Новый текст:',text); if(t!==null) api({action:'updateContent',user:ADMIN_USER,pass:ADMIN_PASS,key,text:t}).then(()=>loadContent()); }
+
+        // Логи
+        async function loadLogs(){
+            const d=await api({action:'logs',user:ADMIN_USER,pass:ADMIN_PASS});
+            document.getElementById('logsContainer').innerHTML=(d.logs||[]).slice(-20).map(r=>`<div>${r[0]} — ${r[2]}: ${r[3]}</div>`).join('');
         }
 
-        function openExpenseForm() { document.getElementById('expenseModal').classList.remove('hidden'); }
-        async function saveExpense() {
-            const params = {
-                action: 'expenseAdd', user: ADMIN_USER, pass: ADMIN_PASS,
-                desc: document.getElementById('expenseDesc').value,
-                amount: document.getElementById('expenseAmount').value
-            };
-            await api(params);
-            closeModal('expenseModal');
-            loadExpenses();
+        // Файлы
+        async function uploadFile(){
+            const file=document.getElementById('fileInput').files[0];
+            if(!file) return;
+            const fd=new FormData(); fd.append('file',file);
+            const r=await fetch(API_URL+'?action=upload&user='+ADMIN_USER+'&pass='+ADMIN_PASS,{method:'POST',body:fd});
+            const d=await r.json();
+            if(d.url) document.getElementById('uploadedUrl').value=d.url;
         }
 
-        // ========== МОБИЛЬНОЕ МЕНЮ ==========
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-        window.addEventListener('click', (e) => {
-            if (!e.target.closest('.sidebar') && !e.target.closest('.mobile-menu-btn')) {
-                document.getElementById('sidebar').classList.remove('open');
-            }
-        });
+        // Мобильное меню
+        function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+        window.addEventListener('click',(e)=>{ if(!e.target.closest('.sidebar')&&!e.target.closest('.mobile-menu-btn')) document.getElementById('sidebar').classList.remove('open'); });
     </script>
 </body>
 </html>
