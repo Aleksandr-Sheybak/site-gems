@@ -345,7 +345,6 @@
         </div>
     </div>
 
-    <!-- Модалки для пропусков, оценок, продаж, трат -->
     <div class="modal hidden" id="passModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('passModal')">&times;</button>
@@ -388,7 +387,7 @@
     </div>
 
     <script>
-        const API_URL = 'ВАШ_API_URL'; // замените на реальный URL после обновления Code.gs
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzWHWQqNVh5mFoRWtn042mmn4V_xwiO3z0ok8bebOzHzflcoe1ej-IFEHZwXAsMGyb2xQ/exec'; // замените на реальный URL после обновления Code.gs
         const ADMIN_USER = 'Root';
         const ADMIN_PASS = 'anna1981';
 
@@ -460,7 +459,6 @@
                 <div class="card"><h4>Курсы</h4><p style="font-size:1.5rem;">${data.coursesCount || 0}</p></div>
                 <div class="card"><h4>Билетов продано</h4><p style="font-size:1.5rem;">${data.ticketsSold || 0}</p></div>
             `;
-            // график
             const ctx = document.getElementById('incomeChart').getContext('2d');
             if (window.incomeChartInstance) window.incomeChartInstance.destroy();
             window.incomeChartInstance = new Chart(ctx, {
@@ -488,7 +486,6 @@
                     <td>${q.name}</td><td>${q.year}</td><td>Q${q.quarter}</td>
                     <td><span class="badge ${q.status === 'active' ? 'badge-success' : 'badge-warning'}">${q.status}</span></td>
                     <td>
-                        <button onclick="editQuarter('${q.id}')"><i class="fas fa-edit"></i></button>
                         <button onclick="archiveQuarter('${q.id}')"><i class="fas fa-archive"></i></button>
                     </td>
                 </tr>
@@ -511,17 +508,144 @@
             closeModal('quarterModal');
             loadQuarters();
         }
-        async function editQuarter(id) { /* ... загрузка и открытие модалки с заполнением */ }
         async function archiveQuarter(id) {
             await api({ action: 'quarterArchive', user: ADMIN_USER, pass: ADMIN_PASS, id });
             loadQuarters();
         }
 
-        // Аналогичные функции для курсов, клиентов, продаж, трат, пропусков, оценок
-        // (все они используют api() и обновляют таблицы)
-        // ...
+        // ========== КУРСЫ ==========
+        async function loadCourses() {
+            const data = await api({ action: 'courseList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const tbody = document.querySelector('#coursesTable tbody');
+            tbody.innerHTML = data.courses.map(c => `
+                <tr>
+                    <td>${c.name}</td><td>${c.price} ₽</td><td>${c.cost} ₽</td><td>${c.seats}</td>
+                    <td>${c.free === 'yes' ? 'Бесплатный' : 'Платный'}</td>
+                    <td><button onclick="editCourse('${c.id}')"><i class="fas fa-edit"></i></button></td>
+                </tr>
+            `).join('');
+            // заполним список кварталов в модалке
+            const quarters = await api({ action: 'quarterList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const select = document.getElementById('courseQuarter');
+            select.innerHTML = quarters.quarters.map(q => `<option value="${q.id}">${q.name}</option>`).join('');
+        }
 
-        // Мобильное меню
+        function openCourseForm() {
+            document.getElementById('courseModal').classList.remove('hidden');
+        }
+        async function saveCourse() {
+            const params = {
+                action: 'courseAdd', user: ADMIN_USER, pass: ADMIN_PASS,
+                name: document.getElementById('courseName').value,
+                price: document.getElementById('coursePrice').value,
+                cost: document.getElementById('courseCost').value,
+                seats: document.getElementById('courseSeats').value,
+                free: document.getElementById('courseFree').value,
+                quarter: document.getElementById('courseQuarter').value
+            };
+            await api(params);
+            closeModal('courseModal');
+            loadCourses();
+        }
+
+        // ========== КЛИЕНТЫ ==========
+        async function loadClients() {
+            const data = await api({ action: 'clientList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const tbody = document.querySelector('#clientsTable tbody');
+            tbody.innerHTML = data.clients.map(c => `
+                <tr>
+                    <td>${c.fio}</td><td>${c.phone}</td><td>${c.age}</td><td>${c.hand}</td>
+                    <td>
+                        <button onclick="openClientDetail('${c.id}')"><i class="fas fa-eye"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openClientForm() {
+            document.getElementById('clientModal').classList.remove('hidden');
+        }
+        async function saveClient() {
+            const params = {
+                action: 'clientAdd', user: ADMIN_USER, pass: ADMIN_PASS,
+                fio: document.getElementById('clientFio').value,
+                phone: document.getElementById('clientPhone').value,
+                email: document.getElementById('clientEmail').value,
+                age: document.getElementById('clientAge').value,
+                hand: document.getElementById('clientHand').value,
+                avatar: document.getElementById('clientAvatar').value,
+                notes: document.getElementById('clientNotes').value
+            };
+            await api(params);
+            closeModal('clientModal');
+            loadClients();
+        }
+
+        async function openClientDetail(id) {
+            const clients = await api({ action: 'clientList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const client = clients.clients.find(c => c.id === id);
+            if (!client) return;
+            document.getElementById('detailAvatar').src = client.avatar || 'https://via.placeholder.com/100';
+            document.getElementById('detailName').textContent = client.fio;
+            document.getElementById('detailInfo').innerHTML = `Возраст: ${client.age}, Рука: ${client.hand}, Tel: ${client.phone}`;
+            // пропуски и оценки подгрузятся позже
+            document.getElementById('clientDetailModal').classList.remove('hidden');
+            window.currentClientId = id;
+        }
+
+        // ========== ПРОДАЖИ ==========
+        async function loadSales() {
+            const data = await api({ action: 'saleList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const tbody = document.querySelector('#salesTable tbody');
+            tbody.innerHTML = data.sales.map(s => `
+                <tr><td>${s.courseId}</td><td>${s.tickets}</td><td>${s.amount} ₽</td><td>${new Date(s.date).toLocaleDateString()}</td></tr>
+            `).join('');
+            // заполним список курсов
+            const courses = await api({ action: 'courseList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const select = document.getElementById('saleCourse');
+            select.innerHTML = courses.courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        }
+
+        function openSaleForm() { document.getElementById('saleModal').classList.remove('hidden'); }
+        async function saveSale() {
+            const params = {
+                action: 'saleAdd', user: ADMIN_USER, pass: ADMIN_PASS,
+                courseId: document.getElementById('saleCourse').value,
+                tickets: document.getElementById('saleTickets').value,
+                amount: document.getElementById('saleTickets').value * (await getCoursePrice(document.getElementById('saleCourse').value))
+            };
+            await api(params);
+            closeModal('saleModal');
+            loadSales();
+        }
+        async function getCoursePrice(id) {
+            const courses = await api({ action: 'courseList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const c = courses.courses.find(x => x.id === id);
+            return c ? c.price : 0;
+        }
+
+        // ========== ТРАТЫ ==========
+        async function loadExpenses() {
+            const data = await api({ action: 'expenseList', user: ADMIN_USER, pass: ADMIN_PASS });
+            const tbody = document.querySelector('#expensesTable tbody');
+            tbody.innerHTML = data.expenses.map(e => `
+                <tr><td>${e.desc}</td><td>${e.amount} ₽</td><td>${new Date(e.date).toLocaleDateString()}</td></tr>
+            `).join('');
+        }
+
+        function openExpenseForm() { document.getElementById('expenseModal').classList.remove('hidden'); }
+        async function saveExpense() {
+            const params = {
+                action: 'expenseAdd', user: ADMIN_USER, pass: ADMIN_PASS,
+                desc: document.getElementById('expenseDesc').value,
+                amount: document.getElementById('expenseAmount').value
+            };
+            await api(params);
+            closeModal('expenseModal');
+            loadExpenses();
+        }
+
+        // ========== МОБИЛЬНОЕ МЕНЮ ==========
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
         window.addEventListener('click', (e) => {
             if (!e.target.closest('.sidebar') && !e.target.closest('.mobile-menu-btn')) {
